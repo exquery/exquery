@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+  
+    <groupId>org.exquery</groupId>
+    <artifactId>exquery-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>EXQuery Parent POM</name>
+
+    <description>The base POM for all EXQuery modules.</description>
+    <url>http://exquery.org</url>
+    <inceptionYear>2012</inceptionYear>
+
+    <organization>
+        <name>EXQuery</name>
+        <url>http://exquery.org</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Adam Retter</name>
+            <email>adam.retter@googlemail.com</email>
+            <organization>Adam Retter Consulting</organization>
+            <organizationUrl>http://www.adamretter.org.uk</organizationUrl>
+            <timezone>BST</timezone>
+        </developer>
+    </developers>
+    
+    <licenses>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:git//github.com:exquery/exquery-core.git</connection> <!-- TODO change me -->
+        <developerConnection>scm:git:git//github.com:exquery/exquery-core.git</developerConnection> <!-- TODO change me -->
+        <url>http://github.com/exquery</url>
+    </scm>
+    
+    <mailingLists>
+        <mailingList>
+            <name>EXQuery Open</name>
+            <post>exquery-open@googlegroups.com</post>
+            <subscribe>exquery-open+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>exquery-open+unsubscribe@googlegroups.com</unsubscribe>
+            <archive>http://groups.google.co.uk/group/exquery-open</archive>
+        </mailingList>
+    </mailingLists>
+    
+    <properties>
+        <project.build.source>1.6</project.build.source>
+        <project.build.target>1.6</project.build.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>true</doCheck>
+                    <doUpdate>true</doUpdate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <source>${project.build.source}</source>
+                    <target>${project.build.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                    <manifest>
+                        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                    </manifest>
+                    <manifestEntries>
+                        <Source-Revision>${buildNumber}</Source-Revision>
+                        <Build-Timestamp>${timestamp}</Build-Timestamp>
+                        <Source-Repository>${project.scm.connection}</Source-Repository>
+                        <Implementation-URL>http://exquery.org</Implementation-URL>
+                    </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Attach source jars -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+        </plugins>
+    </build>
+  
+</project>
