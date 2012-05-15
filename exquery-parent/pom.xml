@@ -39,7 +39,7 @@
     <scm>
         <connection>scm:git:git://github.com/exquery/exquery.git</connection> <!-- TODO change me -->
         <developerConnection>scm:git:git://github.com/exquery/exquery.git</developerConnection> <!-- TODO change me -->
-        <url>http://github.com/exquery</url>
+        <url>http://github.com/exquery/exquery</url>
     </scm>
     
     <mailingLists>
