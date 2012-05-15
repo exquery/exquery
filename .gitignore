@@ -5,3 +5,4 @@
 *.war
 *.ear
 /exquery-common/target/
+/exquery-xquery/target/
