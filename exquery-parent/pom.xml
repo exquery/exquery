@@ -37,8 +37,8 @@
     </licenses>
     
     <scm>
-        <connection>scm:git:git//github.com:exquery/exquery.git</connection> <!-- TODO change me -->
-        <developerConnection>scm:git:git//github.com:exquery/exquery.git</developerConnection> <!-- TODO change me -->
+        <connection>scm:git:git://github.com:exquery/exquery.git</connection> <!-- TODO change me -->
+        <developerConnection>scm:git:git://github.com:exquery/exquery.git</developerConnection> <!-- TODO change me -->
         <url>http://github.com/exquery</url>
     </scm>
     
