@@ -6,3 +6,4 @@
 *.ear
 /exquery-common/target/
 /exquery-xquery/target/
+/exquery-xquery3/target/
