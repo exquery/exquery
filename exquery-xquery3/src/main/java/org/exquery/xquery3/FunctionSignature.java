@@ -28,10 +28,17 @@ package org.exquery.xquery3;
 
 /**
  * Representation of the signature of a Function in XQuery 3.0
+ * 
+ * Basically an XQuery 1.0 function extended with Annotations
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public interface FunctionSignature extends org.exquery.xquery.FunctionSignature {
     
+    /**
+     * Get the Annotations on the function
+     * 
+     * @return The annotations on the function
+     */
     public Annotation[] getAnnotations();
 }

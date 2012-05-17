@@ -35,9 +35,24 @@ import javax.xml.namespace.QName;
  */
 public interface FunctionSignature {
     
+    /**
+     * Get the Name of the function
+     * 
+     * @return The function name
+     */
     public QName getName();
     
+    /**
+     * Get the number of arguments expected by the function
+     * 
+     * @param The number of arguments 
+     */
     public int getArgumentCount();
     
-    public FunctionParameter[] getParameters();
+    /**
+     * Get the arguments expected by the function
+     * 
+     * @param The function arguments
+     */
+    public FunctionArgument[] getParameters();
 }

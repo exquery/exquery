@@ -31,7 +31,7 @@ import org.exquery.Namespace;
 
 /**
  * Error Codes caused by Static of Dynamic errors
- * when compiling or evaluating an XQuery
+ * when compiling or evaluating an XQuery 1.0
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -47,20 +47,38 @@ public class ErrorCodes {
         private final QName code;
         private final String description;
         
+        /**
+         * @param code A short code for error
+         * @param description A description of the error
+         */
         public ErrorCode(final String code, final String description) {
             this.code = new QName(Namespace.EXQUERY_ERROR_NS, code, Namespace.EXQUERY_ERROR_PREFIX);
             this.description = description;
         }
 
+        /**
+         * @param code The code of the error
+         * @param description A description of the error
+         */
         public ErrorCode(final QName code, final String description) {
             this.code = code;
             this.description = description;
         }
 
+        /**
+         * Gets the code of the error
+         * 
+         * @return the error code
+         */
         public QName getCode() {
             return code;
         }
 
+        /**
+         * Gets a string representation of the error
+         * 
+         * @return a string representation in the format (NAMESPACE#CODE):DESCRIPTION
+         */
         @Override
         public String toString() {
             return "(" + code.getNamespaceURI() + "#" + code.getLocalPart() + "):" + description;

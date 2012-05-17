@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.xquery;
 
 /**
- * Representation of the Cardinality of a type in XQuery
+ * Representation of the Cardinality of a type in XQuery 1.0
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -43,20 +43,39 @@ public enum Cardinality {
 
     private int value;
     
+    /**
+     * Cardinality
+     * 
+     * @param value integer representation of the cardinality (must be distinct in base two)
+     */
     Cardinality(int value) {
         this.value = value;
     }
     
+    /**
+     * Composite Cardinality
+     * 
+     * @param cardinalities Cardinalities when combined make up this cardinality
+     */
     Cardinality(final Cardinality... cardinalities) {
         for(Cardinality cardinality : cardinalities) {
             value |= cardinality.value;
         }
     }
     
-    public boolean hasRequiredCardinality(final Cardinality cardinality) {
-        return ((cardinality.value & value) == value);
+    /**
+     * Checks if this Cardinality satisfies the required Cardinality
+     * 
+     * @requiredCardinality The cardinality that is required
+     */
+    public boolean hasRequiredCardinality(final Cardinality requiredCardinality) {
+        return ((requiredCardinality.value & value) == value);
     }
 
+    /**
+     * Gets the numeric value of the cardinality.
+     * Perhaps useful for calculations by external functions
+     */
     public int getNumericValue() {
         return value;
     }

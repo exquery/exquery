@@ -27,15 +27,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.xquery;
 
 /**
- * Representation of a Parameter to a Function in XQuery
+ * Representation of an Argument to a Function in XQuery 1.0
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface FunctionParameter {
+public interface FunctionArgument {
 
+    /**
+     * Get the name of the function parameter
+     * 
+     * @return The name of the function parameter
+     */
     public String getName();
     
-    public Type getPrimaryType();
+    /**
+     * Get the required type of the function parameter
+     * 
+     * @return The type of the function parameter
+     */
+    public Type getType();
     
+    /**
+     * Get the required cardinality of the function parameter
+     * 
+     * @return The cardinality of the function parameter
+     */
     public Cardinality getCardinality();
 }

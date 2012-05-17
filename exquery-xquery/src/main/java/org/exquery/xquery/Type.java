@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Model of W3C XQuery 1.0 and XPath 2.0 XDM Types
  * 
- * http://www.w3.org/TR/xpath-datamodel/#types
+ * @see http://www.w3.org/TR/xpath-datamodel/#types
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -118,14 +118,29 @@ public enum Type {
     
     final Type subTypes[];
     
+    /**
+     * Type
+     */
     Type() {
         subTypes = null;
     }
     
+    /**
+     * Type
+     * 
+     * @param subTypes The sub-types of this type
+     */
     Type(final Type... subTypes) {
         this.subTypes = subTypes;
     }
     
+    /**
+     * Determines if this type is a sub-type of the other type
+     * 
+     * @param other another Type
+     * 
+     * @return true if this type is a sub-type of other, false otherwise
+     */
     public boolean isSubTypeOf(final Type other) {
         if(this == other) {
             return true;
@@ -134,11 +149,26 @@ public enum Type {
         return other.hasSubType(this);
     }
     
+    /**
+     * Determines if this type has a sub-type of other
+     * 
+     * @param other another Type
+     * 
+     * @return true if other is a sub-type of this type, false otherwise
+     */
     public boolean hasSubType(final Type other) {
-        
         return hasSubType(subTypes, other);
     }
 
+    /**
+     * Determines if the type to match is a sub-type of the provides types
+     * by recursively examining all sub-types
+     * 
+     * @param types
+     * @param toMatch 
+     * 
+     * @return true if the type to match is a sub-type of the types, false otherwise
+     */
     private boolean hasSubType(final Type types[], final Type toMatch) {
         if(types != null) {
             for(final Type type : types) {

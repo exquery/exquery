@@ -36,9 +36,24 @@ import org.exquery.xquery.Literal;
  */
 public interface Annotation {
     
+    /**
+     * Get the Name of the Annotation
+     * 
+     * @return the name of the Annotation
+     */
     public QName getName();
     
+    /**
+     * Get the Literals from the Annotation
+     * 
+     * @return the Literals in the Annotation
+     */
     public Literal[] getLiterals();
     
+    /**
+     * Get the FunctionSignature of the function which is annotated with this Annotation
+     * 
+     * @return The FunctionSignature of the annotated function
+     */
     public FunctionSignature getFunctionSignature();
 }

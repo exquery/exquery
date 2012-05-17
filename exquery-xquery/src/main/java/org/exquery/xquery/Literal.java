@@ -27,13 +27,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.xquery;
 
 /**
- * Representation of a Literal in the XQuery grammar
+ * Representation of a Literal in the XQuery 1.0 grammar
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public interface Literal {
     
+    /**
+     * Gets the type of the Literal
+     * 
+     * @return the type of the Literal
+     */
     public Type getType();
     
+    /**
+     * Gets the Literal Value
+     * 
+     * @return the Literal value
+     */
     public String getValue();
 }
