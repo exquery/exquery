@@ -54,5 +54,5 @@ public interface FunctionSignature {
      * 
      * @param The function arguments
      */
-    public FunctionArgument[] getParameters();
+    public FunctionArgument[] getArguments();
 }
