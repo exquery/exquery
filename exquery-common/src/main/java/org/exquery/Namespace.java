@@ -33,6 +33,23 @@ package org.exquery;
  */
 public interface Namespace {
     
-    public final static String EXQUERY_ERROR_NS = "http://exquery.org/ns/error/";
-    public final static String EXQUERY_ERROR_PREFIX = "exqerr";
+    /**
+     * The namespace of EXQuery
+     */
+    public final static String EXQUERY_NS = "http://exquery.org/ns/";
+    
+    /**
+     * The recommended prefix for the namespace of EXQuery
+     */
+    public final static String EXQ_PREFIX = "exq";
+    
+    /**
+     * The namespace of EXQuery errors
+     */
+    public final static String EXQUERY_ERROR_NS = EXQUERY_NS + "error/";
+    
+    /**
+     * The recommended prefix for the namespace of EXQuery errors
+     */
+    public final static String EXQUERY_ERROR_PREFIX = EXQ_PREFIX + "err";
 }
