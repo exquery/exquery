@@ -31,7 +31,7 @@ package org.exquery.http;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public enum HTTPMethod {
+public enum HttpMethod {
     GET,
     HEAD,
     POST,
