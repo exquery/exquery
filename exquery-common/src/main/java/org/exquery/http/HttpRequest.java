@@ -45,6 +45,12 @@ public interface HttpRequest {
      */
     public InputStream getInputStream() throws IOException;
 
+    /**
+     * Gets the HTTP Method of the HTTP Request
+     * 
+     * @return the HttpMethod of the request
+     */
+    public HttpMethod getMethod();
     
     /**
      * Get the Path from the URI
@@ -53,6 +59,8 @@ public interface HttpRequest {
      */
     public String getPath();
 
+    //TODO remove
+    @Deprecated
     public int getContentLength();
 
     public String getContentType();
