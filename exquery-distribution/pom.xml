@@ -25,7 +25,7 @@
         <module>../exquery-xquery3</module>
         <module>../exquery-annotations</module>
         <module>../exquery-serialization-annotations</module>
-        <module>../exquery-restxq</module>
+        <module>../exquery-restxq-api</module>
     </modules>
     
     <build>

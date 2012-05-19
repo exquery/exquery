@@ -8,11 +8,11 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../exquery-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>exquery-restxq</artifactId>
+    <artifactId>exquery-restxq-api</artifactId>
     <packaging>jar</packaging>
   
-    <name>EXQuery RESTXQ</name>
-    <description>EXQuery RESTXQ Project</description>
+    <name>EXQuery RESTXQ API</name>
+    <description>EXQuery RESTXQ Project API</description>
   
     <scm>
         <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
