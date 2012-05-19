@@ -28,6 +28,7 @@ package org.exquery.restxq;
 
 import java.net.URI;
 import java.util.Set;
+import org.exquery.annotations.serialization.SerializationAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
@@ -76,10 +77,18 @@ public interface ResourceFunction {
     public Set<HttpMethodAnnotation> getHttpMethodAnnotations();
     
     /**
-     * Returns the Set of HTTP Parameter Annotations applied to the Resource Function
+     * Returns the Set of Parameter Annotations applied to the Resource Function
      * 
-     * @return The HTTP Parameter Annotations of the Resource Function
+     * @return The Parameter Annotations of the Resource Function
      * The Set may contain zero or more annotations.
      */
     public Set<ParameterAnnotation> getParameterAnnotations();
+    
+    /**
+     * Returns the Set of Serialization Annotations applied to the Resource Function
+     * 
+     * @return The Serialization Annotations of the Resource Function
+     * The Set may contain zero or more annotations.
+     */
+    public Set<SerializationAnnotation> getSerializationAnnotations();
 }

@@ -26,6 +26,11 @@
             <artifactId>exquery-xquery3</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-serialization-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
   
 </project>
