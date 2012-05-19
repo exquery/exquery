@@ -80,6 +80,10 @@ public class ResourceFunctionFactory {
             }
         }
         
+        if(resourceFunction.getPathAnnotation() == null) {
+            throw new EXQueryException("Resource Function must have a Path Annotation");
+        }
+        
         //borrow the function signature from the PathAnnotation which is mandatory (it will be the same anyways)
         resourceFunction.setFunctionSignature(resourceFunction.getPathAnnotation().getFunctionSignature());
         

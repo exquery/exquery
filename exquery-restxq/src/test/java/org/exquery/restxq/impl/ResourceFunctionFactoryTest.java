@@ -32,15 +32,16 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import org.exquery.EXQueryException;
-import org.exquery.http.HttpMethod;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
-import org.exquery.xquery.Literal;
+import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.xquery3.Annotation;
-import org.exquery.xquery3.FunctionSignature;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for ResourceFunctionFactory
@@ -50,51 +51,45 @@ import org.junit.Test;
 public class ResourceFunctionFactoryTest {
  
     @Test(expected=EXQueryException.class)
-    public void create_failsForNonRESTXQAnnotation() throws URISyntaxException {
+    public void create_failsForNonRESTXQAnnotation() throws URISyntaxException, EXQueryException {
+        
+        final QName badName = new QName("http://fake", "fake");
+        
+        final Annotation mckAnnotation = mock(Annotation.class);
+        when(mckAnnotation.getName()).thenReturn(badName);
         
         final Set<Annotation> annotations = new HashSet<Annotation>();
-        annotations.add(new Annotation(){
-            public QName getName() {
-                return new QName("http://fake", "fake");
-            }
-
-            public Literal[] getLiterals() {
-                return new Literal[0];
-            }
-
-            public FunctionSignature getFunctionSignature() {
-                return null;
-            }
-        });
+        annotations.add(mckAnnotation);
                 
         ResourceFunctionFactory.create(new URI("/fake.xquery"), annotations);
     }
     
-    public void create_succeedsForRESTXQAnnotation() throws URISyntaxException {
-        
-        final Annotation getHttpMethodAnnotation = new HttpMethodAnnotation(){
-
-            public HttpMethod getHttpMethod() {
-                return HttpMethod.GET;
-            }
-
-            public QName getName() {
-                return new QName(Namespace.ANNOTATION_NS, "GET");
-            }
-
-            public Literal[] getLiterals() {
-                return new Literal[0];
-            }
-
-            public FunctionSignature getFunctionSignature() {
-                return null;
-            }
-        };
+    @Test(expected=EXQueryException.class)
+    public void create_failsForRESTXQAnnotations_Without_PathAnnotation() throws URISyntaxException, EXQueryException {
+        final QName qnHttpMethodAnnotation = new QName(Namespace.ANNOTATION_NS, "GET");
+        final HttpMethodAnnotation mckHttpMethodAnnotation = mock(HttpMethodAnnotation.class);
         
         final Set<Annotation> annotations = new HashSet<Annotation>();
-        annotations.add(getHttpMethodAnnotation);
-                
+        annotations.add(mckHttpMethodAnnotation);
+        
+        when(mckHttpMethodAnnotation.getName()).thenReturn(qnHttpMethodAnnotation);
+        
+        final ResourceFunction resourceFunction = ResourceFunctionFactory.create(new URI("/some.xquery"), annotations);
+    }
+    
+    @Test
+    public void create_succeedsForRESTXQAnnotations_With_PathAnnotation() throws URISyntaxException, EXQueryException {
+        
+        final QName qnPathAnnotation = new QName(Namespace.ANNOTATION_NS, "path");
+        final PathAnnotation mckPathAnnotation = mock(PathAnnotation.class);
+        
+        final Set<Annotation> annotations = new HashSet<Annotation>();
+        annotations.add(mckPathAnnotation);
+        
+        when(mckPathAnnotation.getName()).thenReturn(qnPathAnnotation);
+        
         final ResourceFunction resourceFunction = ResourceFunctionFactory.create(new URI("/some.xquery"), annotations);
         assertNotNull(resourceFunction);
+        assertEquals(mckPathAnnotation, resourceFunction.getPathAnnotation());
     }
 }
