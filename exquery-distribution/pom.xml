@@ -12,6 +12,12 @@
     <name>EXQuery Distribution POM</name>
     <description>Module for building an EXQuery distribution</description>
     
+    <scm>
+        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <url>${project.parent.scm.url}</url>
+    </scm>
+    
     <modules>
         <module>../exquery-common</module>
         <module>../exquery-xquery</module>
