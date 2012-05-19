@@ -18,6 +18,7 @@
         <url>${project.parent.scm.url}</url>
     </scm>
     
+    
     <modules>
         <module>../exquery-common</module>
         <module>../exquery-xquery</module>
@@ -28,7 +29,7 @@
     </modules>
     
     <build>
-        <plugins>
+        <!-- plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -41,6 +42,44 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+        </plugins -->
     </build>
+    
+    <!--
+    The assemblies work off of dependency sets since the stuff to be aggregated is no longer sub-modules after moving assembly itself into this 'distribution' module.
+    -->
+    <!--
+    <dependencies>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-xquery</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-xquery3</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-serialization-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-restxq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+    -->
 </project>
