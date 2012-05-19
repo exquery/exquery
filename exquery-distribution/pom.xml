@@ -26,6 +26,7 @@
         <module>../exquery-annotations</module>
         <module>../exquery-serialization-annotations</module>
         <module>../exquery-restxq-api</module>
+        <module>../exquery-restxq</module>
     </modules>
     
     <build>
