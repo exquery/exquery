@@ -24,54 +24,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.restxq;
+package org.exquery.restxq.annotation;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
-import org.exquery.restxq.annotation.HttpMethodAnnotation;
-import org.exquery.restxq.annotation.PathAnnotation;
-import org.exquery.xquery3.FunctionSignature;
+import java.util.Map;
 
 /**
- * Resource Function
+ * PathAnnotation
  * 
- * Represents an XQuery 3.0 function which has
- * RESTXQ annotations applied to it
- * 
- * Resource Functions may also have Serialization
- * Annotations in addition to RESTXQ Annotations
+ * Represents the XQuery RESTXQ Annotation %rest:path
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface ResourceFunction {
+public interface PathAnnotation extends ConstraintAnnotation {
     
     /**
-     * Gets the URI of the XQuery that contains this Resource Function
+     * Determines if the Path in this Path Annotation
+     * would match the provided path
      * 
-     * @return The URI pointing to the XQuery containing this Resource Function
+     * @param path The path to attempt to
+     * match against this Path Annotation
+     * 
+     * @return true if the provided path would be matched
+     * by this annotation, false otherwise
      */
-    public URI getXQueryLocation();
+    public boolean matchesPath(final String path);
     
     /**
-     * Gets the Function Signature of the Resource Function
+     * Extracts the parameters of any URI Templates described
+     * by this Path Annotation from the provided path
      * 
-     * @return The Function Signature of the Resource Function
-     */
-    public FunctionSignature getFunctionSignature();
-    
-    /**
-     * Returns the Path Annotation applied to the Resource Function
+     * @param path The path from which to extract
+     * any URI Templated parameters
      * 
-     * @return The Path Annotation of the Resource Function
+     * @return A Map where the Key is the URI template name, and the Value is extracted from the path
      */
-    public PathAnnotation getPathAnnotation();
-    
-    /**
-     * Returns the Set of HTTP Method Annotations applied to the Resource Function
-     * 
-     * @return The HTTP Method Annotations of the Resource Function
-     * The Set may contain zero or more annotations.
-     */
-    public Set<HttpMethodAnnotation> getHttpMethodAnnotations();
+    public Map<String, String> extractPathParameters(final String path); //TODO consider that the left side is a function parameter name?
 }
