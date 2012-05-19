@@ -30,6 +30,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
+import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.xquery3.FunctionSignature;
 
@@ -74,4 +75,12 @@ public interface ResourceFunction {
      * The Set may contain zero or more annotations.
      */
     public Set<HttpMethodAnnotation> getHttpMethodAnnotations();
+    
+    /**
+     * Returns the Set of HTTP Parameter Annotations applied to the Resource Function
+     * 
+     * @return The HTTP Parameter Annotations of the Resource Function
+     * The Set may contain zero or more annotations.
+     */
+    public Set<ParameterAnnotation> getParameterAnnotations();
 }
