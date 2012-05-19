@@ -20,7 +20,7 @@
     
     <dependencies>
         <dependency>
-            <groupId>org.exuqery</groupId>
+            <groupId>org.exquery</groupId>
             <artifactId>exquery-xquery3</artifactId>
             <version>${project.version}</version>
         </dependency>
