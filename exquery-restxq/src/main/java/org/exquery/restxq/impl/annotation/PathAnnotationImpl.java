@@ -34,7 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exquery.restxq.RESTXQAnnotationException;
 import org.exquery.restxq.RESTXQErrorCodes;
-import org.exquery.restxq.annotation.ConstraintAnnotation;
+import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -44,7 +44,7 @@ import org.exquery.xquery.Type;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class PathAnnotationImpl extends AbstractRESTAnnotation implements ConstraintAnnotation {
+public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAnnotation {
     
     private final static char URI_PATH_SEGMENT_DELIMITER = '/';
     
@@ -85,21 +85,38 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements Constr
     private int pathSegmentCount = -1;
     
     
+    /**
+     * Ensures that the Path Annotation
+     * is compatible with the Function Signature
+     * and extracts templates from the path
+     * for later use
+     * 
+     * @throws  RESTXQAnnotationException if the Path Annotation is not compatible
+     * with the function signature or if the path is malformed
+     */
     @Override
     public void initialise() throws RESTXQAnnotationException {
         super.initialise();
         this.pathMatcherAndGroupParamNames = parsePath(); 
     }
     
+    /**
+     * @see org.exquery.restxq.annotation.PathAnnotation#matchesPath(java.lang.String)
+     */
+    @Override
     public boolean matchesPath(final String path) {
         final Matcher m = getPathMatcherAndParamIndicies().getPathMatcher(path);
         return m.matches();
     }
     
-    public Map<String, String> extractPathParameters(final String path) {
+    /**
+     * @see org.exquery.restxq.annotation.PathAnnotation#extractPathParameters(java.lang.String) 
+     */
+    @Override
+    public Map<String, String> extractPathParameters(final String uriPath) {
         
         final Map<String, String> pathParamNameAndValues = new HashMap<String, String>();        
-        final Matcher m = getPathMatcherAndParamIndicies().getPathMatcher(path);        
+        final Matcher m = getPathMatcherAndParamIndicies().getPathMatcher(uriPath);        
 
         if(m.matches()) {
             for(int i = 1 ; i <= m.groupCount(); i++) {
@@ -113,6 +130,10 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements Constr
         return pathParamNameAndValues;
     }
     
+    /**
+     * @see org.exquery.restxq.annotation.PathAnnotation#getPathSegmentCount() 
+     */
+    @Override
     public int getPathSegmentCount() {
         return pathSegmentCount;
     }

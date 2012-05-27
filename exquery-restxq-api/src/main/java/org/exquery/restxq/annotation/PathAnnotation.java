@@ -51,14 +51,13 @@ public interface PathAnnotation extends ConstraintAnnotation {
     
     /**
      * Extracts the parameters of any URI Templates described
-     * by this Path Annotation from the provided path
+     * by this Path Annotation from the provided URI path
      * 
-     * @param path The path from which to extract
-     * any URI Templated parameters
+     * @param uriPath The URI path from which to extract templated parameters
      * 
      * @return A Map where the Key is the URI template name, and the Value is extracted from the path
      */
-    public Map<String, String> extractPathParameters(final String path); //TODO consider that the left side is a function parameter name?
+    public Map<String, String> extractPathParameters(final String uriPath); //TODO consider that the left side is a function parameter name?
     
     /**
      * Gets the number of Path Segments in the Path described by the Path Annotation

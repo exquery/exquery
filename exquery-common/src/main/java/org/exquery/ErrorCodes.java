@@ -29,6 +29,7 @@ package org.exquery;
 import javax.xml.namespace.QName;
 
 /**
+ * EXQuery Error Codes
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -53,9 +54,17 @@ public class ErrorCodes {
             return errorQName;
         }
 
+        /**
+         * Returns a String representation
+         * of the error code in an extended
+         * Clark Notation format
+         * i.e. {uri}localname: description
+         * 
+         * @return String representation of the error code
+         */
         @Override
         public String toString() {
-            return "(" + errorQName.getNamespaceURI() + "#" + errorQName.getLocalPart() + "):" + description;
+            return "{" + errorQName.getNamespaceURI() + "}" + errorQName.getLocalPart() + ": " + description;
         }
 
         public String getDescription(){
