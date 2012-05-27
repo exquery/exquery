@@ -37,15 +37,6 @@ import java.io.InputStream;
 public interface HttpRequest {
     
     /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-
-    /**
      * Gets the HTTP Method of the HTTP Request
      * 
      * @return the HttpMethod of the request
@@ -58,10 +49,19 @@ public interface HttpRequest {
      * @return the Path segment of the URI
      */
     public String getPath();
+    
+    /**
+     * Gets the InputStream for reading the body of the HTTP Request
+     * 
+     * @return The input stream for the request body
+     *
+     * @throws IOException if a problem occurs when reading the request body
+     */
+    public InputStream getInputStream() throws IOException;
 
     //TODO remove
     @Deprecated
-    public int getContentLength();
+    public int getContentLength(); 
 
     public String getContentType();
 
