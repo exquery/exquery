@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.exquery.restxq.RESTXQAnnotationException;
-import org.exquery.restxq.RESTXQErrorCodes;
+import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
@@ -44,7 +44,7 @@ import org.exquery.xquery.Type;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAnnotation {
+public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
     private final static char URI_PATH_SEGMENT_DELIMITER = '/';
     
@@ -95,7 +95,7 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
      * with the function signature or if the path is malformed
      */
     @Override
-    public void initialise() throws RESTXQAnnotationException {
+    public void initialise() throws RestAnnotationException {
         super.initialise();
         this.pathMatcherAndGroupParamNames = parsePath(); 
     }
@@ -146,28 +146,28 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
         this.pathSegmentCount = pathSegmentCount;
     }
     
-    private PathPatternAndGroupParamNames parsePath() throws RESTXQAnnotationException {
+    private PathPatternAndGroupParamNames parsePath() throws RestAnnotationException {
         
         final Literal[] annotationValue = getLiterals();
         
         if(annotationValue.length != 1) {
-            throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0001);
+            throw new RestAnnotationException(RestXqErrorCodes.RQST0001);
         }
         
         final Literal pathValue = annotationValue[0];
         if(pathValue.getType() != Type.STRING) {
-            throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0002);
+            throw new RestAnnotationException(RestXqErrorCodes.RQST0002);
         }
         
         final String pathStr = pathValue.getValue();
         if(pathStr.isEmpty()) {
-            throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0003);
+            throw new RestAnnotationException(RestXqErrorCodes.RQST0003);
         }
 
         //validate the Path
         final Matcher mchPath = ptnPath.matcher(pathStr);
         if(!mchPath.matches()) {
-            throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0004);
+            throw new RestAnnotationException(RestXqErrorCodes.RQST0004);
         }
 
         //extract the Path segments

@@ -27,8 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
-import org.exquery.restxq.RESTXQAnnotationException;
-import org.exquery.restxq.RESTXQErrorCodes.RESTXQErrorCode;
+import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
@@ -38,7 +38,7 @@ import org.exquery.xquery.Type;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractParameterAnnotation extends AbstractRESTAnnotation implements ParameterAnnotation {
+public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation implements ParameterAnnotation {
     
     private ParameterAnnotationMapping parameterAnnotationMapping;
     
@@ -56,7 +56,7 @@ public abstract class AbstractParameterAnnotation extends AbstractRESTAnnotation
      * with the function which it annotates
      */
     @Override
-    public void initialise() throws RESTXQAnnotationException {
+    public void initialise() throws RestAnnotationException {
         super.initialise();
         this.parameterAnnotationMapping = parseAnnotationValue();
     }    
@@ -65,50 +65,50 @@ public abstract class AbstractParameterAnnotation extends AbstractRESTAnnotation
         return parameterAnnotationMapping;
     }
     
-    private ParameterAnnotationMapping parseAnnotationValue() throws RESTXQAnnotationException {
+    private ParameterAnnotationMapping parseAnnotationValue() throws RestAnnotationException {
         final Literal[] annotationLiterals = getLiterals();
         
         if(canProvideDefaultValue()) {
             if(annotationLiterals.length < 2 || annotationLiterals.length > 3) {
-                throw new RESTXQAnnotationException(getInvalidAnnotationParamsErr());
+                throw new RestAnnotationException(getInvalidAnnotationParamsErr());
             }
         } else {
             if(annotationLiterals.length != 2) {
-                throw new RESTXQAnnotationException(getInvalidAnnotationParamsErr());
+                throw new RestAnnotationException(getInvalidAnnotationParamsErr());
             }
         }
         
         return parseAnnotationLiterals(annotationLiterals[0], annotationLiterals[1], annotationLiterals.length == 3 ? annotationLiterals[2] : null);
     }
     
-    private ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Literal defaultValue) throws RESTXQAnnotationException {
+    private ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Literal defaultValue) throws RestAnnotationException {
         if(parameterName.getType() != Type.STRING) {
-            throw new RESTXQAnnotationException(getInvalidParameterNameErr());
+            throw new RestAnnotationException(getInvalidParameterNameErr());
         }
         
         if(functionArgumentName.getType() != Type.STRING) {
-            throw new RESTXQAnnotationException(getInvalidFunctionArgumentNameErr());
+            throw new RestAnnotationException(getInvalidFunctionArgumentNameErr());
         }
         
         //TODO eXist-db's Type System needs some fixing before we can properly tell what a xs:anySimpleType is
         if(defaultValue != null && !defaultValue.getType().isSubTypeOf(Type.ANY_SIMPLE_TYPE)) {
-            throw new RESTXQAnnotationException(getInvalidDefaultValueErr());
+            throw new RestAnnotationException(getInvalidDefaultValueErr());
         }
         
         final String keyStr = parameterName.getValue();
         final String varStr = functionArgumentName.getValue();
         if(keyStr.isEmpty()) {
-            throw new RESTXQAnnotationException(getInvalidParameterNameErr());
+            throw new RestAnnotationException(getInvalidParameterNameErr());
         }
 
         if(varStr.isEmpty()) {
-            throw new RESTXQAnnotationException(getInvalidFunctionArgumentNameErr());
+            throw new RestAnnotationException(getInvalidFunctionArgumentNameErr());
         }
 
         //validate the varStr
         final Matcher mtcFnParameter = functionArgumentPattern.matcher(varStr);
         if(!mtcFnParameter.matches()) {
-            throw new RESTXQAnnotationException(getInvalidAnnotationParametersSyntaxErr());
+            throw new RestAnnotationException(getInvalidAnnotationParametersSyntaxErr());
         }
 
         final String varName = mtcFnParameter.group(1);
@@ -131,42 +131,42 @@ public abstract class AbstractParameterAnnotation extends AbstractRESTAnnotation
      * 
      * @return The ErrorCode for invalid Annotation Parameters
      */
-    protected abstract RESTXQErrorCode getInvalidAnnotationParamsErr();
+    protected abstract RestXqErrorCode getInvalidAnnotationParamsErr();
     
     /**
      * Get the Error Code for an invalid Parameter name
      * 
      * @return The ErrorCode for an invalid Parameter name
      */
-    protected abstract RESTXQErrorCode getInvalidParameterNameErr();
+    protected abstract RestXqErrorCode getInvalidParameterNameErr();
     
     /**
      * Get the Error Code for an invalid Function Argument name
      * 
      * @return The ErrorCode for an invalid Function Argument name
      */
-    protected abstract RESTXQErrorCode getInvalidFunctionArgumentNameErr();
+    protected abstract RestXqErrorCode getInvalidFunctionArgumentNameErr();
     
     /**
      * Get the Error Code for an invalid Default Value
      * 
      * @return The ErrorCode for an invalid Default Value
      */
-    protected abstract RESTXQErrorCode getInvalidDefaultValueErr();
+    protected abstract RestXqErrorCode getInvalidDefaultValueErr();
     
     /**
      * Get the Error Code for an invalidly typed Default Value
      * 
      * @return The ErrorCode for an invalidly typed Default Value
      */
-    protected abstract RESTXQErrorCode getInvalidDefaultValueTypeErr();
+    protected abstract RestXqErrorCode getInvalidDefaultValueTypeErr();
     
     /**
      * Get the Error Code for invalid Annotation parameters syntax
      * 
      * @return The ErrorCode for invalid Annotation parameters syntax
      */
-    protected abstract RESTXQErrorCode getInvalidAnnotationParametersSyntaxErr();
+    protected abstract RestXqErrorCode getInvalidAnnotationParametersSyntaxErr();
     
     //</editor-fold>
 }

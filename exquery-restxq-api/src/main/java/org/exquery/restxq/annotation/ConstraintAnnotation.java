@@ -32,6 +32,6 @@ package org.exquery.restxq.annotation;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface ConstraintAnnotation extends RESTXQAnnotation {
+public interface ConstraintAnnotation extends RestAnnotation {
     
 }

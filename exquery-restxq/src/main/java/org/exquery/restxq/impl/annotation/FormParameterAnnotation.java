@@ -28,8 +28,8 @@ package org.exquery.restxq.impl.annotation;
 
 import java.io.InputStream;
 import org.exquery.http.HttpRequest;
-import org.exquery.restxq.RESTXQErrorCodes;
-import org.exquery.restxq.RESTXQErrorCodes.RESTXQErrorCode;
+import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedArgumentValue;
@@ -154,48 +154,48 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      * @see AbstractParameterAnnotation#getInvalidAnnotationParamsErr()
      */
     @Override
-    final protected RESTXQErrorCode getInvalidAnnotationParamsErr() {
-        return RESTXQErrorCodes.RQST0014;
+    final protected RestXqErrorCode getInvalidAnnotationParamsErr() {
+        return RestXqErrorCodes.RQST0014;
     }
 
     /**
      * @see AbstractParameterAnnotation#getInvalidKeyErr()
      */
     @Override
-    final protected RESTXQErrorCode getInvalidParameterNameErr() {
-        return RESTXQErrorCodes.RQST0015;
+    final protected RestXqErrorCode getInvalidParameterNameErr() {
+        return RestXqErrorCodes.RQST0015;
     }
 
     /**
      * @see AbstractParameterAnnotation#getInvalidValueErr()
      */
     @Override
-    final protected RESTXQErrorCode getInvalidFunctionArgumentNameErr() {
-        return RESTXQErrorCodes.RQST0016;
+    final protected RestXqErrorCode getInvalidFunctionArgumentNameErr() {
+        return RestXqErrorCodes.RQST0016;
     }
 
     /**
      * @see AbstractParameterAnnotation#getInvalidDefaultValueErr()
      */
     @Override
-    final protected RESTXQErrorCode getInvalidDefaultValueErr() {
-        return RESTXQErrorCodes.RQST0017;
+    final protected RestXqErrorCode getInvalidDefaultValueErr() {
+        return RestXqErrorCodes.RQST0017;
     }
 
     /**
      * @see AbstractParameterAnnotation#getInvalidDefaultValueTypeErr()
      */
     @Override
-    protected RESTXQErrorCode getInvalidDefaultValueTypeErr() {
-        return RESTXQErrorCodes.RQST0018;
+    protected RestXqErrorCode getInvalidDefaultValueTypeErr() {
+        return RestXqErrorCodes.RQST0018;
     }
     
     /**
      * @see AbstractParameterAnnotation#getInvalidAnnotationParamSyntaxErr()
      */
     @Override
-    protected RESTXQErrorCode getInvalidAnnotationParametersSyntaxErr() {
-        return RESTXQErrorCodes.RQST0019;
+    protected RestXqErrorCode getInvalidAnnotationParametersSyntaxErr() {
+        return RestXqErrorCodes.RQST0019;
     }
     
     //<editor-fold>

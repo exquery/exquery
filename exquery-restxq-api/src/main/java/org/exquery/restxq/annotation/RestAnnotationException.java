@@ -24,23 +24,23 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.restxq;
+package org.exquery.restxq.annotation;
 
 import org.exquery.EXQueryException;
-import org.exquery.restxq.RESTXQErrorCodes.RESTXQErrorCode;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 
 /**
  * Exception for RESTXQAnnotations
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class RESTXQAnnotationException extends EXQueryException {
+public class RestAnnotationException extends EXQueryException {
     
-    public RESTXQAnnotationException(final RESTXQErrorCode code) {
+    public RestAnnotationException(final RestXqErrorCode code) {
         super(code.toString());
     }
     
-    public RESTXQAnnotationException(final RESTXQErrorCode code, final Throwable cause) {
+    public RestAnnotationException(final RestXqErrorCode code, final Throwable cause) {
         super(code.toString(), cause);
     }
 }

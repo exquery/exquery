@@ -28,8 +28,8 @@ package org.exquery.restxq.impl.annotation;
 
 import javax.xml.namespace.QName;
 import org.exquery.restxq.Namespace;
-import org.exquery.restxq.RESTXQAnnotationException;
-import org.exquery.restxq.RESTXQErrorCodes;
+import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.xquery3.Annotation;
 
@@ -38,7 +38,7 @@ import org.exquery.xquery3.Annotation;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractHttpMethodAnnotation extends AbstractRESTAnnotation implements HttpMethodAnnotation {
+public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotation implements HttpMethodAnnotation {
 
     //TODO cosider allowing a catch all Method Annotation, i.e. with no Path Annotation, should work as the PathSegmentCount would just be 0 or -1 for sorting
     
@@ -47,18 +47,18 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRESTAnnotatio
      * as you cannot have a Method Annotation without a Path Annotation
      */
     @Override
-    public void initialise() throws RESTXQAnnotationException {
+    public void initialise() throws RestAnnotationException {
         super.initialise();
         checkForPathAnnotation();
     }
 
-    private void checkForPathAnnotation() throws RESTXQAnnotationException {
+    private void checkForPathAnnotation() throws RestAnnotationException {
         for(Annotation annotation : getFunctionSignature().getAnnotations()) {
             if(annotation.getName().equals(new QName(Namespace.ANNOTATION_NS, "path"))) { //TODO having this hardcoded QName here is not ideal!
                 return;
             }
         }
 	        
-        throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0009);
+        throw new RestAnnotationException(RestXqErrorCodes.RQST0009);
     }
 }

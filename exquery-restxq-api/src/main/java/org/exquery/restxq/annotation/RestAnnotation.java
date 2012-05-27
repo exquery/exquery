@@ -44,6 +44,6 @@ import org.exquery.xquery3.Annotation;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface RESTXQAnnotation extends Annotation {
+public interface RestAnnotation extends Annotation {
     
 }

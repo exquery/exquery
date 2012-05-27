@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
-import org.exquery.restxq.RESTXQAnnotationException;
-import org.exquery.restxq.RESTXQErrorCodes;
-import org.exquery.restxq.RESTXQErrorCodes.RESTXQErrorCode;
-import org.exquery.restxq.annotation.RESTXQAnnotation;
+import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
+import org.exquery.restxq.annotation.RestAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.FunctionArgument;
 import org.exquery.xquery.Literal;
@@ -45,7 +45,7 @@ import org.exquery.xquery3.FunctionSignature;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
+public abstract class AbstractRestAnnotation implements RestAnnotation {
     
     /**
      * Matches a function parameter e.g. {$id}
@@ -61,9 +61,9 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
      * Initialises an Annotation
      * By default this does nothing, but a sub-class may override
      * 
-     * @throws RESTXQAnnotationException if the Annotation could not be initialised
+     * @throws RestAnnotationException if the Annotation could not be initialised
      */
-    public void initialise() throws RESTXQAnnotationException {
+    public void initialise() throws RestAnnotationException {
     }
     
     /**
@@ -75,9 +75,9 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
      * @param requiredArgumentType The required type of the argument to check the function signature for
      * @param errorCode An error code to return in the exception of the required type could not be found
      * 
-     * @throws RESTXQAnnotationException If the named argument with a compatible required type is not declared by the function signature
+     * @throws RestAnnotationException If the named argument with a compatible required type is not declared by the function signature
      */
-    protected void checkFnDeclaresParameterWithType(final FunctionSignature functionSignature, final String fnArgumentName, final Type requiredArgumentType, final RESTXQErrorCode errorCode) throws RESTXQAnnotationException {
+    protected void checkFnDeclaresParameterWithType(final FunctionSignature functionSignature, final String fnArgumentName, final Type requiredArgumentType, final RestXqErrorCode errorCode) throws RestAnnotationException {
         
         final FunctionArgument[] fnArguments = functionSignature.getArguments();
         
@@ -87,7 +87,7 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
             if(fnArgument.getName().equals(fnArgumentName)) {
                 
                 if(!fnArgument.getType().isSubTypeOf(requiredArgumentType)) {
-                    throw new RESTXQAnnotationException(errorCode);
+                    throw new RestAnnotationException(errorCode);
                 }
 
                 found = true;
@@ -96,7 +96,7 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
         }
         
         if(!found) {
-            throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0007);
+            throw new RestAnnotationException(RestXqErrorCodes.RQST0007);
         }
     }
     
@@ -106,9 +106,9 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
      * @param functionSignature The function signature to check for the named argument
      * @param fnArgumentName The name of the argument to check the function signature for
      * 
-     * @throws RESTXQAnnotationException If the function arguments are not compatible with the function signature
+     * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
-    protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName) throws RESTXQAnnotationException {
+    protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName) throws RestAnnotationException {
         final List<String> fnParamNames = new ArrayList<String>(1);
         fnParamNames.add(fnArgumentName);
         
@@ -122,9 +122,9 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
      * @param functionSignature The function signature to check for declared parameters
      * @param fnArgumentNames The Function arguments to check against the function signature
      * 
-     * @throws RESTXQAnnotationException If the function arguments are not compatible with the function signature
+     * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
-    protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RESTXQAnnotationException {
+    protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {
         
         final FunctionArgument[] fnArguments = functionSignature.getArguments();
         
@@ -137,11 +137,11 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
                 if(fnArgument.getName().equals(fnArgumentName)) {
                     
                     if(fnArgument.getCardinality().hasRequiredCardinality(Cardinality.ONE)) {
-                        throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0005);
+                        throw new RestAnnotationException(RestXqErrorCodes.RQST0005);
                     }
                     
                     if(!fnArgument.getType().isSubTypeOf(Type.ITEM)) {
-                        throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0006);
+                        throw new RestAnnotationException(RestXqErrorCodes.RQST0006);
                     }
                     
                     found = true;
@@ -150,7 +150,7 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
             }
             
             if(!found) {
-                throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0007);
+                throw new RestAnnotationException(RestXqErrorCodes.RQST0007);
             }
         }
         
@@ -171,7 +171,7 @@ public abstract class AbstractRESTAnnotation implements RESTXQAnnotation {
                 if(paramCardinality != Cardinality.ZERO
                 && paramCardinality != Cardinality.ZERO_OR_ONE
                 && paramCardinality != Cardinality.ZERO_OR_MORE) {
-                    throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0008);
+                    throw new RestAnnotationException(RestXqErrorCodes.RQST0008);
                 }
             }
         }

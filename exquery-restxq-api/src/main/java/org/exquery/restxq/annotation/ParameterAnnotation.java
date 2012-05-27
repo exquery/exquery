@@ -35,7 +35,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface ParameterAnnotation extends RESTXQAnnotation {
+public interface ParameterAnnotation extends RestAnnotation {
     
     /**
      * Extracts the Parameter from the Request
