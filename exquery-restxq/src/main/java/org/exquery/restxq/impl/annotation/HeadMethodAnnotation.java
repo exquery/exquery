@@ -35,7 +35,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class HeadMethodAnnotation extends AbstractRESTAnnotation implements HttpMethodAnnotation {
+public class HeadMethodAnnotation extends AbstractHttpMethodAnnotation {
 
     /**
      * @see org.exquery.restxq.annotation.HttpMethodAnnotation#getHttpMethod()

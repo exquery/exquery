@@ -33,7 +33,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  * Implementation of RESTXQ GET Annotation
  * e.g. %rest:GET
  */
-public class GetMethodAnnotation extends AbstractRESTAnnotation implements HttpMethodAnnotation {
+public class GetMethodAnnotation extends AbstractHttpMethodAnnotation {
 
     /**
      * @see org.exquery.restxq.annotation.HttpMethodAnnotation#getHttpMethod()

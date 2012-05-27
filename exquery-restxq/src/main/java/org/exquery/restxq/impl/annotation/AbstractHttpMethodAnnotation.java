@@ -26,22 +26,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import org.exquery.http.HttpMethod;
+import javax.xml.namespace.QName;
+import org.exquery.restxq.Namespace;
+import org.exquery.restxq.RESTXQAnnotationException;
+import org.exquery.restxq.RESTXQErrorCodes;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
+import org.exquery.xquery3.Annotation;
 
 /**
- * Implementation of RESTXQ DELETE Annotation
- * e.g. %rest:DELETE
+ * Base class for RESTXQ Method Annotation Implementations
+ *
+ * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class DeleteMethodAnnotation extends AbstractHttpMethodAnnotation {
+public abstract class AbstractHttpMethodAnnotation extends AbstractRESTAnnotation implements HttpMethodAnnotation {
 
-    /**
-     * @see org.exquery.restxq.annotation.HttpMethodAnnotation#getHttpMethod()
-     * 
-     * @return HttpMethod.DELETE
-     */
     @Override
-    public HttpMethod getHttpMethod() {
-        return HttpMethod.DELETE;
+    public void initialise() throws RESTXQAnnotationException {
+        super.initialise();
+        checkForPathAnnotation();
+    }
+
+    private void checkForPathAnnotation() throws RESTXQAnnotationException {
+        for(Annotation annotation : getFunctionSignature().getAnnotations()) {
+            if(annotation.getName().equals(new QName(Namespace.ANNOTATION_NS, "path"))) { //TODO having this hardcoded QName here is not ideal!
+                return;
+            }
+        }
+	        
+        throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0009);
     }
 }
