@@ -30,20 +30,20 @@ import org.exquery.http.HttpMethod;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 
 /**
- * Implementation of RESTXQ GET Annotation
- * i.e. %rest:GET
+ * Implementation of RESTXQ PUT Annotation
+ * i.e. %rest:PUT
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class GetMethodAnnotation extends AbstractHttpMethodAnnotation {
+public class PutMethodAnnotation extends AbstractHttpMethodWithBodyAnnotation {
 
     /**
      * @see org.exquery.restxq.annotation.HttpMethodAnnotation#getHttpMethod()
      * 
-     * @return HttpMethod.GET
+     * @return HttpMethod.PUT
      */
     @Override
     public HttpMethod getHttpMethod() {
-        return HttpMethod.GET;
+        return HttpMethod.PUT;
     }
 }

@@ -32,6 +32,8 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
 /**
  * Implementation of RESTXQ DELETE Annotation
  * i.e. %rest:DELETE
+ * 
+ * @author Adam Retter <adam.retter@googlemail.com>
  */
 public class DeleteMethodAnnotation extends AbstractHttpMethodAnnotation {
 
