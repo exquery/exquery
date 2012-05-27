@@ -26,14 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery;
 
+import javax.xml.namespace.QName;
+
 /**
- * EXQuery base Exception
- * 
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class EXQueryException extends Exception {
+public class ErrorCodes {
+    
+    public static class ErrorCode {
 
-    public EXQueryException(final String message) {
-        super(message);
+        private final QName errorQName;
+        private final String description;
+
+        public ErrorCode(final String code, final String description) {
+            this.errorQName = new QName(code, Namespace.EXQUERY_ERROR_NS, Namespace.EXQUERY_ERROR_PREFIX);
+            this.description = description;
+        }
+
+        public ErrorCode(final QName errorQName, final String description) {
+            this.errorQName = errorQName;
+            this.description = description;
+        }
+
+        public QName getErrorQName() {
+            return errorQName;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + errorQName.getNamespaceURI() + "#" + errorQName.getLocalPart() + "):" + description;
+        }
+
+        public String getDescription(){
+            return description;
+        }
     }
 }
