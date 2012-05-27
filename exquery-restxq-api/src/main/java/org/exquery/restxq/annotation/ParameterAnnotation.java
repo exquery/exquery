@@ -26,13 +26,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.annotation;
 
+import org.exquery.http.HttpRequest;
+import org.exquery.xquery.TypedArgumentValue;
+
 /**
  * Parameter Annotations optionally inject a parameter
  * from the REST Request into the Resource Function
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface ParameterAnnotation {
+public interface ParameterAnnotation extends RESTXQAnnotation {
     
-    //public Map.Entry<String, TypedParameter> extractParameter(HttpRequest request);
+    /**
+     * Extracts the Parameter from the Request
+     * 
+     * @param <T> The Underlying Java type class of the typed value
+     * @param request The HTTP Request to extract the Parameter from
+     * 
+     * @return The extracted Parameter values, suitable for passing to a function invocation
+     */
+    public <T> TypedArgumentValue<T> extractParameter(HttpRequest request);
 }

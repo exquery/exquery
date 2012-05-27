@@ -40,7 +40,7 @@ import org.exquery.xquery.Type;
 
 /**
  * Implementation of RESTXQ Path Annotation
- * e.g. %rest:path
+ * i.e. %rest:path
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */

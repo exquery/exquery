@@ -43,6 +43,13 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
 
     private String bodyParameterName;
 
+    /**
+     * Checks that a method body annotation
+     * is applicable to the function signature
+     * and keeps its name for later use
+     * 
+     * @see AbstractHttpMethodAnnotation#initialise()
+     */
     @Override
     public void initialise() throws RESTXQAnnotationException {
         super.initialise();
@@ -62,11 +69,11 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
         } else if(annotationLiterals.length != 1) {
             return null;
         } else {
-            return parseMethodContentValue(annotationLiterals[0]);
+            return parseMethodBodyValue(annotationLiterals[0]);
         }
     }
     
-    private String parseMethodContentValue(final Literal methodValue) throws RESTXQAnnotationException {
+    private String parseMethodBodyValue(final Literal methodValue) throws RESTXQAnnotationException {
         
         if(methodValue.getType() != Type.STRING) {
             throw new RESTXQAnnotationException(RESTXQErrorCodes.RQST0011);

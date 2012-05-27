@@ -24,50 +24,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
-
-import java.io.IOException;
-import java.io.InputStream;
+package org.exquery.xquery;
 
 /**
- * Interface for a HTTP Request
+ * Represents a Typed Value to a Function Argument in XQuery
+ * 
+ * @param <T> The Underlying Java type class of the typed value
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
+public interface TypedArgumentValue<T> {
     
     /**
-     * Gets the HTTP Method of the HTTP Request
+     * Get the Name of the Function Argument
      * 
-     * @return the HttpMethod of the request
+     * @return The Name of the Function Argument
      */
-    public HttpMethod getMethod();
+    public String getArgumentName();
     
     /**
-     * Get the Path from the URI
+     * Get the Typed Value to the Function Argument
      * 
-     * @return the Path segment of the URI
+     * @return The Typed Value
      */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-
-    //TODO remove
-    @Deprecated
-    public int getContentLength(); 
-
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    public TypedValue<T> getTypedValue();
 }

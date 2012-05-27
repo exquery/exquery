@@ -24,50 +24,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
+package org.exquery.restxq.impl.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.exquery.xquery.Literal;
+
 
 /**
- * Interface for a HTTP Request
- * 
+ * Mapping between the a Parameter Annotations
+ * parameter and the function argument to which
+ * it injects a value
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
+public class ParameterAnnotationMapping {
+    public final String parameterName;
+    public final String functionArgumentName;
+    public final Literal defaultValue;
+
+    public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName) {
+        this.parameterName = parameterName;
+        this.functionArgumentName = functionArgumentName;
+        this.defaultValue = null;
+    }
+
+    public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName, final Literal defaultValue) {
+        this.parameterName = parameterName;
+        this.functionArgumentName = functionArgumentName;
+        this.defaultValue = defaultValue;
+    }
     
-    /**
-     * Gets the HTTP Method of the HTTP Request
-     * 
-     * @return the HttpMethod of the request
-     */
-    public HttpMethod getMethod();
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public String getFunctionArgumentName() {
+        return functionArgumentName;
+    }
     
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-
-    //TODO remove
-    @Deprecated
-    public int getContentLength(); 
-
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    public Literal getDefaultValue() {
+        return defaultValue;
+    }
 }
