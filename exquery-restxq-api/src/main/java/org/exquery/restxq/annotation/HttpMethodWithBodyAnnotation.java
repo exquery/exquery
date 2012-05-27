@@ -36,4 +36,11 @@ package org.exquery.restxq.annotation;
  */
 public interface HttpMethodWithBodyAnnotation extends HttpMethodAnnotation {
     
+    /**
+     * Gets the Parameter Name of the
+     * body part of the RESTXQ Annotation
+     * 
+     * @return The name of the Parameter
+     */
+    public String getBodyParameterName();
 }

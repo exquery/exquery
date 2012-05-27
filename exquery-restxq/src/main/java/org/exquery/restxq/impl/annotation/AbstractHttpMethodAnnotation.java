@@ -40,6 +40,12 @@ import org.exquery.xquery3.Annotation;
  */
 public abstract class AbstractHttpMethodAnnotation extends AbstractRESTAnnotation implements HttpMethodAnnotation {
 
+    //TODO cosider allowing a catch all Method Annotation, i.e. with no Path Annotation, should work as the PathSegmentCount would just be 0 or -1 for sorting
+    
+    /**
+     * Checks that a Path Annotation is present
+     * as you cannot have a Method Annotation without a Path Annotation
+     */
     @Override
     public void initialise() throws RESTXQAnnotationException {
         super.initialise();

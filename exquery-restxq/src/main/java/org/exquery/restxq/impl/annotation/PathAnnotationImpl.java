@@ -80,7 +80,7 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
     //validator for Path
     private final static Pattern ptnPath = Pattern.compile(pathRegExp);
     
-    private PathMatcherAndGroupParamNames pathMatcherAndGroupParamNames;
+    private PathPatternAndGroupParamNames pathMatcherAndGroupParamNames;
     
     private int pathSegmentCount = -1;
     
@@ -138,7 +138,7 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
         return pathSegmentCount;
     }
     
-    private PathMatcherAndGroupParamNames getPathMatcherAndParamIndicies(){
+    private PathPatternAndGroupParamNames getPathMatcherAndParamIndicies(){
         return pathMatcherAndGroupParamNames;
     }
     
@@ -146,7 +146,7 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
         this.pathSegmentCount = pathSegmentCount;
     }
     
-    private PathMatcherAndGroupParamNames parsePath() throws RESTXQAnnotationException {
+    private PathPatternAndGroupParamNames parsePath() throws RESTXQAnnotationException {
         
         final Literal[] annotationValue = getLiterals();
         
@@ -216,14 +216,14 @@ public class PathAnnotationImpl extends AbstractRESTAnnotation implements PathAn
         //we now have a pattern for matching the URI path!
         final Pattern ptnThisPath = Pattern.compile(thisPathExprRegExp.toString());
 
-        return new PathMatcherAndGroupParamNames(ptnThisPath, groupParamNames);
+        return new PathPatternAndGroupParamNames(ptnThisPath, groupParamNames);
     }
     
-    private class PathMatcherAndGroupParamNames {
+    private class PathPatternAndGroupParamNames {
         final Pattern ptnPath;
         final Map<Integer, String> groupParamNames;
         
-        public PathMatcherAndGroupParamNames(final Pattern ptnPath, final Map<Integer, String> groupParamNames) {
+        public PathPatternAndGroupParamNames(final Pattern ptnPath, final Map<Integer, String> groupParamNames) {
             this.ptnPath = ptnPath;
             this.groupParamNames = groupParamNames;
         }
