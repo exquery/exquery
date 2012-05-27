@@ -36,4 +36,8 @@ public class EXQueryException extends Exception {
     public EXQueryException(final String message) {
         super(message);
     }
+    
+    public EXQueryException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }
