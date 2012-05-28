@@ -21,6 +21,11 @@
     <dependencies>
         <dependency> <!--TODO remove in favour of exquery-annotations? -->
             <groupId>org.exquery</groupId>
+            <artifactId>exquery-annotations-common-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency> <!--TODO remove in favour of exquery-annotations? -->
+            <groupId>org.exquery</groupId>
             <artifactId>exquery-xquery3</artifactId>
             <version>${project.version}</version>
         </dependency>

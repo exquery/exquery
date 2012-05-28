@@ -23,8 +23,11 @@
         <module>../exquery-common</module>
         <module>../exquery-xquery</module>
         <module>../exquery-xquery3</module>
-        <module>../exquery-serialization-annotations-api</module>
-        <module>../exquery-restxq-api</module>
+	<module>../exquery-annotations-common-api</module>        
+	<module>../exquery-annotations-common</module> 
+	<module>../exquery-serialization-annotations-api</module>
+        <module>../exquery-serialization-annotations</module>
+	<module>../exquery-restxq-api</module>
         <module>../exquery-restxq</module>
     </modules>
     

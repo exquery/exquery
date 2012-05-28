@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.annotation;
 
-import org.exquery.EXQueryException;
+import org.exquery.annotation.AnnotationException;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 
 /**
@@ -34,13 +34,13 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class RestAnnotationException extends EXQueryException {
+public class RestAnnotationException extends AnnotationException {
     
     public RestAnnotationException(final RestXqErrorCode code) {
-        super(code.toString());
+        super(code);
     }
     
     public RestAnnotationException(final RestXqErrorCode code, final Throwable cause) {
-        super(code.toString(), cause);
+        super(code, cause);
     }
 }

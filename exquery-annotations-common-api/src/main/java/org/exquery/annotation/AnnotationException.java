@@ -24,28 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.serialization.annotations;
+package org.exquery.annotation;
 
-import javax.xml.namespace.QName;
-import org.exquery.ErrorCodes;
-import org.exquery.serialization.Namespace;
+import org.exquery.EXQueryException;
+import org.exquery.ErrorCodes.ErrorCode;
 
 /**
- * Error Codes and descriptions for Serialization Annotation Errors
+ * Exception for EXQuery Annotations
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class SerializationAnnotationErrorCodes extends ErrorCodes {
-
-    //output method
-    public static SerializationAnnotationErrorCode SEST0001 = new SerializationAnnotationErrorCode("SEST0001", "It is a static error if a Serialization Output Method Annotation has more than one literal value");
-    public static SerializationAnnotationErrorCode SEST0002 = new SerializationAnnotationErrorCode("SEST0002", "It is a static error if a Serialization Output Method Annotation has an empty value");
-    public static SerializationAnnotationErrorCode SEST0003 = new SerializationAnnotationErrorCode("SEST0003", "It is a static error if a Serialization Output Method Annotation does not describe a valid output method");
+public abstract class AnnotationException extends EXQueryException {
+    public AnnotationException(final ErrorCode code) {
+        super(code.toString());
+    }
     
-    public static class SerializationAnnotationErrorCode extends ErrorCode {
-
-        private SerializationAnnotationErrorCode(String code, String description) {
-            super(new QName(Namespace.ANNOTATION_ERROR_NS, code, Namespace.ANNOTATION_ERROR_PREFIX), description);
-        }
+    public AnnotationException(final ErrorCode code, final Throwable cause) {
+        super(code.toString(), cause);
     }
 }

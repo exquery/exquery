@@ -1,41 +1,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
     <parent>
         <groupId>org.exquery</groupId>
         <artifactId>exquery-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../exquery-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>exquery-restxq-api</artifactId>
+    <artifactId>exquery-serialization-annotations</artifactId>
     <packaging>jar</packaging>
-  
-    <name>EXQuery RESTXQ API</name>
-    <description>EXQuery RESTXQ Project API</description>
-  
+    <name>EXQuery XQuery 3.0 Serialization Annotations</name>
+    <description>EXQuery XQuery 3.0 Annotations for XSLT and XQuery Serialization 3.0</description>
+
     <scm>
         <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
         <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
         <url>${project.parent.scm.url}</url>
     </scm>
     
-     <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.exquery</groupId>
-            <artifactId>exquery-annotations-common-api</artifactId>
+            <artifactId>exquery-annotations-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency> <!--TODO remove in favour of exquery-annotations? -->
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-xquery3</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exquery</groupId>
             <artifactId>exquery-serialization-annotations-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-  
+    
 </project>

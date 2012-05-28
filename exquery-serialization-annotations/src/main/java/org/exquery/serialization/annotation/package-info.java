@@ -1,5 +1,5 @@
 /**
- * EXQuery annotations API for XSLT and XQuery Serialization 3.0
+ * EXQuery annotations Implementation for XSLT and XQuery Serialization 3.0
  * 
  * The W3C XSLT and XQuery Serialization 3.0 specification
  * describes mechanisms for controlling the serialization
@@ -11,4 +11,4 @@
  *
  * @author Adam Reter <adam.retter@googlemail.com>
  */
-package org.exquery.serialization.annotations;
+package org.exquery.serialization.annotation;

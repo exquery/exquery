@@ -28,10 +28,10 @@ package org.exquery.restxq;
 
 import java.net.URI;
 import java.util.Set;
-import org.exquery.annotations.serialization.SerializationAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.serialization.annotations.SerializationAnnotation;
 import org.exquery.xquery3.FunctionSignature;
 
 /**
