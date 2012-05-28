@@ -24,23 +24,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.serialization.annotations;
+package org.exquery.serialization.annotation;
 
-import org.exquery.xquery3.Annotation;
+import org.exquery.serialization.Namespace;
+import javax.xml.namespace.QName;
 
 /**
- * Serialization Annotation
+ * Names for the Serialization Annotations
  * 
- * The W3C XSLT and XQuery Serialization 3.0 specification
- * describes mechanisms for controlling the serialization
- * of the output of XSLT and XQuery processing.
- * @see http://www.w3.org/TR/xslt-xquery-serialization-30/
- * 
- * These annotations for XQuery 3.0 apply such serialization
- * control mechanisms on a per-function basis in XQuery 3.0
- * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author aretter
  */
-public interface SerializationAnnotation extends Annotation {
+public enum SerializationAnnotationName {
     
+    method;
+
+    final QName name;
+    SerializationAnnotationName() {
+        this.name = new QName(Namespace.ANNOTATION_NS, name());
+    }
+
+    public static SerializationAnnotationName valueOf(final QName name) { 
+
+        for(SerializationAnnotationName an : SerializationAnnotationName.values()) {
+            if(an.name.equals(name)) {
+                return an;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown name: " + name.toString());
+    }
+
+    public QName getQName() {
+        return name;
+    }
 }

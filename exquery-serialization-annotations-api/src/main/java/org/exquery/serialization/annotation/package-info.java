@@ -11,4 +11,4 @@
  *
  * @author Adam Reter <adam.retter@googlemail.com>
  */
-package org.exquery.serialization.annotations;
+package org.exquery.serialization.annotation;

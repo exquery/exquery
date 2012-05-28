@@ -24,37 +24,23 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.serialization.annotations;
+package org.exquery.serialization.annotation;
 
-import org.exquery.serialization.Namespace;
-import javax.xml.namespace.QName;
+import org.exquery.annotation.AnnotationException;
+import org.exquery.serialization.annotation.SerializationAnnotationErrorCodes.SerializationAnnotationErrorCode;
 
 /**
- * Names for the Serialization Annotations
- * 
- * @author aretter
+ * Exception for RESTXQAnnotations
+ *
+ * @author Adam Retter <adam.retter@googlemail.com>
  */
-public enum SerializationAnnotationName {
+public class SerializationAnnotationException extends AnnotationException {
     
-    method;
-
-    final QName name;
-    SerializationAnnotationName() {
-        this.name = new QName(Namespace.ANNOTATION_NS, name());
+    public SerializationAnnotationException(final SerializationAnnotationErrorCode code) {
+        super(code);
     }
-
-    public static SerializationAnnotationName valueOf(final QName name) { 
-
-        for(SerializationAnnotationName an : SerializationAnnotationName.values()) {
-            if(an.name.equals(name)) {
-                return an;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown name: " + name.toString());
-    }
-
-    public QName getQName() {
-        return name;
+    
+    public SerializationAnnotationException(final SerializationAnnotationErrorCode code, final Throwable cause) {
+        super(code, cause);
     }
 }

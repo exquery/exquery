@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
+import org.exquery.annotation.AbstractAnnotation;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.RestAnnotation;
@@ -45,7 +46,7 @@ import org.exquery.xquery3.FunctionSignature;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractRestAnnotation implements RestAnnotation {
+public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnnotationException> implements RestAnnotation {
     
     /**
      * Matches a function parameter e.g. {$id}
@@ -56,15 +57,6 @@ public abstract class AbstractRestAnnotation implements RestAnnotation {
     private FunctionSignature functionSignature;
     private Literal[] literals;
     private QName name;
-    
-    /**
-     * Initialises an Annotation
-     * By default this does nothing, but a sub-class may override
-     * 
-     * @throws RestAnnotationException if the Annotation could not be initialised
-     */
-    public void initialise() throws RestAnnotationException {
-    }
     
     /**
      * Checks that a function declares a named argument with a specific compatible type
@@ -176,33 +168,4 @@ public abstract class AbstractRestAnnotation implements RestAnnotation {
             }
         }
     }
-
-    //<editor-fold desc="getter/setter">
-    @Override
-    public FunctionSignature getFunctionSignature() {
-        return functionSignature;
-    }
-    
-    public void setFunctionSignature(final FunctionSignature functionSignature) {
-        this.functionSignature = functionSignature;
-    }
-
-    @Override
-    public Literal[] getLiterals() {
-        return literals;
-    }
-    
-    public void setLiterals(final Literal[] literals) {
-        this.literals = literals;
-    }
-
-    @Override
-    public QName getName() {
-        return name;
-    }
-
-    public void setName(final QName name) {
-        this.name = name;
-    }
-    //</editor-fold>
 }

@@ -31,7 +31,7 @@ import java.util.Set;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
-import org.exquery.serialization.annotations.SerializationAnnotation;
+import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery3.FunctionSignature;
 
 /**

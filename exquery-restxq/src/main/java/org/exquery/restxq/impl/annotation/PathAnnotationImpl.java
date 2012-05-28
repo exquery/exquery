@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -91,7 +91,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
      * and extracts templates from the path
      * for later use
      * 
-     * @throws  RESTXQAnnotationException if the Path Annotation is not compatible
+     * @throws  RestAnnotationException if the Path Annotation is not compatible
      * with the function signature or if the path is malformed
      */
     @Override

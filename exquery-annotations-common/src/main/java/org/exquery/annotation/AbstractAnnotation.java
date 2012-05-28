@@ -34,9 +34,11 @@ import org.exquery.xquery3.FunctionSignature;
 /**
  * Base Class for EXQuery Annotation Implementations
  *
+ * @param <E> The Class to use for Exceptions
+ * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractAnnotation implements Annotation {
+public abstract class AbstractAnnotation<E extends AnnotationException> implements Annotation {
     private FunctionSignature functionSignature;
     private Literal[] literals;
     private QName name;
@@ -45,9 +47,9 @@ public abstract class AbstractAnnotation implements Annotation {
      * Initialises an Annotation
      * By default this does nothing, but a sub-class may override
      * 
-     * @throws AnnotationException if the Annotation could not be initialised
+     * @throws E if the Annotation could not be initialised
      */
-    public void initialise() throws AnnotationException {
+    public void initialise() throws E {
     }
     
     //<editor-fold desc="getter/setter">

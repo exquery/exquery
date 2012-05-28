@@ -29,9 +29,6 @@ package org.exquery.serialization.annotation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exquery.annotation.AbstractAnnotation;
-import org.exquery.serialization.annotations.SerializationAnnotation;
-import org.exquery.serialization.annotations.SerializationAnnotationErrorCodes;
-import org.exquery.serialization.annotations.SerializationAnnotationException;
 import org.exquery.xquery.Literal;
 
 /**
@@ -39,10 +36,13 @@ import org.exquery.xquery.Literal;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class MethodAnnotation extends AbstractAnnotation implements SerializationAnnotation {
+public class MethodAnnotation extends AbstractAnnotation<SerializationAnnotationException> implements SerializationAnnotation {
     
     private String method;
     
+    /**
+     * 
+     */
     @Override
     public void initialise() throws SerializationAnnotationException {
         super.initialise();

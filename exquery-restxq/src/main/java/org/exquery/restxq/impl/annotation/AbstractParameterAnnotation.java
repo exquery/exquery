@@ -27,9 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
-import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.ParameterAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -54,6 +54,7 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
     /**
      * Checks that the Parameter Annotation is compatible
      * with the function which it annotates
+     * @throws RestAnnotationException If the Parameter could not be parsed
      */
     @Override
     public void initialise() throws RestAnnotationException {

@@ -26,6 +26,16 @@
             <artifactId>exquery-restxq-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency> <!--TODO remove in favour of exquery-annotations? -->
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-serialization-annotations-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-annotations-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>junit</groupId>

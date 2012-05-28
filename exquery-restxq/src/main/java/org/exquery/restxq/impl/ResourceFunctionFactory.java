@@ -30,12 +30,12 @@ import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import org.exquery.EXQueryException;
-import org.exquery.annotations.serialization.SerializationAnnotation;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery3.Annotation;
 
 /**
@@ -47,7 +47,7 @@ public class ResourceFunctionFactory {
     
     public static boolean isResourceFunctionAnnotation(final QName annotationName) {
         return annotationName.getNamespaceURI().equals(Namespace.ANNOTATION_NS)
-                || annotationName.getNamespaceURI().equals(org.exquery.annotations.serialization.Namespace.ANNOTATION_NS);
+                || annotationName.getNamespaceURI().equals(org.exquery.serialization.Namespace.ANNOTATION_NS);
     }
     
     /**
