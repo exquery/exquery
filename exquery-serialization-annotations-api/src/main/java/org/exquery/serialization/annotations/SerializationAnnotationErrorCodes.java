@@ -24,23 +24,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.annotations.serialization;
+package org.exquery.serialization.annotations;
 
-import org.exquery.xquery3.Annotation;
+import org.exquery.serialization.Namespace;
+import javax.xml.namespace.QName;
+import org.exquery.ErrorCodes;
 
 /**
- * Serialization Annotation
- * 
- * The W3C XSLT and XQuery Serialization 3.0 specification
- * describes mechanisms for controlling the serialization
- * of the output of XSLT and XQuery processing.
- * @see http://www.w3.org/TR/xslt-xquery-serialization-30/
- * 
- * These annotations for XQuery 3.0 apply such serialization
- * control mechanisms on a per-function basis in XQuery 3.0
- * 
+ * Error Codes and descriptions for Serialization Annotation Errors
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface SerializationAnnotation extends Annotation {
+public class SerializationAnnotationErrorCodes extends ErrorCodes {
+
+    //output method
+    public static SerializationAnnotationErrorCode SEST0001 = new SerializationAnnotationErrorCode("SEST0001", "It is a static error if a Serialization Output Method Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0002 = new SerializationAnnotationErrorCode("SEST0002", "It is a static error if a Serialization Output Method Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0003 = new SerializationAnnotationErrorCode("SEST0003", "It is a static error if a Serialization Output Method Annotation does not describe a valid output method");
     
+    public static class SerializationAnnotationErrorCode extends ErrorCode {
+
+        private SerializationAnnotationErrorCode(String code, String description) {
+            super(new QName(Namespace.ANNOTATION_ERROR_NS, code, Namespace.ANNOTATION_ERROR_PREFIX), description);
+        }
+    }
 }

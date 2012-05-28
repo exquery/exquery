@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../exquery-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>exquery-serialization-annotations</artifactId>
+    <artifactId>exquery-serialization-annotations-api</artifactId>
     <packaging>jar</packaging>
-    <name>EXQuery XQuery 3.0 Serialization Annotations</name>
-    <description>EXQuery XQuery 3.0 Annotations for XSLT and XQuery Serialization 3.0</description>
+    <name>EXQuery XQuery 3.0 Serialization Annotations API</name>
+    <description>EXQuery XQuery 3.0 Annotations for XSLT and XQuery Serialization 3.0 API</description>
     
     <scm>
         <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->

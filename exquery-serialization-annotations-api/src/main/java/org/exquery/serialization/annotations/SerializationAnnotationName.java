@@ -24,32 +24,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.annotations.serialization;
- 
+package org.exquery.serialization.annotations;
+
+import org.exquery.serialization.Namespace;
+import javax.xml.namespace.QName;
+
 /**
- * Namespace for EXQuery XSLT and XQuery 3.0 Serialization annotations
- *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * Names for the Serialization Annotations
+ * 
+ * @author aretter
  */
-public interface Namespace extends org.exquery.Namespace {
+public enum SerializationAnnotationName {
     
-    /**
-     * The namespace of XSLT and XQuery 3.0 Serialization
-     */
-    public final static String XSLT_XQUERY_SERIALIZATION_NS = "http://www.w3.org/2010/xslt-xquery-serialization";
-    
-    /**
-     * The namespace of EXQuery Annotations for XSLT and XQuery 3.0 Serialization
-     */
-    public final static String ANNOTATION_NS = XSLT_XQUERY_SERIALIZATION_NS;
-    
-    /**
-     * The namespace of EXQuery Annotations for XSLT and XQuery 3.0 Serialization errors
-     */
-    public final static String ANNOTATION_ERROR_NS = ANNOTATION_NS + "/error/";
-    
-    /**
-     * The recommended prefix for the namespace of EXQuery Annotations for XSLT and XQuery 3.0 Serialization errors
-     */
-    public final static String ANNOTATION_ERROR_PREFIX = "serr";
+    method;
+
+    final QName name;
+    SerializationAnnotationName() {
+        this.name = new QName(Namespace.ANNOTATION_NS, name());
+    }
+
+    public static SerializationAnnotationName valueOf(final QName name) { 
+
+        for(SerializationAnnotationName an : SerializationAnnotationName.values()) {
+            if(an.name.equals(name)) {
+                return an;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown name: " + name.toString());
+    }
+
+    public QName getQName() {
+        return name;
+    }
 }
