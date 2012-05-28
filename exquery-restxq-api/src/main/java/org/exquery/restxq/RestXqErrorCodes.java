@@ -30,7 +30,7 @@ import javax.xml.namespace.QName;
 import org.exquery.ErrorCodes;
 
 /**
- * Error Codes and descriptions for RESTXQ
+ * Error Codes and descriptions for RESTXQ errors
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
