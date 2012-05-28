@@ -21,14 +21,14 @@
     </scm>
     
      <dependencies>
-        <dependency> <!--TODO remove in favour of exquery-annotations? -->
+        <dependency>
             <groupId>org.exquery</groupId>
             <artifactId>exquery-restxq-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency> <!--TODO remove in favour of exquery-annotations? -->
+        <dependency>
             <groupId>org.exquery</groupId>
-            <artifactId>exquery-serialization-annotations-api</artifactId>
+            <artifactId>exquery-serialization-annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
