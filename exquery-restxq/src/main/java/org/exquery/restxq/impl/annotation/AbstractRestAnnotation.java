@@ -29,7 +29,6 @@ package org.exquery.restxq.impl.annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.xml.namespace.QName;
 import org.exquery.annotation.AbstractAnnotation;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
@@ -37,7 +36,6 @@ import org.exquery.restxq.annotation.RestAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.FunctionArgument;
-import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 import org.exquery.xquery3.FunctionSignature;
 
@@ -53,10 +51,6 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
      */
     protected final static String functionArgumentRegExp = "\\{\\$((?:[A-Za-z0-9_\\-]+:)?[A-Za-z0-9_\\-]+)\\}";  //TODO make sure this expression is correct - at the moment its too lax for function parameter syntax
     protected final static Pattern functionArgumentPattern = Pattern.compile(functionArgumentRegExp);
-    
-    private FunctionSignature functionSignature;
-    private Literal[] literals;
-    private QName name;
     
     /**
      * Checks that a function declares a named argument with a specific compatible type
