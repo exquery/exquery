@@ -26,11 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import javax.xml.namespace.QName;
-import org.exquery.restxq.Namespace;
-import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.restxq.annotation.RestAnnotationName;
 import org.exquery.xquery3.Annotation;
 
 /**
@@ -54,7 +53,7 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
 
     private void checkForPathAnnotation() throws RestAnnotationException {
         for(Annotation annotation : getFunctionSignature().getAnnotations()) {
-            if(annotation.getName().equals(new QName(Namespace.ANNOTATION_NS, "path"))) { //TODO having this hardcoded QName here is not ideal!
+            if(annotation.getName().equals(RestAnnotationName.path.getQName())) {
                 return;
             }
         }
