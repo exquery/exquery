@@ -44,6 +44,11 @@ public interface Namespace extends org.exquery.Namespace {
     public final static String ANNOTATION_NS = XSLT_XQUERY_SERIALIZATION_NS;
     
     /**
+     * The recommended prefix for the namespace of Serialization
+     */
+    public final static String ANNOTATION_PREFIX = "output";
+    
+    /**
      * The namespace of EXQuery Annotations for XSLT and XQuery 3.0 Serialization errors
      */
     public final static String ANNOTATION_ERROR_NS = ANNOTATION_NS + "/error/";

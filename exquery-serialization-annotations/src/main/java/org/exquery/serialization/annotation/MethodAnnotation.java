@@ -33,6 +33,7 @@ import org.exquery.xquery.Literal;
 
 /**
  * Serialization Method Annotation
+ * i.e. %
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -41,7 +42,13 @@ public class MethodAnnotation extends AbstractAnnotation<SerializationAnnotation
     private String method;
     
     /**
+     * Ensures that the Method Annotation
+     * is compatible with the Function Signature
+     * and extracts the method for later use
+     * and ensures it is supported
      * 
+     * @throws SerializationAnnotationException if the Method Annotation is not compatible
+     * with the function signature or if the method is malformed or unsupported
      */
     @Override
     public void initialise() throws SerializationAnnotationException {

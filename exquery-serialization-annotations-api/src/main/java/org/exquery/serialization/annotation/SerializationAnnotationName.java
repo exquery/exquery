@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.serialization.annotation;
 
-import org.exquery.serialization.Namespace;
 import javax.xml.namespace.QName;
+import org.exquery.serialization.Namespace;
 
 /**
  * Names for the Serialization Annotations
