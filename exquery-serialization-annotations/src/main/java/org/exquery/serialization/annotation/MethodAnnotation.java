@@ -28,16 +28,15 @@ package org.exquery.serialization.annotation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.exquery.annotation.AbstractAnnotation;
 import org.exquery.xquery.Literal;
 
 /**
  * Serialization Method Annotation
- * i.e. %
+ * i.e. %output:method
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class MethodAnnotation extends AbstractAnnotation<SerializationAnnotationException> implements SerializationAnnotation {
+public class MethodAnnotation extends AbstractSerializationAnnotation {
     
     private String method;
     
