@@ -1,4 +1,4 @@
-# XQuery
+# EXQuery
 
 *GitHub code repository for the EXQuery project - [http://www.exquery.org](http://www.exquery.org)*
 
