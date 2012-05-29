@@ -42,7 +42,7 @@ Base Implementation of EXQuery Annotations based on [W3C XSLT and XQuery Seriali
 API for the EXQuery [RESTXQ](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) (RESTful XQuery) Project.
 
 ### exquery-restxq	
-Base Implementation of EXQuery RESTXQ Project, builds on the *exquery-restxq-api*.
+Base Implementation of EXQuery RESTXQ Project, builds on the [exquery-restxq-api](exquery-restxq-api).
 
 ### exquery-distribution
 Maven project for building all modules and creating an EXQuery distribution.
