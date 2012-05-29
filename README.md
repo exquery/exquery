@@ -30,7 +30,7 @@ Abstractions for XQuery 3.0.
 API Abstractions for any EXQuery Annotations project.
 
 ### exquery-annotations-common
-Base Implementation for any EXQuery Annotations project, builds on the [exquery-annotations-common-api](#exquery-annotations-common).
+Base Implementation for any EXQuery Annotations project, builds on the [exquery-annotations-common-api](#exquery-annotations-common-api).
 
 ### exquery-serialization-annotations-api
 API for EXQuery Annotations based on the [W3C XSLT and XQuery Serialization 3.0 specification](http://www.w3.org/TR/xslt-xquery-serialization-30/)
