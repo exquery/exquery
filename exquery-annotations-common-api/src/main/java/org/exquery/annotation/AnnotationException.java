@@ -26,15 +26,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.annotation;
 
-import org.exquery.EXQueryException;
 import org.exquery.ErrorCodes.ErrorCode;
+import org.exquery.ExQueryException;
 
 /**
  * Exception for EXQuery Annotations
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AnnotationException extends EXQueryException {
+public abstract class AnnotationException extends ExQueryException {
     public AnnotationException(final ErrorCode code) {
         super(code.toString());
     }
