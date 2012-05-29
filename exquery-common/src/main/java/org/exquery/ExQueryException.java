@@ -31,13 +31,13 @@ package org.exquery;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class EXQueryException extends Exception {
+public class ExQueryException extends Exception {
 
-    public EXQueryException(final String message) {
+    public ExQueryException(final String message) {
         super(message);
     }
     
-    public EXQueryException(final String message, final Throwable cause) {
+    public ExQueryException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }
