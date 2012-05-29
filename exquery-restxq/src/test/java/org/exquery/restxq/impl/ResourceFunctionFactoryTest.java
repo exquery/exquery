@@ -31,7 +31,7 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import org.exquery.EXQueryException;
+import org.exquery.ExQueryException;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
@@ -50,8 +50,8 @@ import static org.mockito.Mockito.when;
  */
 public class ResourceFunctionFactoryTest {
  
-    @Test(expected=EXQueryException.class)
-    public void create_failsForNonRESTXQAnnotation() throws URISyntaxException, EXQueryException {
+    @Test(expected=ExQueryException.class)
+    public void create_failsForNonRESTXQAnnotation() throws URISyntaxException, ExQueryException {
         
         final QName badName = new QName("http://fake", "fake");
         
@@ -64,8 +64,8 @@ public class ResourceFunctionFactoryTest {
         ResourceFunctionFactory.create(new URI("/fake.xquery"), annotations);
     }
     
-    @Test(expected=EXQueryException.class)
-    public void create_failsForRESTXQAnnotations_Without_PathAnnotation() throws URISyntaxException, EXQueryException {
+    @Test(expected=ExQueryException.class)
+    public void create_failsForRESTXQAnnotations_Without_PathAnnotation() throws URISyntaxException, ExQueryException {
         final QName qnHttpMethodAnnotation = new QName(Namespace.ANNOTATION_NS, "GET");
         final HttpMethodAnnotation mckHttpMethodAnnotation = mock(HttpMethodAnnotation.class);
         
@@ -78,7 +78,7 @@ public class ResourceFunctionFactoryTest {
     }
     
     @Test
-    public void create_succeedsForRESTXQAnnotations_With_PathAnnotation() throws URISyntaxException, EXQueryException {
+    public void create_succeedsForRESTXQAnnotations_With_PathAnnotation() throws URISyntaxException, ExQueryException {
         
         final QName qnPathAnnotation = new QName(Namespace.ANNOTATION_NS, "path");
         final PathAnnotation mckPathAnnotation = mock(PathAnnotation.class);

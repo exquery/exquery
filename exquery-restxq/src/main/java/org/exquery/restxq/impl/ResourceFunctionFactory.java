@@ -29,7 +29,7 @@ package org.exquery.restxq.impl;
 import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import org.exquery.EXQueryException;
+import org.exquery.ExQueryException;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
@@ -60,13 +60,13 @@ public class ResourceFunctionFactory {
      * 
      * @throws EXQueryException if provided annotations are not either RESTXQ or Serialization Annotations
      */
-    public static ResourceFunction create(final URI xQueryLocation, final Set<Annotation> annotations) throws EXQueryException {
+    public static ResourceFunction create(final URI xQueryLocation, final Set<Annotation> annotations) throws ExQueryException {
         final ResourceFunctionImpl resourceFunction = new ResourceFunctionImpl();
         resourceFunction.setXQueryLocation(xQueryLocation);
         
         for(final Annotation annotation : annotations) {
             if(!isResourceFunctionAnnotation(annotation.getName())) {
-                throw new EXQueryException("Annotation is not a valid EXQuery RESTXQ or Serialization Annotation");
+                throw new ExQueryException("Annotation is not a valid EXQuery RESTXQ or Serialization Annotation");
             }
             
             if(annotation instanceof PathAnnotation) {
@@ -81,7 +81,7 @@ public class ResourceFunctionFactory {
         }
         
         if(resourceFunction.getPathAnnotation() == null) {
-            throw new EXQueryException("Resource Function must have a Path Annotation");
+            throw new ExQueryException("Resource Function must have a Path Annotation");
         }
         
         //borrow the function signature from the PathAnnotation which is mandatory (it will be the same anyways)
