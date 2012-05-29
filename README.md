@@ -30,13 +30,13 @@ Abstractions for XQuery 3.0.
 API Abstractions for any EXQuery Annotations project.
 
 ### exquery-annotations-common
-Base Implementation for any EXQuery Annotations project, builds on the *exquery-annotations-common-api*.
+Base Implementation for any EXQuery Annotations project, builds on the [exquery-annotations-common-api](#exquery-annotations-common).
 
 ### exquery-serialization-annotations-api
 API for EXQuery Annotations based on the [W3C XSLT and XQuery Serialization 3.0 specification](http://www.w3.org/TR/xslt-xquery-serialization-30/)
 
 ### exquery-serialization-annotations
-Base Implementation of EXQuery Annotations based on [W3C XSLT and XQuery Serialization 3.0 specification](http://www.w3.org/TR/xslt-xquery-serialization-30/), builds on the *exquery-serialization-annotations-api*.
+Base Implementation of EXQuery Annotations based on [W3C XSLT and XQuery Serialization 3.0 specification](http://www.w3.org/TR/xslt-xquery-serialization-30/), builds on the [exquery-serialization-annotations-api](#exquery-serialization-annotations-api).
 
 ### exquery-restxq-api
 API for the EXQuery [RESTXQ](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) (RESTful XQuery) Project.
