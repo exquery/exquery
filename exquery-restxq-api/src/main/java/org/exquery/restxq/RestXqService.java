@@ -26,6 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq;
 
+import java.util.EnumSet;
+import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.http.HttpResponse;
 
@@ -46,6 +48,14 @@ public interface RestXqService extends Comparable<RestXqService> {
      * @return The ResourceFunction for execution by this service
      */
     public ResourceFunction getResourceFunction();
+    
+    /**
+     * Get the HTTP Methods that this REST XQ Service
+     * can service
+     * 
+     * @return The set of HttpMethods that this Service can service
+     */
+    public EnumSet<HttpMethod> getServicedMethods();
     
     /**
      * Determines if this service can Service the request
