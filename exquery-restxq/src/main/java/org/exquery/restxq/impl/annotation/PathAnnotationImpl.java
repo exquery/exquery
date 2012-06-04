@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.exquery.http.URI;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
@@ -46,41 +47,19 @@ import org.exquery.xquery.Type;
  */
 public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
-    private final static char URI_PATH_SEGMENT_DELIMITER = '/';
-    
-    /**
-     * URI path segment valid characters from RFC 3986
-     * 
-     * http://labs.apache.org/webarch/uri/rfc/rfc3986.html#collected-abnf
-     * 
-     * pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
-     * unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-     * pct-encoded   = "%" HEXDIG HEXDIG
-     * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-     */
-    private final static String unreservedRegExp = "[A-Za-z0-9\\-\\._~]";
-    private final static String pctEncodedRegExp = "%[A-F0-9]{2}";
-    private final static String subDelimsRegExp = "[!\\$&'\\(\\)\\*\\+,;=]";
-    
-    //capturing
-    private final static String cPcharRegExp = "(" + unreservedRegExp + "|" + pctEncodedRegExp + "|" + subDelimsRegExp + "|[\\:@]" + ")+";
-    
-    //non-capturing
-    private final static String ncPcharRegExp = "(?:" + unreservedRegExp + "|" + pctEncodedRegExp + "|" + subDelimsRegExp + "|[\\:@]" + ")+";
-    
     //combines official RFC URI path segment regexp  with our encoded function argument regexp
-    private final static String pathSegmentRegExp = "(?:"  + ncPcharRegExp + "|" + functionArgumentRegExp + ")";
+    public final static String pathSegmentRegExp = "(?:"  + URI.pchar_regExp + "|" + functionArgumentRegExp + ")";
     
     //path segment extractor
-    private final static Pattern ptnPathSegment = Pattern.compile(pathSegmentRegExp);
+    public final static Pattern ptnPathSegment = Pattern.compile(pathSegmentRegExp);
     
     //regexp to validate entire path
-    private final static String pathRegExp = "^(?:" + URI_PATH_SEGMENT_DELIMITER + "?" + pathSegmentRegExp + ")+$";
+    public final static String pathRegExp = "^(?:" + URI.PATH_SEGMENT_DELIMITER + "?" + pathSegmentRegExp + ")+$";
     
     //validator for Path
-    private final static Pattern ptnPath = Pattern.compile(pathRegExp);
+    public final static Pattern ptnPath = Pattern.compile(pathRegExp);
     
-    private PathRegularExpression pathMatcherAndGroupParamNames;
+    private PathRegularExpression pathRegularExpression;
     
     private int pathSegmentCount = -1;
     
@@ -97,7 +76,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     @Override
     public void initialise() throws RestAnnotationException {
         super.initialise();
-        this.pathMatcherAndGroupParamNames = parsePath(); 
+        this.pathRegularExpression = parsePath(); 
     }
     
     /**
@@ -105,7 +84,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
      */
     @Override
     public boolean matchesPath(final String path) {
-        final Matcher m = getPathMatcherAndParamIndicies().getPathMatcher(path);
+        final Matcher m = getPathRegularExpression().getPathMatcher(path);
         return m.matches();
     }
     
@@ -116,12 +95,12 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     public Map<String, String> extractPathParameters(final String uriPath) {
         
         final Map<String, String> pathParamNameAndValues = new HashMap<String, String>();        
-        final Matcher m = getPathMatcherAndParamIndicies().getPathMatcher(uriPath);        
+        final Matcher m = getPathRegularExpression().getPathMatcher(uriPath);        
 
         if(m.matches()) {
             for(int i = 1 ; i <= m.groupCount(); i++) {
 
-                final String paramName = getPathMatcherAndParamIndicies().getFnParamNameForGroup(i);
+                final String paramName = getPathRegularExpression().getFnParamNameForGroup(i);
                 final String paramValue = m.group(i);
 
                 pathParamNameAndValues.put(paramName, paramValue);
@@ -139,21 +118,21 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     }
     
     /**
-     * Get the Path Matcher and Parameter Indices
-     * 
-     * @return The Path Pattern and Group Parameter Names
-     */
-    protected PathRegularExpression getPathMatcherAndParamIndicies(){
-        return pathMatcherAndGroupParamNames;
-    }
-    
-    /**
      * Set the Path Segment Count of the URI
      * 
      * @param pathSegmentCount The number of Segments in the Path
      */
     protected void setPathSegmentCount(int pathSegmentCount) {
         this.pathSegmentCount = pathSegmentCount;
+    }
+    
+    /**
+     * Get the Path Regular Expression
+     * 
+     * @return The Path Regular Expression
+     */
+    protected PathRegularExpression getPathRegularExpression(){
+        return pathRegularExpression;
     }
     
     /**
@@ -203,16 +182,15 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
             final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegment);
 
-            thisPathExprRegExp.append(URI_PATH_SEGMENT_DELIMITER);
+            thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
 
             if(mtcFnParameter.matches()) {
                 //is a path function parameter
                 final String fnParamName = mtcFnParameter.replaceFirst("$1");
                 pathFnParams.add(fnParamName);
 
-                //thisPathExprRegExp.append(cPcharRegExp);
                 thisPathExprRegExp.append("(");
-                thisPathExprRegExp.append(ncPcharRegExp);
+                thisPathExprRegExp.append(URI.pchar_regExp);
                 thisPathExprRegExp.append(")");
 
                 //record the position of the param in the path
