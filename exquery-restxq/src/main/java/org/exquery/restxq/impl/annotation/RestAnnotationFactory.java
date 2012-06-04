@@ -84,7 +84,7 @@ public class RestAnnotationFactory {
         }
     }
 
-    private static RestAnnotation getRESTAnnotation(final Annotation annotation) throws RestAnnotationException {
+    protected static RestAnnotation getRESTAnnotation(final Annotation annotation) throws RestAnnotationException {
         final RestAnnotationName an = RestAnnotationName.valueOf(annotation.getName());
         
         final AbstractRestAnnotation restAnnotation;

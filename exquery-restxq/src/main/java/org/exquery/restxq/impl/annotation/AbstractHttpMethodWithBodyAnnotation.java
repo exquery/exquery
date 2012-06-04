@@ -27,9 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
-import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.HttpMethodWithBodyAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -61,7 +61,14 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
         return bodyParameterName;
     }
     
-    private String parseAnnotationValue() throws RestAnnotationException {
+    /**
+     * Extract the value of the HTTP Method Annotation
+     * 
+     * @return The body content literal
+     * 
+     * @throws RestAnnotationException if the annotation literal cannot be correctly parsed
+     */
+    protected String parseAnnotationValue() throws RestAnnotationException {
         final Literal[] annotationLiterals = getLiterals();
         
         if(annotationLiterals.length > 1) {
@@ -73,7 +80,17 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
         }
     }
     
-    private String parseMethodBodyValue(final Literal methodValue) throws RestAnnotationException {
+    /**
+     * Parses the literal value of the HTTP Method annotation
+     * i.e. the variable binding for the body content
+     * 
+     * @param methodValue The Literal to parse
+     * @return The extracted Literal value
+     * 
+     * @throws RestAnnotationException if the literal is invalid or
+     * the variable it binds does not match the function signature
+     */
+    protected String parseMethodBodyValue(final Literal methodValue) throws RestAnnotationException {
         
         if(methodValue.getType() != Type.STRING) {
             throw new RestAnnotationException(RestXqErrorCodes.RQST0011);

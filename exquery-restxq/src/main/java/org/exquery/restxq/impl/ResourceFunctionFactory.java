@@ -58,7 +58,7 @@ public class ResourceFunctionFactory {
      * 
      * @return The Resource Function
      * 
-     * @throws EXQueryException if provided annotations are not either RESTXQ or Serialization Annotations
+     * @throws ExQueryException if provided annotations are not either RESTXQ or Serialization Annotations
      */
     public static ResourceFunction create(final URI xQueryLocation, final Set<Annotation> annotations) throws ExQueryException {
         final ResourceFunctionImpl resourceFunction = new ResourceFunctionImpl();

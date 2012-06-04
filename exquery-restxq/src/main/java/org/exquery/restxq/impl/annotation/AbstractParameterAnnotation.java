@@ -46,15 +46,16 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
      * Determines whether a particular Parameter Annotation
      * can provide a default value if no value is present
      * 
-     * @return true if the Parameter Annotation can provide a default
-     * value
+     * @return true if the Parameter Annotation can
+     * provide a default value
      */
     protected abstract boolean canProvideDefaultValue();
 
     /**
      * Checks that the Parameter Annotation is compatible
      * with the function which it annotates
-     * @throws RestAnnotationException If the Parameter could not be parsed
+     *
+     * @throws RestAnnotationException if the Parameter could not be parsed
      */
     @Override
     public void initialise() throws RestAnnotationException {
@@ -62,11 +63,22 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         this.parameterAnnotationMapping = parseAnnotationValue();
     }    
     
+    /**
+     * Get the Parameter Annotation Mapping
+     * 
+     * @return The Parameter Annotation Mapping
+     */
     protected ParameterAnnotationMapping getParameterAnnotationMapping() {
         return parameterAnnotationMapping;
     }
     
-    private ParameterAnnotationMapping parseAnnotationValue() throws RestAnnotationException {
+    /**
+     * Parses the Parameter Annotation Value
+     * 
+     * @return The Parameter to Argument Mapping described by the Parameter Annotation
+     * @throws RestAnnotationException if the Parameter annotations mapping is invalid
+     */
+    protected ParameterAnnotationMapping parseAnnotationValue() throws RestAnnotationException {
         final Literal[] annotationLiterals = getLiterals();
         
         if(canProvideDefaultValue()) {
@@ -82,7 +94,18 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         return parseAnnotationLiterals(annotationLiterals[0], annotationLiterals[1], annotationLiterals.length == 3 ? annotationLiterals[2] : null);
     }
     
-    private ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Literal defaultValue) throws RestAnnotationException {
+    /**
+     * Parses the Parameter Annotations Literal Values
+     * 
+     * @param parameterName The name of the Parameter
+     * @param functionArgumentName The name of the Function Argument
+     * @param defaultValue The default value if provided, or null otherwise
+     * 
+     * @return A description of the mapping between the Parameter and the Function Argument
+     * 
+     * @throws RestAnnotationException if the mapping is invalid
+     */
+    protected ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Literal defaultValue) throws RestAnnotationException {
         if(parameterName.getType() != Type.STRING) {
             throw new RestAnnotationException(getInvalidParameterNameErr());
         }
@@ -91,7 +114,6 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
             throw new RestAnnotationException(getInvalidFunctionArgumentNameErr());
         }
         
-        //TODO eXist-db's Type System needs some fixing before we can properly tell what a xs:anySimpleType is
         if(defaultValue != null && !defaultValue.getType().isSubTypeOf(Type.ANY_SIMPLE_TYPE)) {
             throw new RestAnnotationException(getInvalidDefaultValueErr());
         }

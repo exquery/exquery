@@ -44,6 +44,8 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
     /**
      * Checks that a Path Annotation is present
      * as you cannot have a Method Annotation without a Path Annotation
+     * 
+     * @throws RestAnnotationException if the initialisation of this annotation fails
      */
     @Override
     public void initialise() throws RestAnnotationException {
@@ -51,7 +53,14 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
         checkForPathAnnotation();
     }
 
-    private void checkForPathAnnotation() throws RestAnnotationException {
+    /**
+     * Ensures that the Resource Function which declared
+     * this HTTP Method Annotation, also declares a Path Annotation
+     * 
+     * @throws RestAnnotationException if the ResourceFunction
+     * does not also declare a Path Annotation
+     */
+    protected void checkForPathAnnotation() throws RestAnnotationException {
         for(Annotation annotation : getFunctionSignature().getAnnotations()) {
             if(annotation.getName().equals(RestAnnotationName.path.getQName())) {
                 return;

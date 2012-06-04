@@ -80,7 +80,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     //validator for Path
     private final static Pattern ptnPath = Pattern.compile(pathRegExp);
     
-    private PathPatternAndGroupParamNames pathMatcherAndGroupParamNames;
+    private PathRegularExpression pathMatcherAndGroupParamNames;
     
     private int pathSegmentCount = -1;
     
@@ -138,15 +138,32 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         return pathSegmentCount;
     }
     
-    private PathPatternAndGroupParamNames getPathMatcherAndParamIndicies(){
+    /**
+     * Get the Path Matcher and Parameter Indices
+     * 
+     * @return The Path Pattern and Group Parameter Names
+     */
+    protected PathRegularExpression getPathMatcherAndParamIndicies(){
         return pathMatcherAndGroupParamNames;
     }
     
-    private void setPathSegmentCount(int pathSegmentCount) {
+    /**
+     * Set the Path Segment Count of the URI
+     * 
+     * @param pathSegmentCount The number of Segments in the Path
+     */
+    protected void setPathSegmentCount(int pathSegmentCount) {
         this.pathSegmentCount = pathSegmentCount;
     }
     
-    private PathPatternAndGroupParamNames parsePath() throws RestAnnotationException {
+    /**
+     * Parses the Path literal of a Path Annotation
+     * 
+     * @return The Path Pattern and Group Parameter Names in the Pattern
+     * 
+     * @throws RestAnnotationException if the Path literal is invalid
+     */
+    protected PathRegularExpression parsePath() throws RestAnnotationException {
         
         final Literal[] annotationValue = getLiterals();
         
@@ -216,24 +233,49 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         //we now have a pattern for matching the URI path!
         final Pattern ptnThisPath = Pattern.compile(thisPathExprRegExp.toString());
 
-        return new PathPatternAndGroupParamNames(ptnThisPath, groupParamNames);
+        return new PathRegularExpression(ptnThisPath, groupParamNames);
     }
     
-    private class PathPatternAndGroupParamNames {
+    /**
+     * Represents a Regular Expression describing the Path
+     * with the Parameters of the Path setup as Groups in the Expression
+     * 
+     * Contains both the Expression and a Map of Group indices to Parameter Names
+     */
+    protected class PathRegularExpression {
         final Pattern ptnPath;
         final Map<Integer, String> groupParamNames;
         
-        public PathPatternAndGroupParamNames(final Pattern ptnPath, final Map<Integer, String> groupParamNames) {
+        public PathRegularExpression(final Pattern ptnPath, final Map<Integer, String> groupParamNames) {
             this.ptnPath = ptnPath;
             this.groupParamNames = groupParamNames;
         }
 
+        /**
+         * Gets a Matcher for the Path Regular Expression
+         * The Matcher enables you to process a Path
+         * 
+         * Note: Matchers are not thread safe, but can be
+         * sequentially reused by calling .reset(str)
+         * 
+         * @param path A Path to process with the Path Regular Expression
+         * 
+         * @return The Mather for the Path Regular Expression
+         */
         public Matcher getPathMatcher(final String path) {
             return ptnPath.matcher(path);
         }
 
-        public String getFnParamNameForGroup(final int groupId) {
-            return groupParamNames.get(groupId);
+        /**
+         * Gets the Parameter Name for a Group in the Path Regular Expression
+         * 
+         * @param groupIndex The index of the Group in the Regular Expression
+         *
+         * @return The name of the Parameter for which a value
+         * extracted by the Group at the index is provided
+         */
+        public String getFnParamNameForGroup(final int groupIndex) {
+            return groupParamNames.get(groupIndex);
         }
     }
 }

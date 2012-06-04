@@ -40,7 +40,7 @@ public class ParameterAnnotationMapping {
     public final String parameterName;
     public final String functionArgumentName;
     public final Literal defaultValue;
-
+    
     public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName) {
         this.parameterName = parameterName;
         this.functionArgumentName = functionArgumentName;
@@ -53,14 +53,31 @@ public class ParameterAnnotationMapping {
         this.defaultValue = defaultValue;
     }
     
+    /**
+     * Get the Parameter's name
+     * 
+     * @return The Parameter's name
+     */
     public String getParameterName() {
         return parameterName;
     }
 
+    /**
+     * Get the Function Argument's name
+     * 
+     * @return The Function Argument's name
+     */
     public String getFunctionArgumentName() {
         return functionArgumentName;
     }
     
+    /**
+     * Get the Default Value for the Function Argument
+     * 
+     * @return The default value for the
+     * function argument, or null if there
+     * is no default value
+     */
     public Literal getDefaultValue() {
         return defaultValue;
     }
