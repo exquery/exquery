@@ -47,6 +47,8 @@ import org.exquery.xquery3.FunctionSignature;
  */
 public interface ResourceFunction {
     
+    //TODO should perhaps consider that ResourceFunction should extend org.exquery.xquery3.Function
+    
     /**
      * Gets the URI of the XQuery that contains this Resource Function
      * 
