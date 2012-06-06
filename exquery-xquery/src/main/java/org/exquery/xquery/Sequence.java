@@ -35,7 +35,8 @@ import java.util.Iterator;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface Sequence {
+public interface Sequence extends Iterable<TypedValue> {
     
+    @Override
     public Iterator<TypedValue> iterator();
 }
