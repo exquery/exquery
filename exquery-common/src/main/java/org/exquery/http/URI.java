@@ -26,8 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
-import java.util.regex.Pattern;
-
 /**
  * URI concepts from RFC 3986
  * 
