@@ -94,6 +94,7 @@ public class MethodAnnotation extends AbstractSerializationAnnotation {
     public static enum SupportedMethod {
         xml,
         xhtml,
+        html,
         html5,
         json,
         text,
