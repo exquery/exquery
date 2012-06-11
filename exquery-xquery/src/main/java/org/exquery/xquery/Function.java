@@ -26,17 +26,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.xquery;
 
-import java.util.Iterator;
+import java.util.Set;
 
 /**
- * Model of a Sequence from W3C XQuery 1.0 and XPath 2.0 Data Model (XDM)
- * 
- * @see http://www.w3.org/TR/xpath-datamodel/#types
+ * Represents an XQuery 1.0 Function
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface Sequence<T> extends Iterable<TypedValue<T>> {
+public interface Function {
     
-    @Override
-    public Iterator<TypedValue<T>> iterator();
+    /**
+     * Get the signature of the function
+     * 
+     * @return The function signature
+     */
+    public FunctionSignature getFunctionSignature();
+    
+    /**
+     * Execute the Function
+     * 
+     * @param arguments The arguments to the function
+     * @return The result of the function
+     */
+    public Sequence execute(final Set<TypedArgumentValue> arguments);
 }

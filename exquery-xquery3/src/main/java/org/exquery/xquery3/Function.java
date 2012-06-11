@@ -24,19 +24,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.xquery;
-
-import java.util.Iterator;
+package org.exquery.xquery3;
 
 /**
- * Model of a Sequence from W3C XQuery 1.0 and XPath 2.0 Data Model (XDM)
- * 
- * @see http://www.w3.org/TR/xpath-datamodel/#types
+ * Represents an XQuery 3.0 Function
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface Sequence<T> extends Iterable<TypedValue<T>> {
+public interface Function extends org.exquery.xquery.Function {
     
+    /**
+     * @see org.exquery.xquery.Function#getFunctionSignature()
+     */
     @Override
-    public Iterator<TypedValue<T>> iterator();
+    public FunctionSignature getFunctionSignature();
 }

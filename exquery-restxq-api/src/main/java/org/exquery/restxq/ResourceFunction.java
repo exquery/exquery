@@ -32,6 +32,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.serialization.annotation.SerializationAnnotation;
+import org.exquery.xquery3.Function;
 import org.exquery.xquery3.FunctionSignature;
 
 /**
@@ -45,7 +46,7 @@ import org.exquery.xquery3.FunctionSignature;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface ResourceFunction {
+public interface ResourceFunction extends Function {
     
     //TODO should perhaps consider that ResourceFunction should extend org.exquery.xquery3.Function
     
@@ -61,6 +62,7 @@ public interface ResourceFunction {
      * 
      * @return The Function Signature of the Resource Function
      */
+    @Override
     public FunctionSignature getFunctionSignature();
     
     /**

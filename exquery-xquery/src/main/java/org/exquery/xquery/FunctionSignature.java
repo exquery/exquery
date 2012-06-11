@@ -45,14 +45,14 @@ public interface FunctionSignature {
     /**
      * Get the number of arguments expected by the function
      * 
-     * @param The number of arguments 
+     * @return The number of arguments 
      */
     public int getArgumentCount();
     
     /**
      * Get the arguments expected by the function
      * 
-     * @param The function arguments
+     * @return The function arguments
      */
     public FunctionArgument[] getArguments();
 }

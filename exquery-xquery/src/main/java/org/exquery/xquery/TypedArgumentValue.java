@@ -47,5 +47,5 @@ public interface TypedArgumentValue<T> {
      * 
      * @return The Typed Value
      */
-    public TypedValue<T> getTypedValue();
+    public Sequence<T> getTypedValue();
 }
