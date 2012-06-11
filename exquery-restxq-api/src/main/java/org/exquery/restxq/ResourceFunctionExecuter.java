@@ -24,21 +24,27 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.xquery;
+package org.exquery.restxq;
 
 import java.util.Set;
+import org.exquery.xquery.Sequence;
+import org.exquery.xquery.TypedArgumentValue;
 
 /**
- * Represents an XQuery 1.0 Function
+ * Executes a Resource Function
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface Function {
+public interface ResourceFunctionExecuter {
     
     /**
-     * Get the signature of the function
+     * Execute the Function
      * 
-     * @return The function signature
+     * @param resourceFunction The Resource Function to execute
+     * 
+     * @param arguments The arguments to the function
+     * 
+     * @return The result of the function
      */
-    public FunctionSignature getFunctionSignature();
+    public Sequence execute(final ResourceFunction resourceFunction, final Set<TypedArgumentValue> arguments);
 }

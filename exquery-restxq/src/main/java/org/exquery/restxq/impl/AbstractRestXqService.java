@@ -34,6 +34,7 @@ import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.http.HttpResponse;
 import org.exquery.restxq.ResourceFunction;
+import org.exquery.restxq.ResourceFunctionExecuter;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
@@ -99,11 +100,11 @@ public abstract class AbstractRestXqService implements RestXqService {
      * @see org.exquery.restxq.RestXqService#service(org.exquery.http.HttpRequest, org.exquery.http.HttpResponse)
      */
     @Override
-    public void service(final HttpRequest request, final HttpResponse response) throws RestXqServiceException {
+    public void service(final HttpRequest request, final HttpResponse response, final ResourceFunctionExecuter resourceFunctionExecuter) throws RestXqServiceException {
         
         final Set<TypedArgumentValue> typedArgumentValues = extractParameters(request);
         
-        final Sequence result = getResourceFunction().execute(typedArgumentValues);
+        final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues);
         
         getRestXqServiceSerializer().serialize(result, getResourceFunction().getSerializationAnnotations(), response);
         
