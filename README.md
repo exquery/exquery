@@ -2,6 +2,8 @@
 
 *GitHub code repository for the EXQuery project - [http://www.exquery.org](http://www.exquery.org)*
 
+[![Build Status](https://secure.travis-ci.org/exquery/exquery.png)](http://travis-ci.org/exquery/exquery)
+
 The main thing here at the moment apart from simple abstractions for dealing with XQuery 1.0 and XQuery 3.0 concepts, is the [RESTXQ](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) Project.
 A simple presentation on RESTXQ can be found [here](http://www.adamretter.org.uk/presentations/restxq_mugl_20120308.pdf).
 
