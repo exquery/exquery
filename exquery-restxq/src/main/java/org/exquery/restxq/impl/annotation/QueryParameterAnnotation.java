@@ -26,13 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
+import java.util.Iterator;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.xquery.Literal;
+import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedArgumentValue;
 import org.exquery.xquery.TypedValue;
+import org.exquery.xquery.impl.SequenceImpl;
+import org.exquery.xquery.impl.StringValue;
 
 /**
  * Implementation of RESTXQ Query Parameter Annotation
@@ -66,33 +70,13 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
             }
 
             @Override
-            public TypedValue<String> getTypedValue() {
+            public Sequence<String> getTypedValue() {
                 final Object queryParam = request.getQueryParam(getParameterAnnotationMapping().getParameterName());
                 if(queryParam == null) {
                     final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new TypedValue<String>(){
-                        @Override
-                        public Type getType() {
-                            return defaultLiteral.getType();
-                        }
-
-                        @Override
-                        public String getValue() {
-                           return defaultLiteral.getValue();
-                        }
-                    };
+                    return new SequenceImpl<String>(new StringValue(defaultLiteral.getValue()));
                 } else if(queryParam instanceof String) {
-                    return new TypedValue<String>(){
-                        @Override
-                        public Type getType() {
-                            return Type.STRING;
-                        }
-
-                        @Override
-                        public String getValue() {
-                            return (String)queryParam;
-                        }
-                    };
+                    return new SequenceImpl<String>(new StringValue((String)queryParam));
                 }
                 
                 //TODO cope with the situation whereby there may be more than a single value

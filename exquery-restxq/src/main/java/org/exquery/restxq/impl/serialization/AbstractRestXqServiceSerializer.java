@@ -206,11 +206,43 @@ public abstract class AbstractRestXqServiceSerializer {
         }
     }
     
+    /**
+     * Serialize the Result as Binary content
+     * 
+     * @param result The result to serialize as Binary, typically a sequence of one or more xs:base64Binary or xs:hexBinary
+     * @param response The HTTP Response to serialize the result to
+     * 
+     * @throws RestXqServiceException If an error occurred whilst serializing the result
+     */
     protected abstract void serializeBinaryBody(final TypedValue result, final HttpResponse response) throws RestXqServiceException;
     
+    /**
+     * Serialize the Result
+     * 
+     * The method for serialization can be obtained from
+     * the map of Serialization properties using
+     * the key SerializationProperty.method, if the method
+     * is missing or null, then XML should be assumed.
+     * 
+     * @param result The result to serialize, typically a sequence of one or more documents
+     * @param response The HTTP Response to serialize the result to
+     * 
+     * @throws RestXqServiceException If an error occurred whilst serializing the result
+     */
     protected abstract void serializeNodeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> properties) throws RestXqServiceException;
     
-    public void serializeExceptionResponse(final HttpResponse response, final XmlWriter writer, final Exception e) throws RestXqServiceException {
+    
+    /**
+     * Serialize the Java Exception
+     * 
+     * Provides a simple serialization of a Java Exception
+     * 
+     * @param e The Exception to serialize
+     * @param writer The XML Writer which will receive the exception
+     * 
+     * @throws RestXqServiceException if an error occurs during serialization
+     */
+    public void serializeExceptionResponse(final Exception e, final XmlWriter writer) throws RestXqServiceException {
         
         try {
             writer.setProperties(getDefaultSerializationProperties());
@@ -250,7 +282,15 @@ public abstract class AbstractRestXqServiceSerializer {
         }
     }
     
-    private Attribute attribute(final QName name, final String value) {
+    /**
+     * Constructs a simple Attribute
+     * 
+     * @param name The name of the attribute
+     * @param value The value of the attribute
+     * 
+     * @return The attribute
+     */
+    protected Attribute attribute(final QName name, final String value) {
         return new Attribute() {
             @Override
             public QName getName() {

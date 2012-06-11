@@ -27,9 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.exquery.http.HttpMethod;
@@ -95,14 +93,19 @@ public abstract class AbstractRestXqService implements RestXqService {
                 && getResourceFunction().getPathAnnotation().matchesPath(request.getPath());
     }
     
+    /**
+     * Service the request and send the response
+     * 
+     * @see org.exquery.restxq.RestXqService#service(org.exquery.http.HttpRequest, org.exquery.http.HttpResponse)
+     */
     @Override
     public void service(final HttpRequest request, final HttpResponse response) throws RestXqServiceException {
         
-        final Map<String, Sequence> typedArgumentValues = extractParameters(request);
+        final Set<TypedArgumentValue> typedArgumentValues = extractParameters(request);
         
         final Sequence result = getResourceFunction().execute(typedArgumentValues);
         
-        getRestXqServiceSerializer().serialize(result, response);
+        getRestXqServiceSerializer().serialize(result, getResourceFunction().getSerializationAnnotations(), response);
         
         /*
         final CompiledHTTPRESTfulXQueryCache cache = CompiledHTTPRESTfulXQueryCache.getInstance();
@@ -182,27 +185,59 @@ public abstract class AbstractRestXqService implements RestXqService {
      *
      * @throws RestXqServiceException If an error occured whilst processing the request
      */
-    protected Map<String, Sequence> extractParameters(final HttpRequest request) throws RestXqServiceException {
+    protected Set<TypedArgumentValue> extractParameters(final HttpRequest request) throws RestXqServiceException {
         
-        final Map<String, Sequence> paramNameValues = new HashMap<String, Sequence>();
+        final Set<TypedArgumentValue> paramNameValues = new HashSet<TypedArgumentValue>();
         
         //extract the param mappings for the Path Annotation
-        for(Entry<String, String> pathParameter : getResourceFunction().getPathAnnotation().extractPathParameters(request.getPath()).entrySet()) {
-            paramNameValues.put(pathParameter.getKey(), new SequenceImpl(new StringValue(pathParameter.getValue())));
+        for(final Entry<String, String> pathParameter : getResourceFunction().getPathAnnotation().extractPathParameters(request.getPath()).entrySet()) {
+            
+            paramNameValues.add(new TypedArgumentValue<String>(){
+                @Override
+                public String getArgumentName() {
+                    return pathParameter.getKey();
+                }
+
+                @Override
+                public Sequence<String> getTypedValue() {
+                    return new SequenceImpl<String>(new StringValue(pathParameter.getValue()));
+                }
+            });
         }
         
         //extract the param mappings for the Body Content Annotations
         if(!getBodyContentAnnotations().isEmpty()) {
             final Sequence requestBody = extractRequestBody(request);
             for(final HttpMethodWithBodyAnnotation bodyContentAnnotation : getBodyContentAnnotations()) {
-                paramNameValues.put(bodyContentAnnotation.getBodyParameterName(), requestBody);
+                paramNameValues.add(new TypedArgumentValue(){
+                    @Override
+                    public String getArgumentName() {
+                        return bodyContentAnnotation.getBodyParameterName();
+                    }
+
+                    @Override
+                    public Sequence getTypedValue() {
+                        return requestBody;
+                    }
+                });
             }
         }
         
         //extract the param mappings for Param Annotations
         for(final ParameterAnnotation parameterAnnotation : getResourceFunction().getParameterAnnotations()) {
             final TypedArgumentValue typedArgumentValue = parameterAnnotation.extractParameter(request);
-            paramNameValues.put(typedArgumentValue.getArgumentName(), new SequenceImpl(typedArgumentValue.getTypedValue()));
+            paramNameValues.add(new TypedArgumentValue(){
+
+                @Override
+                public String getArgumentName() {
+                    return typedArgumentValue.getArgumentName();
+                }
+
+                @Override
+                public Sequence getTypedValue() {
+                    return new SequenceImpl(typedArgumentValue.getTypedValue());
+                }
+            });
         }
         
         return paramNameValues;

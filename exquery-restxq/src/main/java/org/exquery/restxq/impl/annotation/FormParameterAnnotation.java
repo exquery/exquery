@@ -31,9 +31,12 @@ import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.xquery.Literal;
+import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedArgumentValue;
 import org.exquery.xquery.TypedValue;
+import org.exquery.xquery.impl.SequenceImpl;
+import org.exquery.xquery.impl.StringValue;
 
 /**
  * Implementation of RESTXQ Form Parameter Annotation
@@ -77,37 +80,15 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
             }
 
             @Override
-            public TypedValue getTypedValue() {
+            public Sequence getTypedValue() {
                 final Object formParam = request.getFormParam(getParameterAnnotationMapping().getParameterName());
                 if(formParam == null) {
                     final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new TypedValue<String>() {
-
-                        @Override
-                        public Type getType() {
-                            return defaultLiteral.getType();
-                        }
-
-                        @Override
-                        public String getValue() {
-                            return defaultLiteral.getValue();
-                        }
-                    };
+                    return new SequenceImpl(new StringValue(defaultLiteral.getValue()));
                 }
                 
                 if(formParam instanceof String) {
-                    return new TypedValue<String>() {
-
-                        @Override
-                        public Type getType() {
-                            return Type.STRING;
-                        }
-
-                        @Override
-                        public String getValue() {
-                            return (String)formParam;
-                        }
-                    };
+                    return new SequenceImpl(new StringValue((String)formParam));
                 }
                 
                 //TODO cope with the situation whereby there may be more than a single value
@@ -129,8 +110,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
                         //TODO log
                         return null;
                     }*/
-                    return new TypedValue<InputStream>() {
-
+                    return new SequenceImpl<InputStream>(new TypedValue<InputStream>(){
                         @Override
                         public Type getType() {
                             return Type.BASE64_BINARY;
@@ -140,7 +120,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
                         public InputStream getValue() {
                             return (InputStream)formParam;
                         }
-                    };
+                    });
                 }
                 
                 return null;

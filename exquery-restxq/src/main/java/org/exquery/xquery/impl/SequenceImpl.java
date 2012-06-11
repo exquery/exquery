@@ -35,21 +35,23 @@ import org.exquery.xquery.TypedValue;
 /**
  * Simple Implementation of Sequence
  *
+ * @param <T> The Type of the items in the Sequence, if they are all of the same type
+ * 
  * @author Adam Reter <adam.retter@googlemail.com>
  */
-public class SequenceImpl implements Sequence {
+public class SequenceImpl<T> implements Sequence<T> {
 
-    private final List<TypedValue> sequence = new ArrayList<TypedValue>();
+    private final List<TypedValue<T>> sequence = new ArrayList<TypedValue<T>>();
     
     public SequenceImpl() {
     }
     
-    public SequenceImpl(final TypedValue value) {
+    public SequenceImpl(final TypedValue<T> value) {
         sequence.add(value);
     }
     
-    public SequenceImpl(final Sequence other) {
-        for(final TypedValue value : other) {
+    public SequenceImpl(final Sequence<T> other) {
+        for(final TypedValue<T> value : other) {
             sequence.add(value);
         }
     }
@@ -59,7 +61,7 @@ public class SequenceImpl implements Sequence {
     }
     
     @Override
-    public Iterator<TypedValue> iterator() {
+    public Iterator<TypedValue<T>> iterator() {
         return sequence.iterator();
     }   
 }
