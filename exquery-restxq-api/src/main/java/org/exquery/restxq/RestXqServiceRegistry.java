@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq;
 
-import java.util.Set;
 import org.exquery.http.HttpRequest;
 
 /**
