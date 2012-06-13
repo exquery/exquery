@@ -48,7 +48,7 @@ public interface RestXqServiceRegistry {
      *
      * @param services The Services to register with the registry
      */
-    public void register(Set<RestXqService> services);
+    public void register(Iterable<RestXqService> services);
     
     
     /**

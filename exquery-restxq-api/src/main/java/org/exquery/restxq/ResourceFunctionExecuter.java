@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq;
 
-import java.util.Set;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.TypedArgumentValue;
 
@@ -46,5 +45,5 @@ public interface ResourceFunctionExecuter {
      * 
      * @return The result of the function
      */
-    public Sequence execute(final ResourceFunction resourceFunction, final Set<TypedArgumentValue> arguments);
+    public Sequence execute(final ResourceFunction resourceFunction, final Iterable<TypedArgumentValue> arguments);
 }
