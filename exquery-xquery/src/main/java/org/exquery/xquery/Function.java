@@ -26,8 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.xquery;
 
-import java.util.Set;
-
 /**
  * Represents an XQuery 1.0 Function
  *
