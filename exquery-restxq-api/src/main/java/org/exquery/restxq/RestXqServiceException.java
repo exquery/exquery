@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq;
 
 import org.exquery.ExQueryException;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 
 /**
  * Exception for RESTXQ Services
@@ -41,5 +42,9 @@ public class RestXqServiceException extends ExQueryException {
 
     public RestXqServiceException(final String message, final Throwable cause) {
         super(message, cause);
+    }
+    
+    public RestXqServiceException(final RestXqErrorCode code, final Throwable cause) {
+        super(code.toString(), cause);
     }
 }

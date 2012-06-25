@@ -56,22 +56,23 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0011 = new RestXqErrorCode("RQST0011", "It is a static error if a REST content method Annotation is not a literal String");
     public static RestXqErrorCode RQST0012 = new RestXqErrorCode("RQST0012", "It is a static error if a REST content method Annotation has a value and it is empty");
     public static RestXqErrorCode RQST0013 = new RestXqErrorCode("RQST0013", "It is a static error if a REST content method Annotation does not describe a function parameter");
+    public static RestXqErrorCode RQST0014 = new RestXqErrorCode("RQDY0014", "It is a dynamic error if a REST content method Annotation cannot extract the Request body of which the annotation describes");
     
     //form-param annotation errors
-    public static RestXqErrorCode RQST0014 = new RestXqErrorCode("RQST0014", "It is a static error if a REST form-param Annotation does not have two or three literal values");
-    public static RestXqErrorCode RQST0015 = new RestXqErrorCode("RQST0015", "It is a static error if a REST form-param Annotations form field is not a literal String or is an empty literal String");
-    public static RestXqErrorCode RQST0016 = new RestXqErrorCode("RQST0016", "It is a static error if a REST form-param Annotations function parameter is not a literal String or is an empty literal String");
-    public static RestXqErrorCode RQST0017 = new RestXqErrorCode("RQST0017", "It is a static error if a REST form-param Annotations default value is present and is not a simple type");
-    public static RestXqErrorCode RQST0018 = new RestXqErrorCode("RQST0018", "It is a static error if a REST form-param Annotations default value is present and is not a super-type of function parameter to which it maps");
-    public static RestXqErrorCode RQST0019 = new RestXqErrorCode("RQST0019", "It is a static error if a REST form-param Annotation function parameter does not describe a function parameter");
+    public static RestXqErrorCode RQST0015 = new RestXqErrorCode("RQST0015", "It is a static error if a REST form-param Annotation does not have two or three literal values");
+    public static RestXqErrorCode RQST0016 = new RestXqErrorCode("RQST0016", "It is a static error if a REST form-param Annotations form field is not a literal String or is an empty literal String");
+    public static RestXqErrorCode RQST0017 = new RestXqErrorCode("RQST0017", "It is a static error if a REST form-param Annotations function parameter is not a literal String or is an empty literal String");
+    public static RestXqErrorCode RQST0018 = new RestXqErrorCode("RQST0018", "It is a static error if a REST form-param Annotations default value is present and is not a simple type");
+    public static RestXqErrorCode RQST0019 = new RestXqErrorCode("RQST0019", "It is a static error if a REST form-param Annotations default value is present and is not a super-type of function parameter to which it maps");
+    public static RestXqErrorCode RQST0020 = new RestXqErrorCode("RQST0020", "It is a static error if a REST form-param Annotation function parameter does not describe a function parameter");
     
     //query-param annotation errors
-    public static RestXqErrorCode RQST0020 = new RestXqErrorCode("RQST0020", "It is a static error if a REST query-param Annotation does not have two or three literal values");
-    public static RestXqErrorCode RQST0021 = new RestXqErrorCode("RQST0021", "It is a static error if a REST query-param Annotations form field is not a literal String or is an empty literal String");
-    public static RestXqErrorCode RQST0022 = new RestXqErrorCode("RQST0022", "It is a static error if a REST query-param Annotations function parameter is not a literal String or is an empty literal String");
-    public static RestXqErrorCode RQST0023 = new RestXqErrorCode("RQST0023", "It is a static error if a REST query-param Annotations default value is present and is not a simple type");
-    public static RestXqErrorCode RQST0024 = new RestXqErrorCode("RQST0024", "It is a static error if a REST query-param Annotations default value is present and is not a super-type of function parameter to which it maps");
-    public static RestXqErrorCode RQST0025 = new RestXqErrorCode("RQST0025", "It is a static error if a REST query-param Annotation function parameter does not describe a function parameter");
+    public static RestXqErrorCode RQST0021 = new RestXqErrorCode("RQST0021", "It is a static error if a REST query-param Annotation does not have two or three literal values");
+    public static RestXqErrorCode RQST0022 = new RestXqErrorCode("RQST0022", "It is a static error if a REST query-param Annotations form field is not a literal String or is an empty literal String");
+    public static RestXqErrorCode RQST0023 = new RestXqErrorCode("RQST0023", "It is a static error if a REST query-param Annotations function parameter is not a literal String or is an empty literal String");
+    public static RestXqErrorCode RQST0024 = new RestXqErrorCode("RQST0024", "It is a static error if a REST query-param Annotations default value is present and is not a simple type");
+    public static RestXqErrorCode RQST0025 = new RestXqErrorCode("RQST0025", "It is a static error if a REST query-param Annotations default value is present and is not a super-type of function parameter to which it maps");
+    public static RestXqErrorCode RQST0026 = new RestXqErrorCode("RQST0026", "It is a static error if a REST query-param Annotation function parameter does not describe a function parameter");
     
     
     public static class RestXqErrorCode extends ErrorCode {
