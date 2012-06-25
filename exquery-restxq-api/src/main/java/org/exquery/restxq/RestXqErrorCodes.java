@@ -56,7 +56,7 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0011 = new RestXqErrorCode("RQST0011", "It is a static error if a REST content method Annotation is not a literal String");
     public static RestXqErrorCode RQST0012 = new RestXqErrorCode("RQST0012", "It is a static error if a REST content method Annotation has a value and it is empty");
     public static RestXqErrorCode RQST0013 = new RestXqErrorCode("RQST0013", "It is a static error if a REST content method Annotation does not describe a function parameter");
-    public static RestXqErrorCode RQST0014 = new RestXqErrorCode("RQDY0014", "It is a dynamic error if a REST content method Annotation cannot extract the Request body of which the annotation describes");
+    public static RestXqErrorCode RQDY0014 = new RestXqErrorCode("RQDY0014", "It is a dynamic error if a REST content method Annotation cannot extract the Request body of which the annotation describes");
     
     //form-param annotation errors
     public static RestXqErrorCode RQST0015 = new RestXqErrorCode("RQST0015", "It is a static error if a REST form-param Annotation does not have two or three literal values");
