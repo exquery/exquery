@@ -30,13 +30,12 @@ import java.io.InputStream;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
+import org.exquery.xdm.type.Base64BinaryTypedValue;
+import org.exquery.xdm.type.SequenceImpl;
+import org.exquery.xdm.type.StringTypedValue;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Sequence;
-import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedArgumentValue;
-import org.exquery.xquery.TypedValue;
-import org.exquery.xquery.impl.SequenceImpl;
-import org.exquery.xquery.impl.StringValue;
 
 /**
  * Implementation of RESTXQ Form Parameter Annotation
@@ -84,11 +83,11 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
                 final Object formParam = request.getFormParam(getParameterAnnotationMapping().getParameterName());
                 if(formParam == null) {
                     final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new SequenceImpl(new StringValue(defaultLiteral.getValue()));
+                    return new SequenceImpl(new StringTypedValue(defaultLiteral.getValue()));
                 }
                 
                 if(formParam instanceof String) {
-                    return new SequenceImpl(new StringValue((String)formParam));
+                    return new SequenceImpl(new StringTypedValue((String)formParam));
                 }
                 
                 //TODO cope with the situation whereby there may be more than a single value
@@ -110,17 +109,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
                         //TODO log
                         return null;
                     }*/
-                    return new SequenceImpl<InputStream>(new TypedValue<InputStream>(){
-                        @Override
-                        public Type getType() {
-                            return Type.BASE64_BINARY;
-                        }
-
-                        @Override
-                        public InputStream getValue() {
-                            return (InputStream)formParam;
-                        }
-                    });
+                    return new SequenceImpl<InputStream>(new Base64BinaryTypedValue((InputStream)formParam));
                 }
                 
                 return null;

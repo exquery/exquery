@@ -44,8 +44,8 @@ import org.exquery.restxq.impl.serialization.AbstractRestXqServiceSerializer;
 import org.exquery.xquery.FunctionSignature;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.TypedArgumentValue;
-import org.exquery.xquery.impl.SequenceImpl;
-import org.exquery.xquery.impl.StringValue;
+import org.exquery.xdm.type.SequenceImpl;
+import org.exquery.xdm.type.StringTypedValue;
 
 /**
  *
@@ -201,7 +201,7 @@ public abstract class AbstractRestXqService implements RestXqService {
 
                 @Override
                 public Sequence<String> getTypedValue() {
-                    return new SequenceImpl<String>(new StringValue(pathParameter.getValue()));
+                    return new SequenceImpl<String>(new StringTypedValue(pathParameter.getValue()));
                 }
             });
         }

@@ -24,44 +24,19 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.xquery.impl;
+package org.exquery.xdm.type;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.exquery.xquery.Sequence;
-import org.exquery.xquery.TypedValue;
+import java.io.InputStream;
+import org.exquery.xquery.Type;
 
 /**
- * Simple Implementation of Sequence
- *
- * @param <T> The Type of the items in the Sequence, if they are all of the same type
+ * Default Binary Value Type for xs:base64Binary
  * 
  * @author Adam Reter <adam.retter@googlemail.com>
  */
-public class SequenceImpl<T> implements Sequence<T> {
+public class Base64BinaryTypedValue extends AbstractTypedValue<InputStream> {
 
-    private final List<TypedValue<T>> sequence = new ArrayList<TypedValue<T>>();
-    
-    public SequenceImpl() {
+    public Base64BinaryTypedValue(final InputStream value) {
+        super(Type.BASE64_BINARY, value);
     }
-    
-    public SequenceImpl(final TypedValue<T> value) {
-        sequence.add(value);
-    }
-    
-    public SequenceImpl(final Sequence<T> other) {
-        for(final TypedValue<T> value : other) {
-            sequence.add(value);
-        }
-    }
-    
-    public void add(final TypedValue value) {
-        sequence.add(value);
-    }
-    
-    @Override
-    public Iterator<TypedValue<T>> iterator() {
-        return sequence.iterator();
-    }   
 }

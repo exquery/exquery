@@ -24,33 +24,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.xquery.impl;
+package org.exquery.xdm.type;
 
-import org.exquery.xquery.Type;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.exquery.xquery.Sequence;
 import org.exquery.xquery.TypedValue;
 
 /**
- * Default String Value Type for xs:string
+ * Simple Implementation of Sequence
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @param <T> The Type of the items in the Sequence, if they are all of the same type
+ * 
+ * @author Adam Reter <adam.retter@googlemail.com>
  */
-public class StringValue implements TypedValue<String> {
+public class SequenceImpl<T> implements Sequence<T> {
 
-    //TODO consider moving into org.exquery.xdm.type
+    private final List<TypedValue<T>> sequence = new ArrayList<TypedValue<T>>();
     
-    private final String value;
-
-    public StringValue(final String value) {
-        this.value = value;
+    public SequenceImpl() {
+    }
+    
+    public SequenceImpl(final TypedValue<T> value) {
+        sequence.add(value);
+    }
+    
+    public SequenceImpl(final Sequence<T> other) {
+        for(final TypedValue<T> value : other) {
+            sequence.add(value);
+        }
+    }
+    
+    public void add(final TypedValue value) {
+        sequence.add(value);
     }
     
     @Override
-    public Type getType() {
-        return Type.STRING;
-    }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
+    public Iterator<TypedValue<T>> iterator() {
+        return sequence.iterator();
+    }   
 }

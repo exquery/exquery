@@ -35,8 +35,8 @@ import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedArgumentValue;
 import org.exquery.xquery.TypedValue;
-import org.exquery.xquery.impl.SequenceImpl;
-import org.exquery.xquery.impl.StringValue;
+import org.exquery.xdm.type.SequenceImpl;
+import org.exquery.xdm.type.StringTypedValue;
 
 /**
  * Implementation of RESTXQ Query Parameter Annotation
@@ -74,9 +74,9 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
                 final Object queryParam = request.getQueryParam(getParameterAnnotationMapping().getParameterName());
                 if(queryParam == null) {
                     final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new SequenceImpl<String>(new StringValue(defaultLiteral.getValue()));
+                    return new SequenceImpl<String>(new StringTypedValue(defaultLiteral.getValue()));
                 } else if(queryParam instanceof String) {
-                    return new SequenceImpl<String>(new StringValue((String)queryParam));
+                    return new SequenceImpl<String>(new StringTypedValue((String)queryParam));
                 }
                 
                 //TODO cope with the situation whereby there may be more than a single value
