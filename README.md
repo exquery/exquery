@@ -7,7 +7,7 @@
 The main thing here at the moment apart from simple abstractions for dealing with XQuery 1.0 and XQuery 3.0 concepts, is the [RESTXQ](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) Project.
 A simple presentation on RESTXQ can be found [here](http://www.adamretter.org.uk/presentations/restxq_mugl_20120308.pdf).
 
-The language is Java 6 and the build system is Maven 3.
+The language is Java 6 (also tested against Oracle JDK 7 and OpenJDK 7) and the build system is Maven 3.
 It is planned that a C++ implementation will also follow eventually.
 
 ## Build
