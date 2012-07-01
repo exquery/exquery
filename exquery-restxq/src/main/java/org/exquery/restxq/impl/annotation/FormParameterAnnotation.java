@@ -135,7 +135,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParamsErr() {
-        return RestXqErrorCodes.RQST0014;
+        return RestXqErrorCodes.RQST0015;
     }
 
     /**
@@ -143,7 +143,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidParameterNameErr() {
-        return RestXqErrorCodes.RQST0015;
+        return RestXqErrorCodes.RQST0016;
     }
 
     /**
@@ -151,7 +151,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidFunctionArgumentNameErr() {
-        return RestXqErrorCodes.RQST0016;
+        return RestXqErrorCodes.RQST0017;
     }
 
     /**
@@ -159,7 +159,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidDefaultValueErr() {
-        return RestXqErrorCodes.RQST0017;
+        return RestXqErrorCodes.RQST0018;
     }
 
     /**
@@ -167,7 +167,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidDefaultValueTypeErr() {
-        return RestXqErrorCodes.RQST0018;
+        return RestXqErrorCodes.RQST0019;
     }
     
     /**
@@ -175,7 +175,7 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParametersSyntaxErr() {
-        return RestXqErrorCodes.RQST0019;
+        return RestXqErrorCodes.RQST0020;
     }
     
     //<editor-fold>

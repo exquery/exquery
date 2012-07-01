@@ -104,7 +104,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParamsErr() {
-        return RestXqErrorCodes.RQST0020;
+        return RestXqErrorCodes.RQST0021;
     }
 
     /**
@@ -112,7 +112,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidParameterNameErr() {
-        return RestXqErrorCodes.RQST0021;
+        return RestXqErrorCodes.RQST0022;
     }
 
     /**
@@ -120,7 +120,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidFunctionArgumentNameErr() {
-        return RestXqErrorCodes.RQST0022;
+        return RestXqErrorCodes.RQST0023;
     }
 
     /**
@@ -128,7 +128,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidDefaultValueErr() {
-        return RestXqErrorCodes.RQST0023;
+        return RestXqErrorCodes.RQST0024;
     }
 
     /**
@@ -136,7 +136,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidDefaultValueTypeErr() {
-        return RestXqErrorCodes.RQST0024;
+        return RestXqErrorCodes.RQST0025;
     }
     
     /**
@@ -144,7 +144,7 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParametersSyntaxErr() {
-        return RestXqErrorCodes.RQST0025;
+        return RestXqErrorCodes.RQST0026;
     }
     
     //</editor-fold>
