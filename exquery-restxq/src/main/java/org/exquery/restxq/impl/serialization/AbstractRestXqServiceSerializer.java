@@ -226,10 +226,11 @@ public abstract class AbstractRestXqServiceSerializer {
      * 
      * @param result The result to serialize, typically a sequence of one or more documents
      * @param response The HTTP Response to serialize the result to
+     * @param serializationProperties Properties for the serialization
      * 
      * @throws RestXqServiceException If an error occurred whilst serializing the result
      */
-    protected abstract void serializeNodeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> properties) throws RestXqServiceException;
+    protected abstract void serializeNodeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException;
     
     
     /**
