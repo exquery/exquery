@@ -35,7 +35,8 @@ import org.exquery.restxq.RegistryListener;
 import org.exquery.restxq.RestXqService;
 
 /**
- * 
+ * Simple Thread-Safe Map that maintains the association between HttpMethods
+ * and RestXqServices
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -44,29 +45,37 @@ public class RestXqServicesMap {
     private final Map<HttpMethod, List<RestXqService>> orderedServices = new EnumMap<HttpMethod, List<RestXqService>>(HttpMethod.class);
     private final Map<HttpMethod, ReentrantReadWriteLock> methodLocks = new EnumMap<HttpMethod, ReentrantReadWriteLock>(HttpMethod.class);
 
+    /**
+     * Put a RESTXQ Service in the Map
+     * 
+     * @param method The HttpMethod with which to associate the Service
+     * @param service The RESTXQ Service to register for the HttpMethod
+     * 
+     * @return The previous Service associated with the method,
+     * or null if no previous service was registered
+     */
+    public RestXqService put(final HttpMethod method, final RestXqService service) {
 
-    public RestXqService put(final HttpMethod key, final RestXqService value) {
-
-        final ReentrantReadWriteLock lock = getOrCreateMethodLock(key);
+        final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
         
         try {
             lock.writeLock().lock();
 
-            List<RestXqService> list = orderedServices.get(key);
+            List<RestXqService> list = orderedServices.get(method);
             if(list == null) {
                 list = new ArrayList<RestXqService>();
             }
 
             RestXqService oldValue = null;
-            int oldIndex = list.indexOf(value);
+            int oldIndex = list.indexOf(service);
             if(oldIndex > -1) {
                 oldValue = list.remove(oldIndex);
             }
 
-            list.add(value);
+            list.add(service);
             Collections.sort(list);
 
-            orderedServices.put(key, list);
+            orderedServices.put(method, list);
 
             return oldValue;
         } finally {
@@ -74,13 +83,21 @@ public class RestXqServicesMap {
         }
     }
     
-    public RestXqService get(final HttpMethod key, final HttpRequest request) {
-        final ReentrantReadWriteLock lock = getOrCreateMethodLock(key);
+    /**
+     * Gets the RESTXQ Service from the Map
+     * 
+     * @param method The HTTP Method to get the Service for
+     * @param request The HTTP Request to get the Service for
+     * 
+     * @return The RESTXQ Service that matches the method and request
+     */
+    public RestXqService get(final HttpMethod method, final HttpRequest request) {
+        final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
         
         try {
             lock.readLock().lock();
             
-            final List<RestXqService> list = orderedServices.get(key);
+            final List<RestXqService> list = orderedServices.get(method);
             if(list == null) {
                 return null;
             }
@@ -98,6 +115,14 @@ public class RestXqServicesMap {
         }
     }
     
+    /**
+     * Removes all RESTXQ Services from the Map that come from the XQuery
+     * located at the URI xqueryLocation
+     * 
+     * @param xqueryLocation The location of the XQuery
+     * @param listeners Any Listseners that should be notified when a
+     * Service is removed
+     */
     public void removeAll(final URI xqueryLocation, final List<RegistryListener> listeners) {
             
         for(final HttpMethod key : orderedServices.keySet()) {
@@ -139,12 +164,19 @@ public class RestXqServicesMap {
         }
     }
 
-    private ReentrantReadWriteLock getOrCreateMethodLock(final HttpMethod key) {
+    /**
+     * Gets of Creates a Lock for a specific HTTP Method
+     * 
+     * @param method The HTTP Method to Get a lock object for
+     * 
+     * @return The Lock to use for the HTTP Method
+     */
+    private ReentrantReadWriteLock getOrCreateMethodLock(final HttpMethod method) {
         synchronized(methodLocks) {
-            ReentrantReadWriteLock lock = methodLocks.get(key);
+            ReentrantReadWriteLock lock = methodLocks.get(method);
             if(lock == null) {
                 lock = new ReentrantReadWriteLock();
-                methodLocks.put(key, lock);
+                methodLocks.put(method, lock);
             }
             return lock;
         }
