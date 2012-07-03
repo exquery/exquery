@@ -26,45 +26,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq;
 
-import java.net.URI;
-import org.exquery.http.HttpRequest;
-
 /**
- * Registry of RESTXQ Services
+ * Listeners for RESTXQ Registry events
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface RestXqServiceRegistry {
-    
+public interface RegistryListener {
+
     /**
-     * Register a RESTXQ Service with the registry
+     * Notifies the Listener that a RESTXQ Service has been registered with the Registry
      * 
-     * @param service The Service to register
+     * @param service The RESTXQ Service that was registered
      */
-    public void register(RestXqService service);
-    
+    public void registered(final RestXqService service);
+
     /**
-     * Register several RESTXQ Services with the registry
-     *
-     * @param services The Services to register with the registry
-     */
-    public void register(Iterable<RestXqService> services);
-    
-    /**
-     * De-register RESTXQ Services from the registry
+     * Notifies the Listener that a RESTXQ Service has been de-registered from the Registry
      * 
-     * @param xqueryLocation The URI of the XQuery from which the Services came to deregister
+     * @param service The RESTXQ Service that was de-registered
      */
-    public void deregister(URI xqueryLocation);
-    
-    /**
-     * Find the RESTXQ Service which can Service the HTTP Request
-     * 
-     * @param request The HTTP Request for which to try and find a matching RESTXQ Service
-     * which can service the HTTP Request
-     * 
-     * @return The RESTXQ Service which can service the request, or null if no
-     * suitable RESTXQ Service can be found
-     */
-    public RestXqService findService(HttpRequest request);
+    public void deregister(final RestXqService service);
 }
