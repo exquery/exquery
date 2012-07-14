@@ -107,58 +107,7 @@ public abstract class AbstractRestXqService implements RestXqService {
         final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues);
         
         getRestXqServiceSerializer().serialize(result, getResourceFunction().getSerializationAnnotations(), response);
-        
-        /*
-        final CompiledHTTPRESTfulXQueryCache cache = CompiledHTTPRESTfulXQueryCache.getInstance();
-        CompiledXQuery xquery = null;
-        ProcessMonitor processMonitor = null;
-        
-        try {
-            //get a compiled query service from the cache
-            xquery = cache.getCompiledQuery(broker, this);
-            
-            //find the function that we will execute
-            final UserDefinedFunction fn = findFunction(xquery, getResourceFunction().getFunctionSignature());
-            
-            //setup monitoring
-            processMonitor = broker.getBrokerPool().getProcessMonitor();
-            xquery.getContext().getProfiler().traceQueryStart();
-            processMonitor.queryStarted(xquery.getContext().getWatchDog());
-            
-            //create a function call
-            final FunctionCall fnCall = createFunctionCall(xquery, fn, request);
-            fnCall.analyze(new AnalyzeContextInfo());
-            
-            //execute the function call
-            final Sequence result = fnCall.eval(NodeSet.EMPTY_SET);
-            
-            //serialize the results
-            serialize(result, response, broker);
-            
-        } catch(XPathException xpe) {
-            throw new RESTfulXQueryServiceException(xpe.getMessage(), xpe);
-        } catch(BadRequestException bde) {
-            throw new RESTfulXQueryServiceException(bde.getMessage(), bde);
-        } finally {
-            
-            //clear down monitoring
-            if(processMonitor != null) {
-                xquery.getContext().getProfiler().traceQueryEnd(xquery.getContext());
-                processMonitor.queryCompleted(xquery.getContext().getWatchDog());
-            }
-            
-            //return the compiled query to the pool
-            cache.returnCompiledQuery(this, xquery);
-        }*/
     }
-    
-    /*
-    private UserDefinedFunction findFunction(final CompiledXQuery xquery, final FunctionSignature fnSignature) throws XPathException {
-        final QName fnName = QName.fromJavaQName(fnSignature.getName());
-        final int arity = fnSignature.getArgumentCount();
-        
-        return xquery.getContext().resolveFunction(fnName, arity);
-    }*/
 
     /**
      * Gets the HTTP Method Annotations which potentially have Body Content

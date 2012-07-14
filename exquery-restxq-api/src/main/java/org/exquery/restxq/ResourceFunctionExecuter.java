@@ -40,10 +40,11 @@ public interface ResourceFunctionExecuter {
      * Execute the Function
      * 
      * @param resourceFunction The Resource Function to execute
-     * 
      * @param arguments The arguments to the function
      * 
      * @return The result of the function
+     * 
+     * @throws RestXqServiceException If an unexpected error occurred during processing
      */
-    public Sequence execute(final ResourceFunction resourceFunction, final Iterable<TypedArgumentValue> arguments);
+    public Sequence execute(final ResourceFunction resourceFunction, final Iterable<TypedArgumentValue> arguments) throws RestXqServiceException;
 }
