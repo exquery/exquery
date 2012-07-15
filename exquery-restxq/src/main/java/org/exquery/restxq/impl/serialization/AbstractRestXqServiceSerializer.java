@@ -103,6 +103,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      *
      * @throws RestXqServiceException If an error occurs during serialization
      */
+    @Override
     public void serialize(final Sequence result, final Set<SerializationAnnotation> serializationAnnotations, final HttpResponse response) throws RestXqServiceException {
         
         // some xquery functions can write directly to the output stream
