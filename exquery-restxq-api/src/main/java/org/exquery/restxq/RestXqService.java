@@ -73,8 +73,9 @@ public interface RestXqService extends Comparable<RestXqService> {
      * @param httpRequest The request to service
      * @param httpResponse The response to write the service result to
      * @param resourceFunctionExecuter The Executer to execute the Resource Function
+     * @param restXqServiceSerializer Serializer for serializing the response of the service
      * 
      * @throws RestXqServiceException If an unexpected error occured whilst processing the request
      */
-    public void service(final HttpRequest httpRequest, final HttpResponse httpResponse, final ResourceFunctionExecuter resourceFunctionExecuter) throws RestXqServiceException;
+    public void service(final HttpRequest httpRequest, final HttpResponse httpResponse, final ResourceFunctionExecuter resourceFunctionExecuter, final RestXqServiceSerializer restXqServiceSerializer) throws RestXqServiceException;
 }

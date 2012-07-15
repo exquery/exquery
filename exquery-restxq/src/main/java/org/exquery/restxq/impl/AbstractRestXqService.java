@@ -37,15 +37,15 @@ import org.exquery.restxq.ResourceFunction;
 import org.exquery.restxq.ResourceFunctionExecuter;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceException;
+import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.HttpMethodWithBodyAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
-import org.exquery.restxq.impl.serialization.AbstractRestXqServiceSerializer;
+import org.exquery.xdm.type.SequenceImpl;
+import org.exquery.xdm.type.StringTypedValue;
 import org.exquery.xquery.FunctionSignature;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.TypedArgumentValue;
-import org.exquery.xdm.type.SequenceImpl;
-import org.exquery.xdm.type.StringTypedValue;
 
 /**
  *
@@ -97,16 +97,16 @@ public abstract class AbstractRestXqService implements RestXqService {
     /**
      * Service the request and send the response
      * 
-     * @see org.exquery.restxq.RestXqService#service(org.exquery.http.HttpRequest, org.exquery.http.HttpResponse)
+     * @see org.exquery.restxq.RestXqService#service(org.exquery.http.HttpRequest, org.exquery.http.HttpResponse, org.exquery.restxq.ResourceFunctionExecuter, org.exquery.restxq.RestXqServiceSerializer)
      */
     @Override
-    public void service(final HttpRequest request, final HttpResponse response, final ResourceFunctionExecuter resourceFunctionExecuter) throws RestXqServiceException {
+    public void service(final HttpRequest request, final HttpResponse response, final ResourceFunctionExecuter resourceFunctionExecuter, final RestXqServiceSerializer restXqServiceSerializer) throws RestXqServiceException {
         
         final Set<TypedArgumentValue> typedArgumentValues = extractParameters(request);
         
         final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues);
         
-        getRestXqServiceSerializer().serialize(result, getResourceFunction().getSerializationAnnotations(), response);
+        restXqServiceSerializer.serialize(result, getResourceFunction().getSerializationAnnotations(), response);
     }
 
     /**
@@ -208,13 +208,6 @@ public abstract class AbstractRestXqService implements RestXqService {
      * @throws RestXqServiceException If an error occurred whilst processing the Request Body
      */
     protected abstract Sequence extractRequestBody(final HttpRequest request) throws RestXqServiceException;
-    
-    /**
-     * Get the Serializer for the RESTXQ Service
-     * 
-     * @return The Serializer for the RESTXQ Service
-     */
-    protected abstract AbstractRestXqServiceSerializer getRestXqServiceSerializer();
     
     /**
      * Generates a Hash Code for the RestXqService Object

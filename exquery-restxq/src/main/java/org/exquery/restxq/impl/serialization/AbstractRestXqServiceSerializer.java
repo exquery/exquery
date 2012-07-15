@@ -36,6 +36,7 @@ import org.exquery.InternetMediaType;
 import org.exquery.http.HttpResponse;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
+import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.impl.serialization.XmlWriter.Attribute;
 import org.exquery.serialization.annotation.MethodAnnotation;
 import org.exquery.serialization.annotation.MethodAnnotation.SupportedMethod;
@@ -51,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author Adam Retter <adam.retter@googelmail.com>
  */
-public abstract class AbstractRestXqServiceSerializer {
+public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSerializer {
     
     private final static String DEFAULT_ENCODING = "UTF-8";
     private final static String DEFAULT_INTERNET_MEDIA_TYPE = InternetMediaType.APPLICATION_XML.getMediaType();
