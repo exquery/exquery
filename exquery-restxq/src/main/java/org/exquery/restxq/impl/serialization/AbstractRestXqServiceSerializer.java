@@ -180,7 +180,10 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
         SupportedMethod method = null;
         
         try {
-            method = SupportedMethod.valueOf(serializationProperties.get(SerializationProperty.METHOD));
+            final String methodProp = serializationProperties.get(SerializationProperty.METHOD);
+            
+            //use the specified method or fallback to xml
+            method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
         } catch(IllegalArgumentException iae) {
             //do nothing
             
