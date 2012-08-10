@@ -3,12 +3,14 @@ package org.exquery.restxq.impl;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceRegistry;
+import org.exquery.restxq.impl.RestXqServicesMap.RestXqServiceMapVisitor;
 
 /**
  * Simple Implementation of a Registry of RESTXQ Services
@@ -49,6 +51,23 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
         }
     }
 
+    @Override
+    public Iterator<RestXqService> iterator() {
+        
+        final Set<RestXqService> services = new HashSet<RestXqService>();
+        final RestXqServiceMapVisitor visitor = new RestXqServiceMapVisitor() {
+                @Override
+                public void visit(final HttpMethod method, final List<RestXqService> restXqServices) {
+                    services.putAll(restXqService);
+                }
+            };
+        getServices().iterate(visitor, true);
+        
+        return services.iterator();
+    }
+
+    
+    
     @Override
     public RestXqService findService(final HttpRequest request) {
         return getServices().get(request.getMethod(), request);

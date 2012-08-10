@@ -83,6 +83,51 @@ public class RestXqServicesMap {
         }
     }
     
+    protected interface RestXqServiceMapVisitor {
+
+        public void visit(HttpMethod method, List<RestXqService> restXqServices);
+    }
+    
+    /**
+     * Iterate over the Services Map
+     * 
+     * @param The visitor which visits the services map
+     * @param eagerLockAll true if all methods should be locked before visiting anything, false to lock methods as they are visited
+     * 
+     */
+    public void iterate(final RestXqServiceMapVisitor visitor, final boolean eagerLockAll) {
+        
+        try {
+            
+            if(eagerLockAll) {
+                for(final HttpMethod method : HttpMethod.values()) {
+                    final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
+                    lock.readLock().lock();
+
+                }
+                
+                for(final HttpMethod method : HttpMethod.values()) {
+                    visitor.visit(method, orderedServices.get(method));
+                }
+            } else {
+            
+                for(final HttpMethod method : HttpMethod.values()) {
+                    final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
+                    lock.readLock().lock();
+                    visitor.visit(method, orderedServices.get(method));
+                }
+            }
+            
+        } finally {
+            for(final HttpMethod method : HttpMethod.values()) {
+                final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
+                lock.readLock().unlock();
+
+            }
+        }
+    }
+    
+    
     /**
      * Gets the RESTXQ Service from the Map
      * 

@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq;
 
 import java.net.URI;
+import java.util.Iterator;
 import org.exquery.http.HttpRequest;
 
 /**
@@ -56,6 +57,13 @@ public interface RestXqServiceRegistry {
      * @param xqueryLocation The URI of the XQuery from which the Services came to deregister
      */
     public void deregister(URI xqueryLocation);
+    
+    /**
+     * Iterate through the RESTXQ Services in the registry
+     * 
+     * @return Iterator over RestXqService(s)
+     */
+    public Iterator<RestXqService> iterator();
     
     /**
      * Find the RESTXQ Service which can Service the HTTP Request
