@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
-import org.exquery.restxq.RegistryListener;
+import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.RestXqService;
 
 /**
@@ -123,7 +123,7 @@ public class RestXqServicesMap {
      * @param listeners Any Listseners that should be notified when a
      * Service is removed
      */
-    public void removeAll(final URI xqueryLocation, final List<RegistryListener> listeners) {
+    public void removeAll(final URI xqueryLocation, final List<RestXqServiceRegistryListener> listeners) {
             
         for(final HttpMethod key : orderedServices.keySet()) {
             
@@ -152,7 +152,7 @@ public class RestXqServicesMap {
                     orderedServices.put(key, serviceList);
                     
                     //update the listeners
-                    for(final RegistryListener listener : listeners) {
+                    for(final RestXqServiceRegistryListener listener : listeners) {
                         for(final RestXqService service : servicesToRemove) {
                             listener.deregister(service);
                         }

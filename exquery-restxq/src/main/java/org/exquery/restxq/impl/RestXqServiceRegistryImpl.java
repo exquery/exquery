@@ -6,7 +6,7 @@ import java.util.EnumSet;
 import java.util.List;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
-import org.exquery.restxq.RegistryListener;
+import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceRegistry;
 
@@ -18,7 +18,7 @@ import org.exquery.restxq.RestXqServiceRegistry;
 public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
 
     private final RestXqServicesMap services = new RestXqServicesMap();
-    private final List<RegistryListener> listeners = new ArrayList<RegistryListener>();
+    private final List<RestXqServiceRegistryListener> listeners = new ArrayList<RestXqServiceRegistryListener>();
     
     private RestXqServicesMap getServices() {
         return services;
@@ -35,7 +35,7 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
         } else {
             for(HttpMethod servicedMethod : servicedMethods) {
                 getServices().put(servicedMethod, service);
-                for(final RegistryListener listener : listeners) {
+                for(final RestXqServiceRegistryListener listener : listeners) {
                     listener.registered(service);
                 }
             }
@@ -66,7 +66,7 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
      * 
      * @param listener The Registry Listener to receive notifications
      */
-    public void addListener(final RegistryListener listener) {
+    public void addListener(final RestXqServiceRegistryListener listener) {
         listeners.add(listener);
     }
     
@@ -76,7 +76,7 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
      * @param listener The Registry Listener which should no longer receive
      * notifications from this registry
      */
-    public boolean removeListener(final RegistryListener listener) {
+    public boolean removeListener(final RestXqServiceRegistryListener listener) {
         return listeners.remove(listener);
     }
     

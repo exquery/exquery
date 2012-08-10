@@ -31,7 +31,7 @@ package org.exquery.restxq;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface RegistryListener {
+public interface RestXqServiceRegistryListener {
 
     /**
      * Notifies the Listener that a RESTXQ Service has been registered with the Registry
@@ -45,5 +45,5 @@ public interface RegistryListener {
      * 
      * @param service The RESTXQ Service that was de-registered
      */
-    public void deregister(final RestXqService service);
+    public void deregistered(final RestXqService service);
 }
