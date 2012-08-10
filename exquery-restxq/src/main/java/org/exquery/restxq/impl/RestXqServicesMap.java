@@ -31,8 +31,8 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
-import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.RestXqService;
+import org.exquery.restxq.RestXqServiceRegistryListener;
 
 /**
  * Simple Thread-Safe Map that maintains the association between HttpMethods
@@ -154,7 +154,7 @@ public class RestXqServicesMap {
                     //update the listeners
                     for(final RestXqServiceRegistryListener listener : listeners) {
                         for(final RestXqService service : servicesToRemove) {
-                            listener.deregister(service);
+                            listener.deregistered(service);
                         }
                     }
                 }
