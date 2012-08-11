@@ -83,9 +83,18 @@ public class RestXqServicesMap {
         }
     }
     
+    /**
+     * Visitor Interface for iterating over the RESTXQ Services Map
+     */
     protected interface RestXqServiceMapVisitor {
 
-        public void visit(HttpMethod method, List<RestXqService> restXqServices);
+        /**
+         * Visits a HTTP Method in the RestXQ Services Map
+         * 
+         * @param method The HTTP Method for which the services are registered
+         * @param restXqServices The services registered against the HTTP Method
+         */
+        public void visit(final HttpMethod method, final List<RestXqService> restXqServices);
     }
     
     /**

@@ -35,7 +35,7 @@ import org.exquery.http.HttpRequest;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface RestXqServiceRegistry {
+public interface RestXqServiceRegistry extends Iterable<RestXqService> {
     
     /**
      * Register a RESTXQ Service with the registry
@@ -63,6 +63,7 @@ public interface RestXqServiceRegistry {
      * 
      * @return Iterator over RestXqService(s)
      */
+    @Override
     public Iterator<RestXqService> iterator();
     
     /**

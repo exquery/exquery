@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
-import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceRegistry;
+import org.exquery.restxq.RestXqServiceRegistryListener;
 import org.exquery.restxq.impl.RestXqServicesMap.RestXqServiceMapVisitor;
 
 /**
