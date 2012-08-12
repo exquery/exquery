@@ -116,14 +116,22 @@ public class RestXqServicesMap {
                 }
                 
                 for(final HttpMethod method : HttpMethod.values()) {
-                    visitor.visit(method, orderedServices.get(method));
+                    final List<RestXqService> services = orderedServices.get(method);
+                    if(services != null) {
+                        visitor.visit(method, services);
+                    }
                 }
             } else {
             
                 for(final HttpMethod method : HttpMethod.values()) {
                     final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
+                    
                     lock.readLock().lock();
-                    visitor.visit(method, orderedServices.get(method));
+                    
+                    final List<RestXqService> services = orderedServices.get(method);
+                    if(services != null) {
+                        visitor.visit(method, services);
+                    }
                 }
             }
             
