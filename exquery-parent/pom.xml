@@ -136,9 +136,9 @@
                     <strictCheck>true</strictCheck>
                     <properties>
                         <year>${project.inceptionYear}</year>
-                        <copyrightholder>${project.developers.developer.name}</copyrightholder>
+                        <copyrightholder>Adam Retter</copyrightholder>
                         <organisation>${project.organization.name}</organisation>
-                        <email>${project.developers.developer.email}</email>
+                        <email>info@exquery.org</email>
                     </properties>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
