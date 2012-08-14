@@ -77,6 +77,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <version>1.9.0</version>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
                     <version>1.1</version>
@@ -120,6 +125,24 @@
         </pluginManagement>
         
         <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <header>../exquery-distribution/header.txt</header>
+                    <failIfMissing>true</failIfMissing>
+                    <aggregate>true</aggregate> <!-- if this module references other modules, then check those too -->
+                    <strictCheck>true</strictCheck>
+                    <properties>
+                        <year>${project.inceptionYear}</year>
+                        <copyrightholder>${project.developers.developer.name}</copyrightholder>
+                        <organisation>${project.organization.name}</organisation>
+                        <email>${project.developers.developer.email}</email>
+                    </properties>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
