@@ -1,14 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>org.exquery</groupId>
         <artifactId>exquery-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../exquery-parent/pom.xml</relativePath>
     </parent>
+    
     <artifactId>exquery-distribution</artifactId>
     <packaging>pom</packaging>
+    
     <name>EXQuery Distribution POM</name>
     <description>Module for building an EXQuery distribution</description>
     
@@ -31,58 +34,4 @@
         <module>../exquery-restxq</module>
     </modules>
     
-    <build>
-        <!-- plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins -->
-    </build>
-    
-    <!--
-    The assemblies work off of dependency sets since the stuff to be aggregated is no longer sub-modules after moving assembly itself into this 'distribution' module.
-    -->
-    <!--
-    <dependencies>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-xquery</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-xquery3</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-annotations</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-serialization-annotations</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exquery</groupId>
-            <artifactId>exquery-restxq</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-    -->
 </project>

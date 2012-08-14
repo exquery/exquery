@@ -8,6 +8,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../exquery-parent/pom.xml</relativePath>
     </parent>
+    
     <artifactId>exquery-restxq</artifactId>
     <packaging>jar</packaging>
   
