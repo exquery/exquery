@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>RESTXQ 1.0: RESTful Annotations for XQuery 3.0</title>
-    <meta charset='utf-8'>
+    <meta charset='utf-8'/>
     <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' class='remove'></script>
     <script class='remove'>
       var respecConfig = {
@@ -29,7 +29,8 @@
           // previousMaturity:  "WD",
 
           // if there a publicly available Editor's Draft, this is the link
-          edDraftURI:           "http://dev.w3.org/2009/dap/ReSpec.js/documentation.html",
+          // edDraftURI:           "http://dev.w3.org/2009/dap/ReSpec.js/documentation.html",
+          edDraftURI:           "https://raw.github.com/exquery/exquery/master/exquery-restxq-specification/restxq-1.0-specification.html",
 
           // if this is a LCWD, uncomment and set the end of its review period
           // lcEnd: "2009-08-05",
@@ -37,8 +38,8 @@
           // editors, add as many as you like
           // only "name" is required
           editors:  [
-              { name: "Your Name", url: "http://example.org/",
-                company: "Your Company", companyURL: "http://example.com/" },
+              { name: "Adam Retter", url: "http://adamretter.org.uk/",
+                company: "Adam Retter Consulting", companyURL: "http://adamretter.org.uk/" },
           ],
 
           // authors, add as many as you like. 
@@ -51,13 +52,13 @@
           //],
           
           // name of the WG
-          wg:           "In Charge Of This Document Working Group",
+          wg:           "EXQuery RESTXQ WG",
           
           // URI of the public WG page
-          wgURI:        "http://example.org/really-cool-wg",
+          wgURI:        "http://exquery.org/restxq-wg",
           
           // name (without the @w3c.org) of the public mailing to which comments are due
-          wgPublicList: "spec-writers-anonymous",
+          wgPublicList: "exquery-restxq",
           
           // URI of the patent status for this WG, for Rec-track documents
           // !!!! IMPORTANT !!!!
@@ -65,25 +66,263 @@
           // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
           // Team Contact.
           wgPatentURI:  "",
+          
+          // If specified, defines an array of alternate formats in which document is available (e.g., XML, Postscript). The format of the array is:
+          // alternateFormats:
+          
+          doRDFa: "1.1",
       };
     </script>
   </head>
   <body>
+    <section id="sotd">
+      It is unclear yet whether this document will be submitted to the W3C, either
+      to the XQuery WG or as Community Group. For the time being it lives under the
+      <a href="http://exquery.org/" title="EXQuery: Extensions for EXQuery">EXQuery project</a>.
+    </section>
     <section id='abstract'>
-      This is the abstract for your specification.
+      Whilst XQuery [[XQUERY]] was originally envisaged and designed as a query language for XML,
+      it has been adopted by many as a language for application development. This specification
+      describes a set of XQuery 3.0 Annotations [[XQUERY-30]] and a small set of functions to enable XQuery
+      to provide RESTful services, thus enabling Web Application development in XQuery.
     </section>
     
-    <section>
-      <h2>Your Title</h2>
+    <section id="introduction">
+      <h2>Introduction</h2>
       <p>
-        Your text...
+        XQuery processors are now frequently provided as part of complete data application
+        processing platforms, which typically incorporate amongst others, XML Data storage
+        and Web serving capabilities.
       </p>
+      <p>
+        XQuery has long been recognised as a good language for producing XHTML and HTML from
+        complex data queries, however XQuery is almost completely ignorant of the Web.
+        XQuery provides no native capabilties for either making Web requests or operating
+        as a server-side scripting language and processing Web requests.
+      </p>
+      <p>
+        As of XQuery 3.0 there is still no standard way to create Web Applications in XQuery.
+        Many vendors provide extensions to their XQuery implementations which allow users
+        to serve web requests using XQuery processing.
+        Whilst vendors have borrowed ideas from each other, there is no standard for Web capabilities
+        in XQuery, as such developers have to use proprietary extensions, which limits the portability
+        of their XQuery code, ultimately fragmenting the XQuery community, limiting re-use and reducing
+        peer-learning.
+      </p>
+      <p>
+        RESTXQ attempts to resolve these problem of interoperablility. RESTXQ defines a standard set of
+        vendor agnostic XQuery Annotations and functions for XQuery 3.0. When implemented by vendors,
+        these annotations provide a standard W3C XQuery 3.0 compliant approach to delivering RESTful
+        Web Services from XQuery, whilst the functions provide user convenience for interacting with
+        implementations of RESTXQ.
+      </p>
+      <section id="goals">
+        <h3>Goals</h3>
+        <p>
+          The guiding goals for the RESTXQ specification are:
+          <dl>
+            <dt>Interoperability</dt>
+              <dd>
+                Only features that are already present in XQuery 3.0 MUST be applied to create RESTXQ.
+                Any XQuery code that makes use of RESTXQ instead of vendor extensions, is valid XQuery 3.0
+                code, and therefore portable. Note, RESTXQ support is required in the XQuery processor to
+                execute resource functions in a Web context.
+              </dd>
+            <dt>Simplicity for XQuery developers</dt>
+              <dd>XQuery developers MUST NOT have to maintain external or complex code for wiring RESTful
+                services to XQuery functions. Developers should just write standard XQuery.
+              </dd>
+            <dt>Vendor Agnostic</dt>
+              <dd>RESTXQ MUST NOT assume anything about an implementation above what is defined in
+                XQuery 3.0. RESTXQ MUST be equally implementable by any vendor.
+              </dd>
+            <dt>Technical improvement</dt>
+            <dd>RESTXQ MUST improve on the current approaches, a comprehensive review was undertaken
+              <a href="http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf" title="RESTful XQuery, Standardised XQuery 3.0 Annotations for REST">here</a>.
+            </dd>              
+          </dl>
+        </p>
+      </section>
+      <section id="audience">
+        <h3>Audience</h3>
+        <p>
+          This specification is intended for both vendors and developers looking to implement RESTXQ in
+          their products, XQuery developers looking to use the RESTXQ features defined in this specification,
+          and individuals wishing to establish the correctness of implementations with respect to the requirements
+          of this specification.
+        </p>
+        <p>
+          This document assumes that readers already have at least a basic understanding of XQuery 3.0, and
+          an understanding of Web technologies and server side scripting.
+        </p>
+      </section>
+    </section>
+    <section id="annotations">
+      <h2>Annotations</h2>
+      <section id="annotations-background">
+        <h3>Background</h3>
+        <section id="xquery3annotations">
+          <h4>XQuery 3.0 Annotations</h4>
+          <p>
+            Whilst XQuery 3.0 introduces many new features, an understanding of Annotations in XQuery 3.0
+            is fundamental to this specification. Annotations declare properties of functions or variables,
+            zero or more annotations may be added to a function or variable declaration. Annotations start
+            with the '%' character and consist of an expanded qualified name and an optional value, the
+            value being a sequence of literals.
+          </p>
+          <pre class="example" title="XQuery 3.0 Annotations">
+        xquery version "3.0";
+        
+        declare namespace java = "http://java";
+        
+        declare
+        %java:method("java.lang.Math.sin")
+        function local:calculate-sin($a as xs:double) as xs:double external
+        
+        &lt;sin&gt;{
+          local:calculate-sin(1.4)
+        }&lt;/sin&gt;
+          </pre>
+          <p>
+            Apart from the <code>%private</code> and <code>%public</code> annotations, no other annotations are defined by
+            the XQuery 3.0 specification. However, the specification states,
+            &quot;Implementations MAY define further annotations, whose behaviour is implementation-defined&quot;.
+            It is this property which this specification exploits to define a standard set of RESTful Annotations for XQuery 3.0.
+          </p>
+        </section>
+        <section id="approach">
+          <h4>Approach</h4>
+          <p>
+            RESTXQ is heavily influenced by that of JAX-RS [[JAX-RS]]. However, we simplify and deviate from JAX-RS
+            predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
+            and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
+            to XQuery invocation, our unit of granularity is the XQuery function.
+          </p>
+          <p>
+            Through the use of annotations on functions in XQuery, we declaratively mark-up the HTTP capabilities
+            of a function. To minimise refactoring by developers when adding annotations to existing code, two measures
+            must be respected by implementations:
+          </p>
+          <ol>
+            <li>Implementations of RESTXQ MUST support annotated functions which have additional function parameters which are not annotation mapped, providing the cardinality type of those un-mapped parameters accepts an empty sequence.</li>
+            <li>Implementors MUST not enforce the order of function parameters. Whether mapped by annotations or not is unimportant, as annotations explicitly name the parameters to which they are mapped.</li>
+          </ol>
+        </section>
+      </section>
+      <section id="resource-functions">
+        <h3>Resource Functions</h3>
+        <p>
+          A Resource Function is an XQuery function which has been marked up with RESTXQ annotations. These annotations
+          indicate to a processor that when presented with a RESTful web service request, that matches the constraints
+          indicated by the annotations, that the function SHOULD be invoked and the result SHOULD be returned as the result of
+          the service request.
+        </p>
+        <p>There are two types of Resource Function Annotations described in RESTXQ:</p>
+        <ul>
+          <li>Constraints (<a href="#resource-function-constraints" class="sectionRef"></a>)</li>
+          <li>Parameters (<a href="#resource-function-parameters" class="sectionRef"></a>)</li>
+        </ul>
+        <section id="templates">
+          <h4>Templates</h4>
+          <p>
+            Some of the RESTXQ Annotations make use of Templates, which allow for the substitution of parameters
+            from the request into the query. The syntax of these templates is very simple and is designed to be
+            familiar to existing XQuery developers, it is expressed in <a href="#template-grammar" class="sectionRef"></a>.
+          </p>
+          <p>The Template appears inside a string literal within the annotation, but the meaning is that the
+            value of the templated substitution MUST be used as the parameter to the named argument of the
+            annotated function.</p>
+          <pre class="example" title="Template">
+            {$number-of-cats}
+          </pre>
+          <p>
+            In the example above, a parameter given from the template substitution MUST be
+            set for the function argument called <code>number-of-cats</code> on the annotated function.
+          </p>
+        </section>
+        <section id="resource-function-constraints">
+          <h4>Resource Function Constraints</h4>
+          <p>Constraints restrict the service requests that a Resource Function MAY process.</p>
+          <section id="path-annotation">
+            <h5>Path Annotation</h5>
+            <p>
+              A Path Annotation maps the URI of a RESTful web service to a Resource Function and provides for path templates.
+            </p>
+            <p> <!-- TODO also consider allowing zero or more path annotations -->
+              A Resource Function MUST contain a single path annotation. Additional annotations MAY also be
+              used to constrain or parameterize the Resource Function.
+            </p>
+            <p>
+              The path annotation is named <code>%rest:path</code> and takes a single mandatory literal string, which
+              describes the URI path for this service. The URI path is considered relative to a base URI which is
+              implementation defined.
+            </p>
+            <p>
+              The URI path itself MAY contain zero or more URI templates which denote path segments that MUST
+              map to named function parameters. Parameters addressed by templates in the URI path, MUST meet the
+              following constraints:
+            </p>
+            <ol>
+              <li>
+                <!-- TODO describe error codes -->
+                Cardinality that MUST allow for an atomic value, otherwise an error should be raised by the
+                implementation. i.e. ONE or ONE_OR_MORE.</li>
+              <li>
+                <!-- TODO describe error codes -->
+                Type that MUST inherit from xs:anyAtomicType, otherwise, an error should be raised by the implementation.
+                In addition, conversion from the URI segment string to the required type should be performed at run-time,
+                and an error raised if conversion is impossible.
+                <!-- TODO describe type conversion -->
+              </li>
+            </ol>
+            <pre class="example" title="Path Annotation">
+              declare
+                %rest:path("/stock/widget/{$id}")
+              function local:widget($id as xs:int) {
+            
+                (: get the widget :)
+                fn:collection("/db/widgets")/widget[@id eq $id]
+              };
+            </pre>
+            <p>
+              In the above example, a HTTP GET on the following URI, would cause the Widget with the <code>id</code> of '1981'
+              to be retrieved: <em>http://www.widget-factory.com/stock/widget/<code>{$id}</code></em>.
+            </p>
+            <div class="note">
+              When many URI paths are defined, conflicts may occur. It is implementation defined how such conflicts should be
+              resolved. However, most specific URI paths MUST always be evaluated before less specific URI paths, to ensure
+              that lesser paths do not unintentionally consume requests.
+            </div>
+          </section>
+        </section>
+        <section id="resource-function-parameters">
+          <h4>Resource Function Parameters</h4>
+          <p>TODO.</p>
+        </section>
+      </section>
+    </section>
+    
+    <section class="appendix" id="template-grammar">
+      <h2>Annotation Template Grammar</h2>
+      <p>The grammar used for RESTXQ Templates is expressed in EBNF and re-uses the EQName from the XQuery 3.0 grammar</p>
+      <table>
+          <tr>
+            <td>[1]</td>
+            <td>Template</td>
+            <td>::=</td>
+            <td>&quot;{&quot; &quot;$&quot; <a href="http://www.w3.org/TR/xquery-30/#prod-xquery30-EQName" title="EQName">EQName</a> &quot;}&quot;</td>
+          </tr>
+      </table>
     </section>
     
     <section class='appendix'>
       <h2>Acknowledgements</h2>
       <p>
-        Many thanks to Robin Berjon for making our lives so much easier with his cool tool.
+        Many thanks to:
+        <ul>
+          <li>Christian Grün for early adoption and enthusiasm.</li>
+          <li>Robin Berjon for making the production of this speficiation much simpler with his cool ReSpec tool.</li>
+        </ul>
       </p>
     </section>
   </body>
