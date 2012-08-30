@@ -26,46 +26,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.serialization.annotation;
 
-import javax.xml.namespace.QName;
-import org.exquery.serialization.Namespace;
+import org.exquery.serialization.annotation.SerializationAnnotationErrorCodes.SerializationAnnotationErrorCode;
 
 /**
- * Names for the Serialization Annotations
- * 
- * @author aretter
+ * Serialization Omit XML Declaration Annotation
+ * i.e. %output:omit-xml-declaration
+ *
+ * @author Adam Retter <adam.retter@googlemail.com>
  */
-public enum SerializationAnnotationName {
-    
-    method,
-    encoding,
-    //doctypepublic("doctype-public"),
-    //doctypesystem("doctype-system"),
-    mediatype("media-type"),
-    indent,
-    omitxmldeclaration("omit-xml-declaration");
-    
+public class OmitXmlDeclarationAnnotation extends AbstractYesNoSerializationAnnotation {
 
-    final QName name;
-    SerializationAnnotationName() {
-        this.name = new QName(Namespace.ANNOTATION_NS, name());
-    }
-    
-    SerializationAnnotationName(final String name) {
-        this.name = new QName(Namespace.ANNOTATION_NS, name);
+    @Override
+    protected SerializationAnnotationErrorCode getAnnotationParamsCardinalityErr() {
+        return SerializationAnnotationErrorCodes.SEST0007;
     }
 
-    public static SerializationAnnotationName valueOf(final QName name) { 
-
-        for(SerializationAnnotationName an : SerializationAnnotationName.values()) {
-            if(an.name.equals(name)) {
-                return an;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown name: " + name.toString());
+    @Override
+    protected SerializationAnnotationErrorCode getAnnotationMissingParamsErr() {
+        return SerializationAnnotationErrorCodes.SEST0008;
     }
 
-    public QName getQName() {
-        return name;
+    @Override
+    protected SerializationAnnotationErrorCode getInvalidAnnotationParamsErr() {
+        return SerializationAnnotationErrorCodes.SEST0009;
     }
 }

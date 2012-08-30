@@ -38,9 +38,29 @@ import org.exquery.serialization.Namespace;
 public class SerializationAnnotationErrorCodes extends ErrorCodes {
 
     //output method
-    public static SerializationAnnotationErrorCode SEST0001 = new SerializationAnnotationErrorCode("SEST0001", "It is a static error if a Serialization Output Method Annotation has more than one literal value");
-    public static SerializationAnnotationErrorCode SEST0002 = new SerializationAnnotationErrorCode("SEST0002", "It is a static error if a Serialization Output Method Annotation has an empty value");
-    public static SerializationAnnotationErrorCode SEST0003 = new SerializationAnnotationErrorCode("SEST0003", "It is a static error if a Serialization Output Method Annotation does not describe a valid output method");
+    public static SerializationAnnotationErrorCode SEST0001 = new SerializationAnnotationErrorCode("SEST0001", "It is a static error if a Serialization Output method Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0002 = new SerializationAnnotationErrorCode("SEST0002", "It is a static error if a Serialization Output method Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0003 = new SerializationAnnotationErrorCode("SEST0003", "It is a static error if a Serialization Output method Annotation does not describe a valid output method");
+    
+    //indent
+    public static SerializationAnnotationErrorCode SEST0004 = new SerializationAnnotationErrorCode("SEST0004", "It is a static error if a Serialization Output indent Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0005 = new SerializationAnnotationErrorCode("SEST0005", "It is a static error if a Serialization Output indent Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0006 = new SerializationAnnotationErrorCode("SEST0006", "It is a static error if a Serialization Output indent Annotation does not have a parameter value of 'yes' or 'no'");
+    
+    //omit-xml-declaration
+    public static SerializationAnnotationErrorCode SEST0007 = new SerializationAnnotationErrorCode("SEST0007", "It is a static error if a Serialization Output omit-xml-declaration Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0008 = new SerializationAnnotationErrorCode("SEST0008", "It is a static error if a Serialization Output omit-xml-declaration Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0009 = new SerializationAnnotationErrorCode("SEST0009", "It is a static error if a Serialization Output omit-xml-declaration Annotation does not have a parameter value of 'yes' or 'no'");
+    
+    //media-type
+    public static SerializationAnnotationErrorCode SEST0010 = new SerializationAnnotationErrorCode("SEST0010", "It is a static error if a Serialization Output media-type Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0011 = new SerializationAnnotationErrorCode("SEST0011", "It is a static error if a Serialization Output media-type Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0012 = new SerializationAnnotationErrorCode("SEST0012", "It is a static error if a Serialization Output media-type Annotation does not describe a valid Internet Media Type");
+    
+    //encoding
+    public static SerializationAnnotationErrorCode SEST0013 = new SerializationAnnotationErrorCode("SEST0013", "It is a static error if a Serialization Output encoding Annotation has more than one literal value");
+    public static SerializationAnnotationErrorCode SEST0014 = new SerializationAnnotationErrorCode("SEST0014", "It is a static error if a Serialization Output encoding Annotation has an empty value");
+    public static SerializationAnnotationErrorCode SEST0015 = new SerializationAnnotationErrorCode("SEST0015", "It is a static error if a Serialization Output encoding Annotation does not describe a valid character encoding");
     
     public static class SerializationAnnotationErrorCode extends ErrorCode {
 

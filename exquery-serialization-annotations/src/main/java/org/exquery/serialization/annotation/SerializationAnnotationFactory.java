@@ -74,6 +74,18 @@ public class SerializationAnnotationFactory {
             case method:
                 serializationAnnotation = new MethodAnnotation();
                 break;
+            
+            case indent:
+                serializationAnnotation = new IndentAnnotation();
+                break;
+                
+            case omitxmldeclaration:
+                serializationAnnotation = new OmitXmlDeclarationAnnotation();
+                break;
+                
+            case mediatype:
+                serializationAnnotation = new MediaTypeAnnotation();
+                break;
                 
             default:
                 throw new IllegalArgumentException("Unknown annotation: " + annotation.getName().toString());

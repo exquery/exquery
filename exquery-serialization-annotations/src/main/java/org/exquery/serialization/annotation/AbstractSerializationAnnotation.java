@@ -33,6 +33,6 @@ import org.exquery.annotation.AbstractAnnotation;
  * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public abstract class AbstractSerializationAnnotation extends AbstractAnnotation<SerializationAnnotationException> implements SerializationAnnotation{
+public abstract class AbstractSerializationAnnotation extends AbstractAnnotation<SerializationAnnotationException> implements SerializationAnnotation {
     
 }
