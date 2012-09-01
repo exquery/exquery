@@ -63,7 +63,7 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
             //TODO future work - if no method annotation, this service could apply to ANY method!
 
         } else {
-            for(HttpMethod servicedMethod : servicedMethods) {
+            for(final HttpMethod servicedMethod : servicedMethods) {
                 getServices().put(servicedMethod, service);
                 for(final RestXqServiceRegistryListener listener : listeners) {
                     listener.registered(service);
@@ -93,8 +93,6 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
         
         return uniqueServices.iterator();
     }
-
-    
     
     @Override
     public RestXqService findService(final HttpRequest request) {
