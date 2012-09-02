@@ -26,53 +26,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
- * Interface for a HTTP Request
- * 
+ * HTTP Header Names
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
+public enum HttpHeaderName {
     
-    /**
-     * Gets the HTTP Method of the HTTP Request
-     * 
-     * @return the HttpMethod of the request
-     */
-    public HttpMethod getMethod();
+    Accept,
+    ContentType;
     
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-    
-    /**
-     * Gets the value of a HTTP Header
-     * 
-     * @param httpHeaderName The name of the HTTP Header to retrieve
-     * 
-     * @return The value of the header or null if the header was not present
-     */
-    public String getHeader(final HttpHeaderName httpHeaderName);
-
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    @Override
+    public String toString() {
+        return name().replaceAll("([a-zX])([A-Z])", "$1-$2");
+    }
 }

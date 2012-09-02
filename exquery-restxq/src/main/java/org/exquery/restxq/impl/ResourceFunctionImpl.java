@@ -30,9 +30,11 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import org.exquery.restxq.ResourceFunction;
+import org.exquery.restxq.annotation.ConsumesAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.restxq.annotation.ProducesAnnotation;
 import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery3.FunctionSignature;
 
@@ -47,6 +49,8 @@ public class ResourceFunctionImpl implements ResourceFunction {
     private FunctionSignature functionSignature;
     private PathAnnotation pathAnnotation;
     private Set<HttpMethodAnnotation> httpMethodAnnotations = new HashSet<HttpMethodAnnotation>();
+    private Set<ConsumesAnnotation> consumesAnnotations = new HashSet<ConsumesAnnotation>();
+    private Set<ProducesAnnotation> producesAnnotations = new HashSet<ProducesAnnotation>();
     private Set<ParameterAnnotation> parameterAnnotations = new HashSet<ParameterAnnotation>();
     private Set<SerializationAnnotation> serializationAnnotations = new HashSet<SerializationAnnotation>();
     
@@ -82,6 +86,16 @@ public class ResourceFunctionImpl implements ResourceFunction {
         return httpMethodAnnotations;
     }
 
+    @Override
+    public Set<ConsumesAnnotation> getConsumesAnnotations() {
+        return consumesAnnotations;
+    }
+    
+    @Override
+    public Set<ProducesAnnotation> getProducesAnnotations() {
+        return producesAnnotations;
+    }
+    
     @Override
     public Set<ParameterAnnotation> getParameterAnnotations() {
         return parameterAnnotations;

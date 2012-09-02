@@ -54,9 +54,9 @@ public interface HttpResponse {
     
     public void setHeader(String attribute, String attribute0);
 
-    public void setStatus(int status, String reason);
+    public void setStatus(HttpStatus status, String reason);
 
-    public void setStatus(int status);
+    public void setStatus(HttpStatus status);
 
     public boolean containsHeader(String contentType);
 

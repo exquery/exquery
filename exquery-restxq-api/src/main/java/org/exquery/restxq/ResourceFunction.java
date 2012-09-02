@@ -28,9 +28,11 @@ package org.exquery.restxq;
 
 import java.net.URI;
 import java.util.Set;
+import org.exquery.restxq.annotation.ConsumesAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.restxq.annotation.ProducesAnnotation;
 import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery3.Function;
 import org.exquery.xquery3.FunctionSignature;
@@ -79,6 +81,22 @@ public interface ResourceFunction extends Function {
      * The Set may contain zero or more annotations.
      */
     public Set<HttpMethodAnnotation> getHttpMethodAnnotations();
+    
+    /**
+     * Returns the Set of Consumes Annotations applied to the Resource Function
+     * 
+     * @return The Consumes Annotations of the Resource Function
+     * The Set may contain zero or more annotations.
+     */
+    public Set<ConsumesAnnotation> getConsumesAnnotations();
+    
+    /**
+     * Returns the Set of Produces Annotations applied to the Resource Function
+     * 
+     * @return The Produces Annotations of the Resource Function
+     * The Set may contain zero or more annotations.
+     */
+    public Set<ProducesAnnotation> getProducesAnnotations();
     
     /**
      * Returns the Set of Parameter Annotations applied to the Resource Function

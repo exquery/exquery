@@ -24,55 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
+package org.exquery.restxq.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.exquery.http.HttpRequest;
 
 /**
- * Interface for a HTTP Request
+ * Media Type Annotations restrict the scope of REST Requests
+ * to which a Resource Function can be applied based on
+ * Internet Media Type properties of the Request
  * 
+ * Base interface for the XQuery RESTXQ Annotations %rest:consumes and %rest:produces
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
+public interface MediaTypeAnnotation extends ConstraintAnnotation {
     
     /**
-     * Gets the HTTP Method of the HTTP Request
+     * Determines whether the Http Request matches
+     * the Media Type Annotation
      * 
-     * @return the HttpMethod of the request
+     * @param request the Http Request to check against
+     * the Media Type Annotation constraints
+     * 
+     * @return true if the request matches, false otherwise
      */
-    public HttpMethod getMethod();
-    
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-    
-    /**
-     * Gets the value of a HTTP Header
-     * 
-     * @param httpHeaderName The name of the HTTP Header to retrieve
-     * 
-     * @return The value of the header or null if the header was not present
-     */
-    public String getHeader(final HttpHeaderName httpHeaderName);
-
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    public boolean matchesMediaType(final HttpRequest request);
 }

@@ -43,13 +43,11 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0004 = new RestXqErrorCode("RQST0004", "It is a static error if a Path annotation provides an invalid URI");
     public static RestXqErrorCode RQST0009 = new RestXqErrorCode("RQST0009", "It is a static error if a function has a REST method annotation, but does not contain a REST path annotation");
     
-    
     //annotated function errors
     public static RestXqErrorCode RQST0005 = new RestXqErrorCode("RQST0005", "It is a static error if an annotated function parameter maps to a function parameter whoose cardinality is not Exactly One");
     public static RestXqErrorCode RQST0006 = new RestXqErrorCode("RQST0006", "It is a static error if an annotated function parameter maps to a function parameter whoose type is not a simple type");
     public static RestXqErrorCode RQST0007 = new RestXqErrorCode("RQST0007", "It is a static error if an annotated function parameter does not map onto a named function parameter");
     public static RestXqErrorCode RQST0008 = new RestXqErrorCode("RQST0008", "It is a static error if a function mapped by an annotated function parameter has parameters which are not mapped from the annotation and are not optional");
-    
     
     //content (put/post) annotation errors
     public static RestXqErrorCode RQST0010 = new RestXqErrorCode("RQST0010", "It is a static error if a REST content method Annotation has more than one literal value");
@@ -74,6 +72,15 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0025 = new RestXqErrorCode("RQST0025", "It is a static error if a REST query-param Annotations default value is present and is not a super-type of function parameter to which it maps");
     public static RestXqErrorCode RQST0026 = new RestXqErrorCode("RQST0026", "It is a static error if a REST query-param Annotation function parameter does not describe a function parameter");
     
+    //consumes annotation errors
+    public static RestXqErrorCode RQST0027 = new RestXqErrorCode("RQST0027", "It is a static error if a REST consumes Annotation is empty");
+    public static RestXqErrorCode RQST0028 = new RestXqErrorCode("RQST0028", "It is a static error if a REST consumes Annotation contains literals which are not strings");
+    public static RestXqErrorCode RQST0029 = new RestXqErrorCode("RQST0029", "It is a static error if a REST consumes Annotation contains string literals which are not valid Internet Media Types");
+    
+    //produces annotation errors
+    public static RestXqErrorCode RQST0030 = new RestXqErrorCode("RQST0030", "It is a static error if a REST produces Annotation is empty");
+    public static RestXqErrorCode RQST0031 = new RestXqErrorCode("RQST0031", "It is a static error if a REST produces Annotation contains literals which are not strings");
+    public static RestXqErrorCode RQST0032 = new RestXqErrorCode("RQST0032", "It is a static error if a REST produces Annotation contains string literals which are not valid Internet Media Types");
     
     public static class RestXqErrorCode extends ErrorCode {
 

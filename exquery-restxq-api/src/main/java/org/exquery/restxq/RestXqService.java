@@ -63,6 +63,8 @@ public interface RestXqService extends Comparable<RestXqService> {
      * @param httpRequest The http request. This method must not consume the request body.
      * 
      * @return true if this Service can service the incoming request
+     * 
+     * @throws RestXqServiceException
      */
     public boolean canService(final HttpRequest httpRequest);
     

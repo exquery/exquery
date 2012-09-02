@@ -24,55 +24,43 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
+package org.exquery.restxq.impl.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.regex.Matcher;
+import org.exquery.http.HttpRequest;
+import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
+import org.exquery.restxq.annotation.ConsumesAnnotation;
 
 /**
- * Interface for a HTTP Request
- * 
+ * Implementation of RESTXQ Consumes Annotation
+ * i.e. %rest:consumes
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
+public class ConsumesAnnotationImpl extends AbstractMediaTypeAnnotation implements ConsumesAnnotation {
     
-    /**
-     * Gets the HTTP Method of the HTTP Request
-     * 
-     * @return the HttpMethod of the request
-     */
-    public HttpMethod getMethod();
+    @Override
+    public boolean matchesMediaType(final HttpRequest request) {
+        final String contentType = request.getContentType();
+        
+        final Matcher mtcConsumesContentType = getMediaTypesPatternMatcher().matcher(contentType);
+        return mtcConsumesContentType.matches();
+    }
     
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-    
-    /**
-     * Gets the value of a HTTP Header
-     * 
-     * @param httpHeaderName The name of the HTTP Header to retrieve
-     * 
-     * @return The value of the header or null if the header was not present
-     */
-    public String getHeader(final HttpHeaderName httpHeaderName);
+    @Override
+    protected RestXqErrorCode getEmptyAnnotationParamsErr() {
+        return RestXqErrorCodes.RQST0027;
+        
+    }
 
-    public String getContentType();
+    @Override
+    protected RestXqErrorCode getInvalidMediaTypeLiteralErr() {
+        return RestXqErrorCodes.RQST0028;
+    }
 
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    @Override
+    protected RestXqErrorCode getInvalidMediaTypeErr() {
+        return RestXqErrorCodes.RQST0029;
+    }
 }

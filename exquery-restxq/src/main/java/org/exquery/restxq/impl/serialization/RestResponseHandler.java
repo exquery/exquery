@@ -30,7 +30,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import org.exquery.http.HttpResponse;
+import org.exquery.http.HttpStatus;
 import org.exquery.restxq.Namespace;
+import org.exquery.restxq.RestXqServiceException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -64,7 +66,7 @@ public class RestResponseHandler {
      * @param response
      * @param serializationProperties  
      */
-    public void process(final Element restResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) {
+    public void process(final Element restResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) throws RestXqServiceException {
         
         final NodeList nlSerializationParameters = restResponse.getElementsByTagNameNS(SERIALIZATION_PARAMETERS_ELEMENT_NAME.getNamespaceURI(), SERIALIZATION_PARAMETERS_ELEMENT_NAME.getLocalPart());
         if(nlSerializationParameters.getLength() == 1) {
@@ -93,24 +95,28 @@ public class RestResponseHandler {
         return serializationProperties;
     }
 
-    protected void processHttpResponse(final Element httpResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) {
+    protected void processHttpResponse(final Element httpResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) throws RestXqServiceException {
         
         //get the status code (if present)
         final String strStatus = httpResponse.getAttribute(STATUS_ATTR_NAME);
-        int status = -1;
+        HttpStatus httpStatus = null;
         if(strStatus != null && !strStatus.isEmpty()) {
-            status = Integer.parseInt(strStatus);
+            final int status = Integer.parseInt(strStatus);
+            try {
+                httpStatus = HttpStatus.fromStatus(status);
+            } catch(final IllegalArgumentException iae) {
+                throw new RestXqServiceException("Invalid HTTP Status in rest:response/@status: " + strStatus, iae);
+            }
         }
         
         //get the reason (if present)
         final String reason = httpResponse.getAttribute(REASON_ATTR_NAME);
         
-        
         //set the status and reason
-        if(status != -1 && (reason != null && !reason.isEmpty())) {
-            response.setStatus(status, reason);
-        } else if(status != -1) {
-            response.setStatus(status);
+        if(httpStatus != null && (reason != null && !reason.isEmpty())) {
+            response.setStatus(httpStatus, reason);
+        } else {
+            response.setStatus(httpStatus);
         }
         
         //process the http headers

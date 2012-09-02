@@ -152,6 +152,7 @@ public class RestXqServicesMap {
      * @param request The HTTP Request to get the Service for
      * 
      * @return The RESTXQ Service that matches the method and request
+     * or null if there is no service that matches the request
      */
     public RestXqService get(final HttpMethod method, final HttpRequest request) {
         final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);

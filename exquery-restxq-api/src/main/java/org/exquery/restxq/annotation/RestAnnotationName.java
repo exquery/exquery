@@ -43,7 +43,9 @@ public enum RestAnnotationName {
     PUT("PUT"),
     //OPTIONS("OPTIONS"),
 
-    path("path"),
+    path,
+    produces,
+    consumes,
 
     formparam("form-param"),
     queryparam("query-param"),
@@ -51,6 +53,10 @@ public enum RestAnnotationName {
     cookieparam("cookie-param");
 
     final QName name;
+    RestAnnotationName() {
+        this.name = new QName(Namespace.ANNOTATION_NS, name());
+    }
+    
     RestAnnotationName(final String name) {
         this.name = new QName(Namespace.ANNOTATION_NS, name);
     }

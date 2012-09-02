@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq;
 
 import org.exquery.ExQueryException;
+import org.exquery.http.HttpStatus;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 
 /**
@@ -37,6 +38,10 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 public class RestXqServiceException extends ExQueryException {
 
     public RestXqServiceException(final String message) {
+        super(message);
+    }
+    
+    public RestXqServiceException(final String message, final HttpStatus httpStatus) {
         super(message);
     }
 

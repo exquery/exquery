@@ -38,9 +38,11 @@ import org.exquery.restxq.ResourceFunctionExecuter;
 import org.exquery.restxq.RestXqService;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.RestXqServiceSerializer;
+import org.exquery.restxq.annotation.ConsumesAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.HttpMethodWithBodyAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
+import org.exquery.restxq.annotation.ProducesAnnotation;
 import org.exquery.xdm.type.SequenceImpl;
 import org.exquery.xdm.type.StringTypedValue;
 import org.exquery.xquery.FunctionSignature;
@@ -90,8 +92,60 @@ public abstract class AbstractRestXqService implements RestXqService {
      */
     @Override
     public boolean canService(final HttpRequest request) {
-        return getServicedMethods().contains(request.getMethod())
-                && getResourceFunction().getPathAnnotation().matchesPath(request.getPath());
+        
+        //1) check the method matches
+        if(getServicedMethods().contains(request.getMethod())) {
+            
+            //2) check the path matches
+            if(getResourceFunction().getPathAnnotation().matchesPath(request.getPath())) {
+                
+                if(!canServiceConsume(request)) {
+                    //TODO HTTP 415 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
+                    return false;
+                }
+                
+                if(!canServiceProduce(request)) {
+                    //TODO HTTP 406 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
+                    return false;
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean canServiceConsume(final HttpRequest request) {
+        if(getResourceFunction().getConsumesAnnotations().isEmpty()) {
+            
+            //if there are no constraints we can consume anything
+            return true;
+        } else {
+            for(final ConsumesAnnotation consumesAnnotation : getResourceFunction().getConsumesAnnotations()) {
+                if(consumesAnnotation.matchesMediaType(request)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean canServiceProduce(final HttpRequest request) {
+        if(getResourceFunction().getProducesAnnotations().isEmpty()) {
+            
+            //if there are no constraints we can produce anything
+            return true;
+        } else {
+            for(final ProducesAnnotation producesAnnotation : getResourceFunction().getProducesAnnotations()) {
+                if(producesAnnotation.matchesMediaType(request)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     /**

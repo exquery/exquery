@@ -24,55 +24,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
-
-import java.io.IOException;
-import java.io.InputStream;
+package org.exquery.restxq.annotation;
 
 /**
- * Interface for a HTTP Request
+ * ConsumesAnnotation
  * 
+ * Represents the XQuery RESTXQ Annotation %rest:consumes
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
-    
-    /**
-     * Gets the HTTP Method of the HTTP Request
-     * 
-     * @return the HttpMethod of the request
-     */
-    public HttpMethod getMethod();
-    
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
-    
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
-    
-    /**
-     * Gets the value of a HTTP Header
-     * 
-     * @param httpHeaderName The name of the HTTP Header to retrieve
-     * 
-     * @return The value of the header or null if the header was not present
-     */
-    public String getHeader(final HttpHeaderName httpHeaderName);
+public interface ConsumesAnnotation extends MediaTypeAnnotation {
 
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
 }

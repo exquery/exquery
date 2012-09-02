@@ -32,9 +32,11 @@ import javax.xml.namespace.QName;
 import org.exquery.ExQueryException;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
+import org.exquery.restxq.annotation.ConsumesAnnotation;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
+import org.exquery.restxq.annotation.ProducesAnnotation;
 import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery3.Annotation;
 
@@ -73,6 +75,10 @@ public class ResourceFunctionFactory {
                 resourceFunction.setPathAnnotation((PathAnnotation)annotation);
             } else if(annotation instanceof HttpMethodAnnotation) {
                 resourceFunction.getHttpMethodAnnotations().add((HttpMethodAnnotation)annotation);
+            } else if(annotation instanceof ConsumesAnnotation) {
+                resourceFunction.getConsumesAnnotations().add((ConsumesAnnotation)annotation);
+            } else if(annotation instanceof ProducesAnnotation) {
+                resourceFunction.getProducesAnnotations().add((ProducesAnnotation)annotation);
             } else if(annotation instanceof ParameterAnnotation) {
                 resourceFunction.getParameterAnnotations().add((ParameterAnnotation)annotation);
             } else if(annotation instanceof SerializationAnnotation) {

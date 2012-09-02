@@ -26,53 +26,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
- * Interface for a HTTP Request
+ * Internet Media Type concepts from RFC 4288
  * 
+ * @see http://tools.ietf.org/html/rfc4288
+ *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface HttpRequest {
-    
+public interface InternetMediaType {
+            
     /**
-     * Gets the HTTP Method of the HTTP Request
+     * Internet Media Type valid characters from RFC 4288
      * 
-     * @return the HttpMethod of the request
+     * @see http://tools.ietf.org/html/rfc4288#section-4.2
+     * 
+     * type-name = reg-name
+     * subtype-name = reg-name
+     * 
+     * reg-name = 1*127reg-name-chars
+     * reg-name-chars = ALPHA / DIGIT / "!" /
+     *                  "#" / "$" / "&" / "." /
+     *                  "+" / "-" / "^" / "_"
      */
-    public HttpMethod getMethod();
     
-    /**
-     * Get the Path from the URI
-     * 
-     * @return the Path segment of the URI
-     */
-    public String getPath();
+    public final static String regNameChars_regExp = "[a-z0-9!#\\$&\\.\\+\\-\\^_]";
+    public final static String regName_regExp = regNameChars_regExp + "{1,127}";
     
-    /**
-     * Gets the InputStream for reading the body of the HTTP Request
-     * 
-     * @return The input stream for the request body
-     *
-     * @throws IOException if a problem occurs when reading the request body
-     */
-    public InputStream getInputStream() throws IOException;
+    public final static String typeName_regExp = regName_regExp;
+    public final static String subtypeName_regExp = regName_regExp;
     
-    /**
-     * Gets the value of a HTTP Header
-     * 
-     * @param httpHeaderName The name of the HTTP Header to retrieve
-     * 
-     * @return The value of the header or null if the header was not present
-     */
-    public String getHeader(final HttpHeaderName httpHeaderName);
-
-    public String getContentType();
-
-    public String getCharacterEncoding();
-
-    public <F> F getFormParam(String key);
-
-    public <Q> Q getQueryParam(String key);
+    public final static char subtypeSeparator = '/';
+    
+    public final static String mediaType_regExp = typeName_regExp + subtypeSeparator + subtypeName_regExp; 
 }

@@ -112,7 +112,15 @@ public class RestAnnotationFactory {
             case path:
                 restAnnotation = new PathAnnotationImpl();
                 break;
+                
+            case consumes:
+                restAnnotation = new ConsumesAnnotationImpl();
+                break;
             
+            case produces:
+                restAnnotation = new ProducesAnnotationImpl();
+                break;
+                
             case formparam:
                 restAnnotation = new FormParameterAnnotation();
                 break;
