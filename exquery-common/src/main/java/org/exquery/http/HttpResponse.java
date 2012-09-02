@@ -52,13 +52,13 @@ public interface HttpResponse {
      */
     public boolean isCommitted();
     
-    public void setHeader(String attribute, String attribute0);
+    public void setHeader(String httpHeaderName, String value);
 
     public void setStatus(HttpStatus status, String reason);
 
     public void setStatus(HttpStatus status);
 
-    public boolean containsHeader(String contentType);
+    public boolean containsHeader(String httpHeaderName);
 
     public void setContentType(String contentType);
 }

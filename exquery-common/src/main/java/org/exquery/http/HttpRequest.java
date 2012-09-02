@@ -66,9 +66,11 @@ public interface HttpRequest {
      * 
      * @return The value of the header or null if the header was not present
      */
-    public String getHeader(final HttpHeaderName httpHeaderName);
+    public String getHeader(String httpHeaderName);
 
     public String getContentType();
+    
+    public int getContentLength();
 
     public String getCharacterEncoding();
 

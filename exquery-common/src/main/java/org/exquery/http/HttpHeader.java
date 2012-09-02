@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.http;
 
 /**
- * Enumeration of HTTP Header Names
+ * Enumeration of Common HTTP Header Names
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
