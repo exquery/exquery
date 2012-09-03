@@ -73,6 +73,33 @@
           doRDFa: "1.1",
       };
     </script>
+    <style>
+      <!--
+        div.exampleInner {
+          background-color: #D5DEE3;
+          border-top-width: 4px;
+          border-top-style: double;
+          border-top-color: lightGrey;
+          border-bottom-width: 4px;
+          border-bottom-style: double;
+          border-bottom-color: lightGrey;
+          padding: 4px;
+          margin: 0em;
+        }
+        
+        code.function {
+          font-weight: bold;
+        }
+        
+        code.return-type {
+          font-style: italic;
+        }
+        
+        code.type {
+          font-style: italic;
+        }
+      -->
+    </style>
   </head>
   <body>
     <section id="sotd">
@@ -81,9 +108,9 @@
       <a href="http://exquery.org/" title="EXQuery: Extensions for EXQuery">EXQuery project</a>.
     </section>
     <section id='abstract'>
-      Whilst XQuery [[XQUERY]] was originally envisaged and designed as a query language for XML,
+      Whilst XQuery [[!XQUERY]] was originally envisaged and designed as a query language for XML,
       it has been adopted by many as a language for application development. This specification
-      describes a set of XQuery 3.0 Annotations [[XQUERY-30]] and a small set of functions to enable XQuery
+      describes a set of XQuery 3.0 Annotations [[!XQUERY-30]] and a small set of functions to enable XQuery
       to provide RESTful services, thus enabling Web Application development in XQuery.
     </section>
     
@@ -156,6 +183,33 @@
           an understanding of Web technologies and server side scripting.
         </p>
       </section>
+      <section>
+        <h3>Namespaces and Prefixes</h3>
+        <p>
+          The annotations and functions discussed in this document are contained in one of
+          two namespaces (see [[!XML-NAMES]]) and referenced using an xs:QName.
+          The namespace prefix used in this document for annotations and functions that are
+          solely related to RESTXQ is <code>rest</code>.
+          <!-- TODO are these in this doc? -->Serialization annotations and functions are named with the prefix <code>output</code>.
+        </p>
+        <p>
+          This document uses the prefix <code>rerr</code> to represent the namespace URI <code>http://exquery.org/ns/restxq/error</code>, which is the namespace for all RESTXQ error codes and messages. This namespace prefix is not predeclared and its use in this document is not normative.
+        </p>
+        <p>
+          The namespace prefix used for the functions, datatypes and errors can vary, as long as the prefix is bound to the correct URI.
+        </p>
+        <p>
+          The URIs of the namespaces and the default prefixes associated with them are:
+        </p>
+        <ul>
+          <li><code>http://exquery.org/ns/restxq</code> for annotations and functions -- associated with <code>rest</code>.</li>
+          <li><code>http://www.w3.org/2010/xslt-xquery-serialization</code> for annotations and functions -- associated with <code>output</code>.</li>
+          <li><code>http://exquery.org/ns/restxq/error</code> for annotations and functions -- associated with <code>rerr</code>.</li>
+        </ul>
+        <div class="note">
+          The namespace URI associated with the <code>rerr</code> prefix is not expected to change from one version of this document to another. The contents of this namespace may be extended to allow additional errors to be returned.
+        </div>
+      </section>
     </section>
     <section id="annotations">
       <h2>Annotations</h2>
@@ -193,7 +247,7 @@
         <section id="approach">
           <h4>Approach</h4>
           <p>
-            RESTXQ is heavily influenced by that of JAX-RS [[JAX-RS]]. However, we simplify and deviate from JAX-RS
+            RESTXQ is heavily influenced by that of JAX-RS [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
             predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
             and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
             to XQuery invocation, our unit of granularity is the XQuery function.
@@ -254,7 +308,7 @@
             </p>
             <p>
               The path annotation is named <code>%rest:path</code> and takes a single mandatory literal string, which
-              describes the URI path for this service. The URI path is considered relative to a base URI which is
+              describes the URI path for this service. The URI path is considered relative to a base URI (<a href="#base-uri" class="sectionRef"></a>) which is
               implementation defined.
             </p>
             <p>
@@ -304,7 +358,82 @@
         </section>
       </section>
     </section>
-    
+    </section>
+    <section id="http-mechanics">
+      <h2>HTTP Mechanics</h2>
+      <p><!--TODO --></p>
+      <section id="base-uri">
+        <h3>Base URI</h3>
+        <p>
+          The base URI of a Resource Function is implementation defined. That is to say that an implementation
+          is free to define either statically or dynamically the URI part that appears before the
+          relative URI of any Path Annotation.(<a href="#path-annotation" class="sectionRef"></a>)
+          <!-- TODO if a path annotation is not specified then the remaining URIs apply to the base uri -->
+        </p>
+        <section>
+          <h4>EXPath Package Considerations</h4>
+          <p><!-- TODO --></p>
+        </section>
+      </section>
+    </section>
+    <section id="functions">
+      <h2>RESTXQ Function Module</h2>
+      <p>RESTXQ offers a few simple functions to assist with the construction of RESTful Web Services.</p>
+      <section>
+        <h3>Registry Functions</h3>
+        <p>Functions to assist in managing the RESTXQ Registry.</p>
+        <section>
+          <h4>rest:resource-functions()</h4>
+          <div class="exampleInner">
+            <pre><code class="function">rest:resource-functions</code>() as <code class="type">document-node(element(rest:resource-functions))</code></pre>
+          </div>
+          <p>
+            Summary: This function returns an XML document describing the Resource Functions registered
+            with the RESTXQ Registry.
+          </p>
+          <p>The XML document root element <code>rest:resource-functions</code> structure:</p>
+          <div class="exampleInner">
+<pre>&lt;rest:resource-functions&gt;
+  rest:resource-function*
+&lt;/rest:resource-functions&gt;</pre>
+          </div>
+          <p>The <code>rest:resource</code> XML element has the following structure:</p>
+          <div class="exampleInner">
+            <pre>&lt;rest:resource-function
+  xquery-uri = xs:anyURI&gt;
+  &lt;rest:identity
+    namespace = xs:anyURI
+    local-name = xs:NCName
+    arity = xs:int/&gt;
+&lt;/rest:resource-function&gt;</pre>
+          </div>
+        </section>
+      </section>
+      <section>
+        <h3>URI Functions</h3>
+        <p>URI functions assist in the construction and selection of URIs.</p>
+        <section>
+          <h4>rest:base-uri()</h4>
+          <div class="exampleInner">
+            <pre><code class="function">rest:base-uri</code>() as <code class="type">xs:anyURI</code></pre>
+          </div>
+          <p>
+            Summary: This function returns the implementation defined base URI
+            (<a href="#base-uri" class="sectionRef"></a>) of the Resource Function.
+          </p>
+        </section>
+        <section>
+          <h4>rest:uri()</h4>
+          <div class="exampleInner">
+            <pre><code class="function">rest:uri</code>() as <code class="type">xs:anyURI</code></pre>
+          </div>
+          <p>
+            Summary: This function is returns the complete URI that addresses the Resource Function. Typically
+            this is the <code>rest:base-uri()</code> appended with the path from the Path Annotation (if present) of the Resource Function.  
+          </p>
+        </section>
+      </section>
+    </section>
     <section class="appendix">
       <h2>Resources for Implementers</h2>
       <p>
