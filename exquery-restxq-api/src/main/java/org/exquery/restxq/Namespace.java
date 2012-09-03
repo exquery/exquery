@@ -36,7 +36,7 @@ public interface Namespace extends org.exquery.Namespace {
     /**
      * The namespace of RESTXQ
      */
-    public final static String ANNOTATION_NS = EXQUERY_NS + "rest/annotation/";
+    public final static String ANNOTATION_NS = EXQUERY_NS + "restxq";
     
     /**
      * The recommended prefix for the namespace of RESTXQ
@@ -47,7 +47,7 @@ public interface Namespace extends org.exquery.Namespace {
     /**
      * The namespace of RESTXQ errors
      */
-    public final static String ANNOTATION_ERROR_NS = ANNOTATION_NS + "error/";
+    public final static String ANNOTATION_ERROR_NS = ANNOTATION_NS + "/error";
     
     /**
      * The recommended prefix for the namespace of RESTXQ errors
