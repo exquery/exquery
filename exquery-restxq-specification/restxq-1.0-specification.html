@@ -98,6 +98,11 @@
         code.type {
           font-style: italic;
         }
+        
+        span.explain {
+          font-family: sans-serif;
+          font-style: italic;
+        }
       -->
     </style>
   </head>
@@ -343,9 +348,7 @@
               to be retrieved: <em>http://www.widget-factory.com/stock/widget/<code>{$id}</code></em>.
             </p>
             <div class="note">
-              When many URI paths are defined, conflicts may occur. It is implementation defined how such conflicts should be
-              resolved. However, most specific URI paths MUST always be evaluated before less specific URI paths, to ensure
-              that lesser paths do not unintentionally consume requests.
+              When many Resource Functions are defined, there can be many Path Annotations, as such conflicts may occur, the resolution of such conflicts MUST be processed as described in <a href="#path-preference"></a>.
             </div>
           </section>
           <section id="method-annotation">
@@ -373,6 +376,106 @@
         <section>
           <h4>EXPath Package Considerations</h4>
           <p><!-- TODO --></p>
+        </section>
+      </section>
+      <section>
+        <h3>HTTP Request Matching</h3>
+        <p>
+          It is often the case that there is one or more Resource Functions that could service an
+          incoming HTTP Request. To avoid conflicts, the most specific Resource Function
+          MUST be applied to an incoming request. This chapter defines the specificity of Resource
+          Functions against HTTP requests.
+        </p>
+        <p>The specificity of a Resource Function is governed by three rules which MUST be applied in order:</p>
+        <ol>
+          <li><a href="#constraint-preference"></a></li>
+          <li><a href="#path-preference"></a></li>
+        </ol>
+        <section id="constraint-preference">
+          <h4>Resource Function Constraint Preference</h4>
+          <p>
+            Resource Functions that impose the most specific constraints MUST first be selected
+            as candidates to process the HTTP Request.
+          </p>
+          <p>Most specific constraints first:</p>
+          <ol>
+            <!-- TODO break Media-Type into Consumes and Produces? -->
+            <li>Method, Path, Media-Type</li>
+            <li>Method, Path</li>
+            <li>Path, Media Type</li>
+            <li>Path</li>
+            <li>Method, Media Type</li>
+            <li>Method</li>
+            <li>Media Type</li>
+          </ol>
+          <pre class="example" title="Constraint Specificity">
+<span class="explain">The following Resource Function:</span>            
+            
+declare function
+  %rest:GET
+  %rest:path("/a/b/c")
+  %rest:consumes("application/xml")
+local:function-1() {
+  <fn>1</fn>
+};
+
+<span class="explain">is more specific than:</span>
+
+declare function
+  %rest:GET
+  %rest:path("/a/b/c")
+local:function-2() {
+  <fn>2</fn>
+};
+          </pre>
+        </section>
+        <section id="path-preference">
+          <h4>Path Preference</h4>
+          <p>
+            More than one Path from a Resource Function Path Annotations MAY appear to satisfy a request,
+            however often these can be disambiguated by specificity of application to the HTTP Request URI.
+            The most specific paths MUST be selected as candidates to process the HTTP Request.
+          </p>
+          <p>The rules determining Path specifity to a request are:</p>
+          <ol>
+            <li>Path Segment Length</li>
+            <p>
+              Path X is more specific than path Y if it has more segments.
+            </p>
+            <pre class="example" title="Path Length Specificity">
+              <code>/a/b</code> <span class="explain">is more specific than</span> <code>/a</code>.
+            </pre>
+            <li>Path Selection</li>
+            <p>
+              If more than one Path has the same number of segments, the segments of the paths are
+              compared from left to right.
+            </p>
+            <p>
+              Path X is more specific than Path Y if the current segment of Y
+              is a template, while the respective segment of X is not.
+            </p>
+            <pre class="example" title="Path Selection Specificity">
+              <code>/a/b</code> <span class="explain">is more specific than</span> <code>/a/{$x}</code>.
+              
+              <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.
+            </pre>
+          </ol>
+        </section>
+        <section id="media-type-preference">
+          <h4>Media Type Preference</h4>
+          <p>
+            More than one Media Type from Resource Function Consumes or Produces Annotations MAY appear to satisfy a request,
+            however often these can be disambiguated by specificity.
+            The most specific media types MUST be selected as candidates to process the HTTP Request.
+          </p>
+          <p>The rules determining Media Type specifity are:</p>
+          <ol>
+            <li>Absolute before Wildcard</li>
+            <p>Absolute Media Types are considered more specific than Media Types with wildcard subtypes</p>
+            <pre class="example" title="Media Type Specificity">
+              <code>application/xml</code> <span class="explain">is more specific than</span> <code>application/*</code>.
+            </pre>
+          </ol>
         </section>
       </section>
     </section>
