@@ -39,4 +39,11 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
     
     @Override
     public Iterator<TypedValue<T>> iterator();
+    
+    /**
+     * Gets the tail of the Sequence
+     * 
+     * @return The Sequence without the first Item
+     */
+    public Sequence<T> tail();
 }

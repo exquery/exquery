@@ -136,13 +136,14 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                 processSerializationAnnotations(serializationAnnotations, serializationProperties);
                 new RestResponseHandler().process(elem, serializationProperties, response);
                 if(itResult.hasNext()) {
-                    final TypedValue secondResultPart = itResult.next();
-                    serializeBody(secondResultPart, response, serializationProperties);
+                    
+                    final Sequence seqBody = result.tail();
+                    serializeBody(seqBody, response, serializationProperties);
                 }
             } else {
                 //serialize just the body
                 processSerializationAnnotations(serializationAnnotations, serializationProperties);
-                serializeBody(firstResultPart, response, serializationProperties);
+                serializeBody(result, response, serializationProperties);
             }
         }
     }
@@ -175,7 +176,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      *
      * @throws RestXqServiceException  
      */
-    protected void serializeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
+    protected void serializeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
         
         SupportedMethod method = null;
         
@@ -219,7 +220,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      * 
      * @throws RestXqServiceException If an error occurred whilst serializing the result
      */
-    protected abstract void serializeBinaryBody(final TypedValue result, final HttpResponse response) throws RestXqServiceException;
+    protected abstract void serializeBinaryBody(final Sequence result, final HttpResponse response) throws RestXqServiceException;
     
     /**
      * Serialize the Result
@@ -235,7 +236,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      * 
      * @throws RestXqServiceException If an error occurred whilst serializing the result
      */
-    protected abstract void serializeNodeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException;
+    protected abstract void serializeNodeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException;
     
     
     /**

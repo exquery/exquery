@@ -41,7 +41,7 @@ import org.exquery.xquery.TypedValue;
  */
 public class SequenceImpl<T> implements Sequence<T> {
 
-    private final List<TypedValue<T>> sequence = new ArrayList<TypedValue<T>>();
+    private List<TypedValue<T>> sequence = new ArrayList<TypedValue<T>>();
     
     public SequenceImpl() {
     }
@@ -63,5 +63,12 @@ public class SequenceImpl<T> implements Sequence<T> {
     @Override
     public Iterator<TypedValue<T>> iterator() {
         return sequence.iterator();
-    }   
+    }
+    
+    @Override
+    public Sequence<T> tail() {
+        final SequenceImpl seq = new SequenceImpl();
+        seq.sequence = sequence.subList(1, sequence.size());
+        return seq;
+    }
 }
