@@ -60,9 +60,19 @@ public interface PathAnnotation extends ConstraintAnnotation {
     public Map<String, String> extractPathParameters(final String uriPath); //TODO consider that the left side is a function parameter name?
     
     /**
-     * Gets the number of Path Segments in the Path described by the Path Annotation
+     * Gets the metric describing the specificity of this path
      * 
-     * @return The total number of Path Segments
+     * When comparing this metric to others paths,
+     * the larger the metric, the more specific the path is.
+     * 
+     * The metric does not tell you if this path annotation
+     * matches a request path. Rather, if you have more than
+     * one Resource Function with Path Annotations that match
+     * a request path, this metric allows you to compare the 
+     * resource functions to determine the most specific match
+     * against the path.     
+     * 
+     * @return The path specificity metric
      */
-    public int getPathSegmentCount();
+    public int getPathSpecificityMetric();
 }

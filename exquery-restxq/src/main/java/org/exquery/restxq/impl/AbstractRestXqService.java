@@ -308,7 +308,7 @@ public abstract class AbstractRestXqService implements RestXqService {
     }
 
     /**
-     * Sorts the Services into URI segment length descending order
+     * Sorts the Services into Path Specificity descending order
      * That is to say that the resultant sorted list should have the most specific URI's at the top! 
      *
      * @param other Another Service
@@ -319,6 +319,6 @@ public abstract class AbstractRestXqService implements RestXqService {
             return 1;
         }
         
-        return getResourceFunction().getPathAnnotation().getPathSegmentCount() - ((RestXqService)other).getResourceFunction().getPathAnnotation().getPathSegmentCount();
+        return getResourceFunction().getPathAnnotation().getPathSpecificityMetric() - ((RestXqService)other).getResourceFunction().getPathAnnotation().getPathSpecificityMetric();
     }
 }

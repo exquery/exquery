@@ -47,6 +47,9 @@ import org.exquery.xquery.Type;
  */
 public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
+    protected final static int PATH_SEGMENT_PARAM_SPECIFICITY = 1;
+    protected final static int PATH_SEGMENT_SOLID_SPECIFICITY = 2;
+    
     //combines official RFC URI path segment regexp  with our encoded function argument regexp
     public final static String pathSegmentRegExp = "(?:"  + URI.pchar_regExp + "|" + functionArgumentRegExp + ")";
     
@@ -59,8 +62,10 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     //validator for Path
     public final static Pattern ptnPath = Pattern.compile(pathRegExp);
     
-    private PathRegularExpression pathRegularExpression;
+    private PathInformation pathRegularExpression;
     
+    //no longer needed now that we have the metric
+    @Deprecated 
     private int pathSegmentCount = -1;
     
     
@@ -76,7 +81,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     @Override
     public void initialise() throws RestAnnotationException {
         super.initialise();
-        this.pathRegularExpression = parsePath(); 
+        this.pathRegularExpression = parsePath();
     }
     
     /**
@@ -84,7 +89,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
      */
     @Override
     public boolean matchesPath(final String path) {
-        final Matcher m = getPathRegularExpression().getPathMatcher(path);
+        final Matcher m = getPathInformation().getPathMatcher(path);
         return m.matches();
     }
     
@@ -95,12 +100,12 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     public Map<String, String> extractPathParameters(final String uriPath) {
         
         final Map<String, String> pathParamNameAndValues = new HashMap<String, String>();        
-        final Matcher m = getPathRegularExpression().getPathMatcher(uriPath);        
+        final Matcher m = getPathInformation().getPathMatcher(uriPath);        
 
         if(m.matches()) {
             for(int i = 1 ; i <= m.groupCount(); i++) {
 
-                final String paramName = getPathRegularExpression().getFnParamNameForGroup(i);
+                final String paramName = getPathInformation().getFnParamNameForGroup(i);
                 final String paramValue = m.group(i);
 
                 pathParamNameAndValues.put(paramName, paramValue);
@@ -108,30 +113,21 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         }
         return pathParamNameAndValues;
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#getPathSegmentCount() 
+
+     /**
+     * @see org.exquery.restxq.annotation.PathAnnotation#getPathSpecificityMetric() 
      */
     @Override
-    public int getPathSegmentCount() {
-        return pathSegmentCount;
+    public int getPathSpecificityMetric() {
+        return getPathInformation().getPathSpecificityMetric();
     }
     
     /**
-     * Set the Path Segment Count of the URI
+     * Get the Path Information
      * 
-     * @param pathSegmentCount The number of Segments in the Path
+     * @return The Path Information
      */
-    protected void setPathSegmentCount(int pathSegmentCount) {
-        this.pathSegmentCount = pathSegmentCount;
-    }
-    
-    /**
-     * Get the Path Regular Expression
-     * 
-     * @return The Path Regular Expression
-     */
-    protected PathRegularExpression getPathRegularExpression(){
+    protected PathInformation getPathInformation(){
         return pathRegularExpression;
     }
     
@@ -142,7 +138,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
      * 
      * @throws RestAnnotationException if the Path literal is invalid
      */
-    protected PathRegularExpression parsePath() throws RestAnnotationException {
+    protected PathInformation parsePath() throws RestAnnotationException {
         
         final Literal[] annotationValue = getLiterals();
         
@@ -172,11 +168,11 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
         final Matcher mchPathSegment = ptnPathSegment.matcher(pathStr);
 
-        int segmentCount = 0;
-
         final Map<Integer, String> groupParamNames = new HashMap<Integer, String>();
         int groupCount = 0;
 
+        int pathSpecificityMetric = 0;
+        
         while(mchPathSegment.find()) {
             final String pathSegment = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
 
@@ -184,6 +180,14 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
             thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
 
+            /* 
+             * if not the first segment,
+             * left shift the last specifity segment of the path
+             */
+            if(pathSpecificityMetric > 0) {
+                pathSpecificityMetric = pathSpecificityMetric << 2;
+            }
+            
             if(mtcFnParameter.matches()) {
                 //is a path function parameter
                 final String fnParamName = mtcFnParameter.replaceFirst("$1");
@@ -195,15 +199,19 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
                 //record the position of the param in the path
                 groupParamNames.put(++groupCount, fnParamName);
+                
+                //record the specifity of this path segment
+                pathSpecificityMetric ^= PATH_SEGMENT_PARAM_SPECIFICITY;
             } else {
                 //is just a string path segment
                 thisPathExprRegExp.append("(?:");
                 thisPathExprRegExp.append(Pattern.quote(pathSegment));
                 thisPathExprRegExp.append(")");
+                
+                //record the specifity of this path segment
+                pathSpecificityMetric ^= PATH_SEGMENT_SOLID_SPECIFICITY;
             }
-            segmentCount++;
         }
-        setPathSegmentCount(segmentCount);
 
         //check the function that has this annotation has parameters as declared by the annotation
         checkFnDeclaresParameters(getFunctionSignature(), pathFnParams);
@@ -211,24 +219,55 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         //we now have a pattern for matching the URI path!
         final Pattern ptnThisPath = Pattern.compile(thisPathExprRegExp.toString());
 
-        return new PathRegularExpression(ptnThisPath, groupParamNames);
+        return new PathInformation(pathStr, ptnThisPath, groupParamNames, pathSpecificityMetric);
     }
     
     /**
-     * Represents a Regular Expression describing the Path
-     * with the Parameters of the Path setup as Groups in the Expression
-     * 
-     * Contains both the Expression and a Map of Group indices to Parameter Names
+     * Represents the extracted information from the parameter to the Path Annotation
      */
-    protected class PathRegularExpression {
-        final Pattern ptnPath;
-        final Map<Integer, String> groupParamNames;
+    protected class PathInformation {
         
-        public PathRegularExpression(final Pattern ptnPath, final Map<Integer, String> groupParamNames) {
+        private final String pathLiteral;
+        
+        /**
+         * Regular Expression to match a corresponding path with the Parameters of the Path setup as Groups in the Expression
+         */
+        private final Pattern ptnPath;
+        
+        /**
+         * Map of Group indices in the Regular Expression (ptnPath) to Parameter Names
+         */
+        private final Map<Integer, String> groupParamNames;
+        
+        /**
+         * Metric describing the path Specificity
+         */
+        private final int pathSpecificityMetric;
+        
+        /**
+         *
+         * @param pathLiteral The original path literal provided as the parameter to the Path Annotation
+         * @param ptnPath The Regular Expression that matches a path against the pathLiteral
+         * @param groupParamNames A mapping of group indexes in the regular expression to parameter names
+         */
+        public PathInformation(final String pathLiteral, final Pattern ptnPath, final Map<Integer, String> groupParamNames, final int pathSpecificityMetric) {
+            this.pathLiteral = pathLiteral;
             this.ptnPath = ptnPath;
             this.groupParamNames = groupParamNames;
+            this.pathSpecificityMetric = pathSpecificityMetric;
         }
 
+        /**
+         * Gets the original Path Literal
+         * which was provided as the parameter
+         * to the Path Annotation
+         * 
+         * @return The Path Literal
+         */
+        public String getPathLiteral() {
+            return pathLiteral;
+        }
+        
         /**
          * Gets a Matcher for the Path Regular Expression
          * The Matcher enables you to process a Path
@@ -254,6 +293,16 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
          */
         public String getFnParamNameForGroup(final int groupIndex) {
             return groupParamNames.get(groupIndex);
+        }
+
+        
+        /**
+         * Gets the specificity metric of this path
+         * 
+         * @return the Specificity metric of this path
+         */
+        public int getPathSpecificityMetric() {
+            return pathSpecificityMetric;
         }
     }
 }
