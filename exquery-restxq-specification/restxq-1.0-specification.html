@@ -460,6 +460,14 @@ local:function-2() {
               <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.
             </pre>
           </ol>
+          <pre class="example" title="Path Specificity">
+              For five possible paths, when listed most specific first, we would see:
+              <code>/person/elisabeth</code>
+              <code>/person/{$name}</code>
+              <code>/{type}/elisabeth</code>
+              <code>/person</code>
+              <code>/{type}</code>
+          </pre>
         </section>
         <section id="media-type-preference">
           <h4>Media Type Preference</h4>
