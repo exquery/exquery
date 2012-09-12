@@ -64,10 +64,6 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     
     private PathInformation pathRegularExpression;
     
-    //no longer needed now that we have the metric
-    @Deprecated 
-    private int pathSegmentCount = -1;
-    
     
     /**
      * Ensures that the Path Annotation
