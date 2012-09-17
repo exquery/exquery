@@ -74,5 +74,5 @@ public interface PathAnnotation extends ConstraintAnnotation {
      * 
      * @return The path specificity metric
      */
-    public int getPathSpecificityMetric();
+    public long getPathSpecificityMetric();
 }

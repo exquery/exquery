@@ -47,8 +47,8 @@ import org.exquery.xquery.Type;
  */
 public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
-    protected final static int PATH_SEGMENT_PARAM_SPECIFICITY = 1;
-    protected final static int PATH_SEGMENT_SOLID_SPECIFICITY = 2;
+    protected final static int PATH_SEGMENT_PARAM_SPECIFICITY = 0;
+    protected final static int PATH_SEGMENT_SOLID_SPECIFICITY = 1;
     
     //combines official RFC URI path segment regexp  with our encoded function argument regexp
     public final static String pathSegmentRegExp = "(?:"  + URI.pchar_regExp + "|" + functionArgumentRegExp + ")";
@@ -110,11 +110,15 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         return pathParamNameAndValues;
     }
 
-     /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#getPathSpecificityMetric() 
+    /**
+     * @see org.exquery.restxq.annotation.PathAnnotation#getPathSpecificityMetric()
+     * 
+     * @return The returned value encodes both the specificity and the path
+     * structure in binary. A templated path segment is 0 and a concrete path
+     * segment is 1. The binary number has a leading 1 bit.
      */
     @Override
-    public int getPathSpecificityMetric() {
+    public long getPathSpecificityMetric() {
         return getPathInformation().getPathSpecificityMetric();
     }
     
@@ -167,7 +171,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         final Map<Integer, String> groupParamNames = new HashMap<Integer, String>();
         int groupCount = 0;
 
-        int pathSpecificityMetric = 0;
+        long pathSpecificityMetric = 0;
         
         while(mchPathSegment.find()) {
             final String pathSegment = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
@@ -176,13 +180,21 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
             thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
 
+            /*
+             * if this is the first iteration, increase
+             * the pathSpecificityMetric so that our
+             * left shift always first shifts 1,
+             * and therefore our binary counting
+             * works.
+             */
+            if(pathSpecificityMetric == 0) {
+                pathSpecificityMetric = 1;
+            }
+            
             /* 
-             * if not the first segment,
              * left shift the last specifity segment of the path
              */
-            if(pathSpecificityMetric > 0) {
-                pathSpecificityMetric = pathSpecificityMetric << 2;
-            }
+            pathSpecificityMetric <<= 1;
             
             if(mtcFnParameter.matches()) {
                 //is a path function parameter
@@ -238,7 +250,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         /**
          * Metric describing the path Specificity
          */
-        private final int pathSpecificityMetric;
+        private final long pathSpecificityMetric;
         
         /**
          *
@@ -246,7 +258,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
          * @param ptnPath The Regular Expression that matches a path against the pathLiteral
          * @param groupParamNames A mapping of group indexes in the regular expression to parameter names
          */
-        public PathInformation(final String pathLiteral, final Pattern ptnPath, final Map<Integer, String> groupParamNames, final int pathSpecificityMetric) {
+        public PathInformation(final String pathLiteral, final Pattern ptnPath, final Map<Integer, String> groupParamNames, final long pathSpecificityMetric) {
             this.pathLiteral = pathLiteral;
             this.ptnPath = ptnPath;
             this.groupParamNames = groupParamNames;
@@ -297,7 +309,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
          * 
          * @return the Specificity metric of this path
          */
-        public int getPathSpecificityMetric() {
+        public long getPathSpecificityMetric() {
             return pathSpecificityMetric;
         }
     }
