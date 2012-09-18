@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.xquery;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Model of a Sequence from W3C XQuery 1.0 and XPath 2.0 Data Model (XDM)
@@ -46,4 +47,38 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
      * @return The Sequence without the first Item
      */
     public Sequence<T> tail();
+    
+    /**
+     * The Empty Sequence
+     */
+    public static Sequence EMPTY_SEQUENCE = new Sequence<Void>(){
+        
+        private Iterator<TypedValue<Void>> EMPTY_ITERATOR = new Iterator<TypedValue<Void>>() {
+            
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public TypedValue<Void> next() {
+                throw new NoSuchElementException("This is an EMPTY Sequence with no elements!");
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("You cannot remove Items from an Empty Sequence.");
+            }
+        };
+        
+        @Override
+        public Iterator<TypedValue<Void>> iterator() {
+            return EMPTY_ITERATOR;
+        }
+
+        @Override
+        public Sequence<Void> tail() {
+            return EMPTY_SEQUENCE;
+        }
+    };
 }
