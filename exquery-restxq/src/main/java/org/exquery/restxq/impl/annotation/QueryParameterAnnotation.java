@@ -26,17 +26,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import java.util.Iterator;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
-import org.exquery.xquery.Literal;
-import org.exquery.xquery.Sequence;
-import org.exquery.xquery.Type;
-import org.exquery.xquery.TypedArgumentValue;
-import org.exquery.xquery.TypedValue;
 import org.exquery.xdm.type.SequenceImpl;
 import org.exquery.xdm.type.StringTypedValue;
+import org.exquery.xquery.Literal;
+import org.exquery.xquery.Sequence;
+import org.exquery.xquery.TypedArgumentValue;
 
 /**
  * Implementation of RESTXQ Query Parameter Annotation
@@ -74,7 +71,11 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
                 final Object queryParam = request.getQueryParam(getParameterAnnotationMapping().getParameterName());
                 if(queryParam == null) {
                     final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new SequenceImpl<String>(new StringTypedValue(defaultLiteral.getValue()));
+                    if(defaultLiteral != null) {
+                        return new SequenceImpl<String>(new StringTypedValue(defaultLiteral.getValue()));
+                    } else {
+                        return Sequence.EMPTY_SEQUENCE;
+                    }
                 } else if(queryParam instanceof String) {
                     return new SequenceImpl<String>(new StringTypedValue((String)queryParam));
                 }
