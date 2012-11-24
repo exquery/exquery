@@ -35,11 +35,19 @@ import org.exquery.ExQueryException;
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public abstract class AnnotationException extends ExQueryException {
+    private final ErrorCode code;
+    
     public AnnotationException(final ErrorCode code) {
         super(code.toString());
+        this.code = code;
     }
     
     public AnnotationException(final ErrorCode code, final Throwable cause) {
         super(code.toString(), cause);
+        this.code = code;
+    }
+    
+    public ErrorCode getErrorCode() {
+        return code;
     }
 }
