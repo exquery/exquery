@@ -139,7 +139,7 @@ public enum Type {
      * 
      * @param other another Type
      * 
-     * @return true if this type is a sub-type of other, false otherwise
+     * @return true if this type is a sub-type of other or if this is equal to other, false otherwise
      */
     public boolean isSubTypeOf(final Type other) {
         if(this == other) {
@@ -154,10 +154,14 @@ public enum Type {
      * 
      * @param other another Type
      * 
-     * @return true if other is a sub-type of this type, false otherwise
+     * @return true if other is a sub-type of this type or if this is equal to other, false otherwise
      */
     public boolean hasSubType(final Type other) {
-        return hasSubType(subTypes, other);
+        if(this == other) {
+            return true;
+        } else {
+            return hasSubType(subTypes, other);
+        }
     }
 
     /**
