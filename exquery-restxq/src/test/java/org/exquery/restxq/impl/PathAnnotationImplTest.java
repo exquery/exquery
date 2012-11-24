@@ -27,6 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl;
 
 import javax.xml.namespace.QName;
+import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.impl.annotation.PathAnnotationImpl;
 import org.exquery.xquery.Cardinality;
@@ -277,6 +279,88 @@ public class PathAnnotationImplTest {
         pa.initialise();
         
         assertEquals(2, pa.getPathSpecificityMetric());
+    }
+    
+    @Test
+    public void path_fnArgItemType_one_template_isOk() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+            new ItemFnArg("arg1")
+        };
+        
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+            new StringLiteral("/{$type}")
+        });
+        pa.initialise();
+    }
+    
+    @Test
+    public void path_fnArgNodeType_one_template_isNotOk() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+            new NodeFnArg("arg1")
+        };
+        
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+            new StringLiteral("/{$type}")
+        });
+        
+        RestXqErrorCode code = null;
+        try {
+            pa.initialise();
+        } catch(final RestAnnotationException rae) {
+            code = rae.getErrorCode();            
+        }
+        
+        assertEquals(RestXqErrorCodes.RQST0006, code);
+    }
+    
+    public class NodeFnArg implements FunctionArgument {
+        private final String name;
+
+        public NodeFnArg(final String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public Type getType() {
+            return Type.NODE;
+        }
+
+        @Override
+        public Cardinality getCardinality() {
+            return Cardinality.ZERO_OR_ONE;
+        }
+    }
+    
+    public class ItemFnArg implements FunctionArgument {
+        private final String name;
+
+        public ItemFnArg(final String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public Type getType() {
+            return Type.ITEM;
+        }
+
+        @Override
+        public Cardinality getCardinality() {
+            return Cardinality.ZERO_OR_ONE;
+        }
     }
     
     public class StrFnArg implements FunctionArgument {
