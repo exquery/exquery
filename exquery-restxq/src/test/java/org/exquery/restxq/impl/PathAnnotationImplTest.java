@@ -27,8 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl;
 
 import javax.xml.namespace.QName;
+import org.exquery.ErrorCodes.ErrorCode;
 import org.exquery.restxq.RestXqErrorCodes;
-import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.impl.annotation.PathAnnotationImpl;
 import org.exquery.xquery.Cardinality;
@@ -307,7 +307,7 @@ public class PathAnnotationImplTest {
             new StringLiteral("/{$type}")
         });
         
-        RestXqErrorCode code = null;
+        ErrorCode code = null;
         try {
             pa.initialise();
         } catch(final RestAnnotationException rae) {
