@@ -290,7 +290,7 @@ public class PathAnnotationImplTest {
         final PathAnnotationImpl pa = new PathAnnotationImpl();
         pa.setFunctionSignature(new ArgsFunctionSignature(args));
         pa.setLiterals(new Literal[]{
-            new StringLiteral("/{$type}")
+            new StringLiteral("/{$arg1}")
         });
         pa.initialise();
     }
@@ -304,7 +304,7 @@ public class PathAnnotationImplTest {
         final PathAnnotationImpl pa = new PathAnnotationImpl();
         pa.setFunctionSignature(new ArgsFunctionSignature(args));
         pa.setLiterals(new Literal[]{
-            new StringLiteral("/{$type}")
+            new StringLiteral("/{$arg1}")
         });
         
         ErrorCode code = null;
