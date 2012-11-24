@@ -135,7 +135,8 @@
         </pluginManagement>
         
         <plugins>
-            <plugin>
+            <!-- TODO dependency analysis seems to break build of exquery-xquery, fix this later -->
+            <!-- plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -150,7 +151,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin -->
             <!-- plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
