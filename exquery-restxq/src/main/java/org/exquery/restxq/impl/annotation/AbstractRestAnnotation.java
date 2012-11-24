@@ -122,12 +122,12 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                 
                 if(fnArgument.getName().equals(fnArgumentName)) {
                     
-                    if(fnArgument.getCardinality().hasRequiredCardinality(Cardinality.ONE)) {
-                        throw new RestAnnotationException(RestXqErrorCodes.RQST0005);
+                    if(!fnArgument.getCardinality().hasRequiredCardinality(getRequiredFunctionParameterCardinality())) {
+                        throw new RestAnnotationException(getInvalidFunctionParameterCardinalityErr());
                     }
                     
-                    if(!fnArgument.getType().isSubTypeOf(Type.ITEM)) {
-                        throw new RestAnnotationException(RestXqErrorCodes.RQST0006);
+                    if(!fnArgument.getType().isSubTypeOf(getRequiredFunctionParameterType())) {
+                        throw new RestAnnotationException(getInvalidFunctionParameterTypeErr());
                     }
                     
                     found = true;
@@ -162,4 +162,34 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
             }
         }
     }
+
+    /**
+     * Get the Cardinality of Function Parameters required by parameters
+     * in this Resource Function annotation
+     * 
+     * @return The required Cardinality
+     */
+    protected abstract Cardinality getRequiredFunctionParameterCardinality();
+
+    /**
+     * Get the Error Code for invalid Function Parameter Cardinality
+     * 
+     * @return The ErrorCode for invalid Function parameter cardinality
+     */
+    protected abstract RestXqErrorCode getInvalidFunctionParameterCardinalityErr();
+
+    /**
+     * Get the Type of Function Parameters required by parameters
+     * in this Resource Function annotation
+     * 
+     * @return The required Type
+     */
+    protected abstract Type getRequiredFunctionParameterType();
+    
+    /**
+     * Get the Error Code for invalid Function Parameter Type
+     * 
+     * @return The ErrorCode for invalid Function parameter type
+     */
+    protected abstract RestXqErrorCode getInvalidFunctionParameterTypeErr();
 }

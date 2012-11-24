@@ -27,9 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.annotation.RestAnnotationName;
+import org.exquery.xquery.Cardinality;
+import org.exquery.xquery.Type;
 import org.exquery.xquery3.Annotation;
 
 /**
@@ -68,5 +71,37 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
         }
 	        
         throw new RestAnnotationException(RestXqErrorCodes.RQST0009);
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
+     */
+    @Override
+    protected Cardinality getRequiredFunctionParameterCardinality() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+    
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
+     */
+    @Override
+    protected Type getRequiredFunctionParameterType() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
+        throw new UnsupportedOperationException("Not required.");
     }
 }

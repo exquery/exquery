@@ -28,8 +28,10 @@ package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
 import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.HttpMethodWithBodyAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -114,5 +116,37 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
         checkFnDeclaresParameter(getFunctionSignature(), bodyContentParamName);
 
         return bodyContentParamName;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
+     */
+    @Override
+    protected Cardinality getRequiredFunctionParameterCardinality() {
+        return Cardinality.ONE; //TODO consider changing this for multi-part request bodies!
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
+        return RestXqErrorCodes.RQST0005;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
+     */
+    @Override
+    protected Type getRequiredFunctionParameterType() {
+        return Type.ITEM; //could be an xml document() or an atomic value
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
+        return RestXqErrorCodes.RQST0033;
     }
 }

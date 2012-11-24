@@ -27,9 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
+import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -145,6 +147,38 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         }
 
         return new ParameterAnnotationMapping(keyStr, varName, defaultValue != null ? defaultValue : null);
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
+     */
+    @Override
+    protected Cardinality getRequiredFunctionParameterCardinality() {
+        return Cardinality.ZERO_OR_MORE;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
+        return RestXqErrorCodes.RQST0034;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
+     */
+    @Override
+    protected Type getRequiredFunctionParameterType() {
+        return Type.ANY_ATOMIC_TYPE;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
+        return RestXqErrorCodes.RQST0006;
     }
     
     //<editor-fold desc="Error Codes">

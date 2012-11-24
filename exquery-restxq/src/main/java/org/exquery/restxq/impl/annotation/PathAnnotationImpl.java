@@ -34,8 +34,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exquery.http.URI;
 import org.exquery.restxq.RestXqErrorCodes;
+import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -228,6 +230,39 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         final Pattern ptnThisPath = Pattern.compile(thisPathExprRegExp.toString());
 
         return new PathInformation(pathStr, ptnThisPath, groupParamNames, pathSpecificityMetric);
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
+     */
+    @Override
+    protected Cardinality getRequiredFunctionParameterCardinality() {
+        return Cardinality.ONE;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
+        return RestXqErrorCodes.RQST0005;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
+     */
+    @Override
+    protected Type getRequiredFunctionParameterType() {
+        //return Type.ITEM;
+        return Type.ANY_ATOMIC_TYPE;
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
+        return RestXqErrorCodes.RQST0006;
     }
     
     /**

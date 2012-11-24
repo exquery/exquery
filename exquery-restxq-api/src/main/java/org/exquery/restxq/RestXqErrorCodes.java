@@ -45,9 +45,11 @@ public class RestXqErrorCodes extends ErrorCodes {
     
     //annotated function errors
     public static RestXqErrorCode RQST0005 = new RestXqErrorCode("RQST0005", "It is a static error if an annotated function parameter maps to a function parameter whoose cardinality is not Exactly One");
-    public static RestXqErrorCode RQST0006 = new RestXqErrorCode("RQST0006", "It is a static error if an annotated function parameter maps to a function parameter whoose type is not a simple type");
+    public static RestXqErrorCode RQST0006 = new RestXqErrorCode("RQST0006", "It is a static error if an annotated function parameter maps to a function parameter whoose type is not an atomic type");
     public static RestXqErrorCode RQST0007 = new RestXqErrorCode("RQST0007", "It is a static error if an annotated function parameter does not map onto a named function parameter");
     public static RestXqErrorCode RQST0008 = new RestXqErrorCode("RQST0008", "It is a static error if a function mapped by an annotated function parameter has parameters which are not mapped from the annotation and are not optional");
+    public static RestXqErrorCode RQST0034 = new RestXqErrorCode("RQST0034", "It is a static error if an annotated function parameter maps to a function parameter whoose cardinality is not Zero or More");
+    
     
     //content (put/post) annotation errors
     public static RestXqErrorCode RQST0010 = new RestXqErrorCode("RQST0010", "It is a static error if a REST content method Annotation has more than one literal value");
@@ -55,6 +57,7 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0012 = new RestXqErrorCode("RQST0012", "It is a static error if a REST content method Annotation has a value and it is empty");
     public static RestXqErrorCode RQST0013 = new RestXqErrorCode("RQST0013", "It is a static error if a REST content method Annotation does not describe a function parameter");
     public static RestXqErrorCode RQDY0014 = new RestXqErrorCode("RQDY0014", "It is a dynamic error if a REST content method Annotation cannot extract the Request body of which the annotation describes");
+    public static RestXqErrorCode RQST0033 = new RestXqErrorCode("RQST0033", "It is a static error if a REST content method Annotation maps to a function parameter whoose type is not an item");
     
     //form-param annotation errors
     public static RestXqErrorCode RQST0015 = new RestXqErrorCode("RQST0015", "It is a static error if a REST form-param Annotation does not have two or three literal values");

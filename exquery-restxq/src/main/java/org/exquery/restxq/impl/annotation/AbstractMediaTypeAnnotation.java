@@ -32,6 +32,7 @@ import org.exquery.http.InternetMediaType;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.MediaTypeAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
@@ -141,10 +142,61 @@ public abstract class AbstractMediaTypeAnnotation extends AbstractRestAnnotation
         
         return mediaType;
     }
+    
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
+     */
+    @Override
+    protected Cardinality getRequiredFunctionParameterCardinality() {
+        throw new UnsupportedOperationException("Not required.");
+    }
 
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
+     */
+    @Override
+    protected Type getRequiredFunctionParameterType() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+
+    /**
+     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
+     */
+    @Override
+    protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
+        throw new UnsupportedOperationException("Not required.");
+    }
+    
+    //<editor-fold desc="Error Codes">
+    
+    /**
+     * Get the Error Code to use when the Annotation Parameters are Empty
+     * 
+     * @return The error code
+     */
     protected abstract RestXqErrorCode getEmptyAnnotationParamsErr();
 
+    /**
+     * Get the Error Code to use when the Annotation has an invalid Media Type literal
+     * 
+     * @return The error code
+     */
     protected abstract RestXqErrorCode getInvalidMediaTypeLiteralErr();
 
+    /**
+     * Get the Error Code to use when the Annotation has an invalid Media Type
+     * 
+     * @return The error code
+     */
     protected abstract RestXqErrorCode getInvalidMediaTypeErr();
+    
+    //</editor-fold>
 }
