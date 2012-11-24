@@ -126,7 +126,7 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                         throw new RestAnnotationException(getInvalidFunctionParameterCardinalityErr());
                     }
                     
-                    if(!fnArgument.getType().isSubTypeOf(getRequiredFunctionParameterType())) {
+                    if(!fnArgument.getType().hasSubType(getRequiredFunctionParameterType())) {
                         throw new RestAnnotationException(getInvalidFunctionParameterTypeErr());
                     }
                     
