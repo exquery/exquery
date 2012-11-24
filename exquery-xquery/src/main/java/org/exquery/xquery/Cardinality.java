@@ -69,7 +69,7 @@ public enum Cardinality {
      * @requiredCardinality The cardinality that is required
      */
     public boolean hasRequiredCardinality(final Cardinality requiredCardinality) {
-        return ((requiredCardinality.value & value) == value);
+        return ((requiredCardinality.value & value) == requiredCardinality.value);
     }
 
     /**
