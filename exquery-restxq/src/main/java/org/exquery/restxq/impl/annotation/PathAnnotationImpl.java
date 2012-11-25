@@ -38,8 +38,10 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
+import org.exquery.xquery.FunctionArgument;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
+import org.exquery.xquery3.FunctionSignature;
 
 /**
  * Implementation of RESTXQ Path Annotation
@@ -231,6 +233,36 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
         return new PathInformation(pathStr, ptnThisPath, groupParamNames, pathSpecificityMetric);
     }
+
+    @Override
+    protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {
+        
+        //1) do the super
+        super.checkFnDeclaresParameters(functionSignature, fnArgumentNames);
+        
+        //2) make sure that each function parameter which does not have a path parameter is optional
+        for(final FunctionArgument fnArgument : functionSignature.getArguments()) {
+            boolean found = false;
+            
+            for(final String fnArgumentName : fnArgumentNames) {    
+                if(fnArgumentName.equals(fnArgument.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if(!found) {
+                final Cardinality paramCardinality = fnArgument.getCardinality();
+                if(paramCardinality != Cardinality.ZERO
+                && paramCardinality != Cardinality.ZERO_OR_ONE
+                && paramCardinality != Cardinality.ZERO_OR_MORE) {
+                    throw new RestAnnotationException(RestXqErrorCodes.RQST0008);
+                }
+            }
+        }
+    }
+    
+    
 
     /**
      * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()

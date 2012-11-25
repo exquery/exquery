@@ -139,28 +139,6 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                 throw new RestAnnotationException(RestXqErrorCodes.RQST0007);
             }
         }
-        
-     
-        //2) make sure that each function parameter which does not have a path parameter is optional
-        for(final FunctionArgument fnArgument : fnArguments) {
-            boolean found = false;
-            
-            for(final String fnArgumentName : fnArgumentNames) {    
-                if(fnArgumentName.equals(fnArgument.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-            
-            if(!found) {
-                final Cardinality paramCardinality = fnArgument.getCardinality();
-                if(paramCardinality != Cardinality.ZERO
-                && paramCardinality != Cardinality.ZERO_OR_ONE
-                && paramCardinality != Cardinality.ZERO_OR_MORE) {
-                    throw new RestAnnotationException(RestXqErrorCodes.RQST0008);
-                }
-            }
-        }
     }
 
     /**
