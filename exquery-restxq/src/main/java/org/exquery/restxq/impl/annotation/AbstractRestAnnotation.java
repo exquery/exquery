@@ -72,7 +72,8 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
 
             if(fnArgument.getName().equals(fnArgumentName)) {
                 
-                if(!fnArgument.getType().isSubTypeOf(requiredArgumentType)) {
+                //if(!fnArgument.getType().isSubTypeOf(requiredArgumentType)) {
+                if(!hasCompatibleType(fnArgument.getType(), requiredArgumentType)) {
                     throw new RestAnnotationException(errorCode);
                 }
 
@@ -136,7 +137,8 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                         throw new RestAnnotationException(getInvalidFunctionParameterCardinalityErr());
                     }
                     
-                    if(!(fnArgument.getType().hasSubType(getRequiredFunctionParameterType()) | getRequiredFunctionParameterType().hasSubType(fnArgument.getType()))) {
+                    //if(!(fnArgument.getType().hasSubType(getRequiredFunctionParameterType()) | getRequiredFunctionParameterType().hasSubType(fnArgument.getType()))) {
+                    if(!hasCompatibleType(fnArgument.getType(), getRequiredFunctionParameterType())) {
                         throw new RestAnnotationException(getInvalidFunctionParameterTypeErr());
                     }
                     
@@ -151,6 +153,10 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
         }
     }
 
+    private boolean hasCompatibleType(final Type actualType, final Type requiredType) {
+        return actualType.hasSubType(requiredType) | requiredType.hasSubType(actualType);
+    }
+    
     /**
      * Get the Cardinality of Function Parameters required by parameters
      * in this Resource Function annotation
