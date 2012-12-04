@@ -39,18 +39,18 @@ import org.exquery.xquery.Literal;
 public class ParameterAnnotationMapping {
     public final String parameterName;
     public final String functionArgumentName;
-    public final Literal defaultValue;
+    public final Literal[] defaultValues;
     
     public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName) {
         this.parameterName = parameterName;
         this.functionArgumentName = functionArgumentName;
-        this.defaultValue = null;
+        this.defaultValues = new Literal[0];
     }
 
-    public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName, final Literal defaultValue) {
+    public ParameterAnnotationMapping(final String parameterName, final String functionArgumentName, final Literal[] defaultValues) {
         this.parameterName = parameterName;
         this.functionArgumentName = functionArgumentName;
-        this.defaultValue = defaultValue;
+        this.defaultValues = defaultValues;
     }
     
     /**
@@ -72,13 +72,13 @@ public class ParameterAnnotationMapping {
     }
     
     /**
-     * Get the Default Value for the Function Argument
+     * Get the Default Value(s) for the Function Argument
      * 
-     * @return The default value for the
-     * function argument, or null if there
-     * is no default value
+     * @return The default value(s) for the
+     * function argument, or the empty array if there
+     * are no default value(s)
      */
-    public Literal getDefaultValue() {
-        return defaultValue;
+    public Literal[] getDefaultValues() {
+        return defaultValues;
     }
 }

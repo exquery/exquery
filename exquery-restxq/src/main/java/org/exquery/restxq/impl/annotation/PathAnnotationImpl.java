@@ -234,6 +234,9 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         return new PathInformation(pathStr, ptnThisPath, groupParamNames, pathSpecificityMetric);
     }
 
+    //TODO enforcing that annotations other than path annotations have optional parameters is not the right thing to do here!
+    //as it does not allow us to have annotations with default-args etc
+    /*
     @Override
     protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {
         
@@ -251,6 +254,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
                 }
             }
             
+            //TODO this cannot really be done here
             if(!found) {
                 final Cardinality paramCardinality = fnArgument.getCardinality();
                 if(paramCardinality != Cardinality.ZERO
@@ -260,7 +264,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
                 }
             }
         }
-    }
+    }*/
     
     
 

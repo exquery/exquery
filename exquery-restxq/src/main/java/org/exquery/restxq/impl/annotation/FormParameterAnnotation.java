@@ -43,17 +43,7 @@ import org.exquery.xquery.TypedArgumentValue;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class FormParameterAnnotation extends AbstractParameterAnnotation {
-    
-    /**
-     * @see AbstractParameterAnnotation#canProvideDefaultValue()
-     * 
-     * @return Always returns true
-     */
-    @Override
-    protected boolean canProvideDefaultValue() {
-        return true;
-    }
+public class FormParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
     
     /**
      * @see AbstractParameterAnnotation#extractParameter(org.exquery.http.HttpRequest)
@@ -82,8 +72,8 @@ public class FormParameterAnnotation extends AbstractParameterAnnotation {
             public Sequence getTypedValue() {
                 final Object formParam = request.getFormParam(getParameterAnnotationMapping().getParameterName());
                 if(formParam == null) {
-                    final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    return new SequenceImpl(new StringTypedValue(defaultLiteral.getValue()));
+                    final Literal defaultLiterals[] = getParameterAnnotationMapping().getDefaultValues();
+                    return literalsToSequence(defaultLiterals);
                 }
                 
                 if(formParam instanceof String) {

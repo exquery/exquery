@@ -41,17 +41,7 @@ import org.exquery.xquery.TypedArgumentValue;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class QueryParameterAnnotation extends AbstractParameterAnnotation {
-
-    /**
-     * @see AbstractParameterAnnotation#canProvideDefaultValue()
-     * 
-     * @return Always returns true
-     */
-    @Override
-    protected boolean canProvideDefaultValue() {
-        return true;
-    }
+public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
     
     /**
      * @see AbstractParameterAnnotation#extractParameter(org.exquery.http.HttpRequest)
@@ -70,9 +60,10 @@ public class QueryParameterAnnotation extends AbstractParameterAnnotation {
             public Sequence<String> getTypedValue() {
                 final Object queryParam = request.getQueryParam(getParameterAnnotationMapping().getParameterName());
                 if(queryParam == null) {
-                    final Literal defaultLiteral = getParameterAnnotationMapping().getDefaultValue();
-                    if(defaultLiteral != null) {
-                        return new SequenceImpl<String>(new StringTypedValue(defaultLiteral.getValue()));
+                    
+                    final Literal defaultLiterals[] = getParameterAnnotationMapping().getDefaultValues();
+                    if(defaultLiterals.length > 0) {
+                        return literalsToSequence(defaultLiterals);
                     } else {
                         return Sequence.EMPTY_SEQUENCE;
                     }

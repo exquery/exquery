@@ -43,15 +43,6 @@ import org.exquery.xquery.Type;
 public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation implements ParameterAnnotation {
     
     private ParameterAnnotationMapping parameterAnnotationMapping;
-    
-    /**
-     * Determines whether a particular Parameter Annotation
-     * can provide a default value if no value is present
-     * 
-     * @return true if the Parameter Annotation can
-     * provide a default value
-     */
-    protected abstract boolean canProvideDefaultValue();
 
     /**
      * Checks that the Parameter Annotation is compatible
@@ -83,17 +74,11 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
     protected ParameterAnnotationMapping parseAnnotationValue() throws RestAnnotationException {
         final Literal[] annotationLiterals = getLiterals();
         
-        if(canProvideDefaultValue()) {
-            if(annotationLiterals.length < 2 || annotationLiterals.length > 3) {
-                throw new RestAnnotationException(getInvalidAnnotationParamsErr());
-            }
-        } else {
-            if(annotationLiterals.length != 2) {
-                throw new RestAnnotationException(getInvalidAnnotationParamsErr());
-            }
+        if(annotationLiterals.length != 2) {
+            throw new RestAnnotationException(getInvalidAnnotationParamsErr());
         }
         
-        return parseAnnotationLiterals(annotationLiterals[0], annotationLiterals[1], annotationLiterals.length == 3 ? annotationLiterals[2] : null);
+        return parseAnnotationLiterals(annotationLiterals[0], annotationLiterals[1], Cardinality.ZERO_OR_MORE);
     }
     
     /**
@@ -107,17 +92,13 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
      * 
      * @throws RestAnnotationException if the mapping is invalid
      */
-    protected ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Literal defaultValue) throws RestAnnotationException {
+    protected final ParameterAnnotationMapping parseAnnotationLiterals(final Literal parameterName, final Literal functionArgumentName, final Cardinality requiredCardinality) throws RestAnnotationException {
         if(parameterName.getType() != Type.STRING) {
             throw new RestAnnotationException(getInvalidParameterNameErr());
         }
         
         if(functionArgumentName.getType() != Type.STRING) {
             throw new RestAnnotationException(getInvalidFunctionArgumentNameErr());
-        }
-        
-        if(defaultValue != null && !defaultValue.getType().isSubTypeOf(Type.ANY_SIMPLE_TYPE)) {
-            throw new RestAnnotationException(getInvalidDefaultValueErr());
         }
         
         final String keyStr = parameterName.getValue();
@@ -138,22 +119,21 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
 
         final String varName = mtcFnParameter.group(1);
 
-        if(defaultValue == null) {
-            //check the function that has this annotation has parameters as declared by the annotation
-            checkFnDeclaresParameter(getFunctionSignature(), varName);
-        } else {
-            //if a default value is provided make sure it matches the type of the function parameter declared
-            checkFnDeclaresParameterWithType(getFunctionSignature(), varName, defaultValue.getType(), getInvalidDefaultValueTypeErr());
-        }
+        //check the function declares the var with the correct cardinality
+        checkFnDeclaresParameter(getFunctionSignature(), varName, requiredCardinality);
 
-        return new ParameterAnnotationMapping(keyStr, varName, defaultValue != null ? defaultValue : null);
+        return new ParameterAnnotationMapping(keyStr, varName);
     }
+    
+    
 
     /**
      * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
      */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
+        
+        //TODO this can be ONE_OR_MORE if there is a default value? depends on the default value, could also be MORE
         return Cardinality.ZERO_OR_MORE;
     }
 

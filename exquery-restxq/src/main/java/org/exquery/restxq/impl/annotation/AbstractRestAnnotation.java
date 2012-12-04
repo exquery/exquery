@@ -95,10 +95,15 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
      * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
     protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName) throws RestAnnotationException {
+        checkFnDeclaresParameter(functionSignature, fnArgumentName, getRequiredFunctionParameterCardinality());
+    }
+    
+    //TODO remove above fn wrapper and remove abstract getRequiredFunctionParameterCardinality() method
+    protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName, final Cardinality requiredCardinality) throws RestAnnotationException {
         final List<String> fnParamNames = new ArrayList<String>(1);
         fnParamNames.add(fnArgumentName);
         
-        checkFnDeclaresParameters(functionSignature, fnParamNames);
+        checkFnDeclaresParameters(functionSignature, fnParamNames, requiredCardinality);
     }
     
     /**
@@ -111,6 +116,11 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
      * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
     protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {
+        checkFnDeclaresParameters(functionSignature, fnArgumentNames, getRequiredFunctionParameterCardinality());
+    }
+    
+    //TODO rm above fn wrapper and remove abstract getRequiredFunctionParameterCardinality() method
+    protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames, final Cardinality requiredCardinality) throws RestAnnotationException {
         
         final FunctionArgument[] fnArguments = functionSignature.getArguments();
         
@@ -122,7 +132,7 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                 
                 if(fnArgument.getName().equals(fnArgumentName)) {
                     
-                    if(!fnArgument.getCardinality().hasRequiredCardinality(getRequiredFunctionParameterCardinality())) {
+                    if(!fnArgument.getCardinality().hasRequiredCardinality(requiredCardinality)) {
                         throw new RestAnnotationException(getInvalidFunctionParameterCardinalityErr());
                     }
                     

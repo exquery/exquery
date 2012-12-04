@@ -56,7 +56,7 @@ public class SequenceImpl<T> implements Sequence<T> {
         }
     }
     
-    public void add(final TypedValue value) {
+    public void add(final TypedValue<T> value) {
         sequence.add(value);
     }
     
