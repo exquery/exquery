@@ -59,22 +59,34 @@ function test:hello5($hello, $other as xs:string+) {
 };
 :)
 
+(: fail - has two mapped parameters of the same name in different annotations:)
+(:
+declare
+    %rest:GET
+    %rest:path("/test6")
+    %rest:query-param("hello", "{$hello}", "hello", "again")
+    %rest:query-param("hello", "{$hello}")
+function test:hello6($hello) {
+    <hello>{$hello}</hello>
+};
+:)
+
 
 
 (: without default params :)
 declare
     %rest:GET
-    %rest:path("/test6")
+    %rest:path("/test7")
     %rest:query-param("hello", "{$hello}")
-function test:hello6($hello as xs:string*) {
+function test:hello7($hello as xs:string*) {
     <hello>{$hello}</hello>
 };
 
 declare
     %rest:GET
-    %rest:path("/test7")
+    %rest:path("/test8")
     %rest:query-param("hello", "{$hello}")
-function test:hello7($hello) {
+function test:hello8($hello) {
     <hello>{$hello}</hello>
 };
 
@@ -82,18 +94,9 @@ function test:hello7($hello) {
 (:
 declare
     %rest:GET
-    %rest:path("/test8")
-    %rest:query-param("hello", "{$hello}")
-function test:hello8($hello as xs:string+) {
-    <hello>{$hello}</hello>
-};
-:)
-(:
-declare
-    %rest:GET
     %rest:path("/test9")
     %rest:query-param("hello", "{$hello}")
-function test:hello9($hello as xs:string?) {
+function test:hello9($hello as xs:string+) {
     <hello>{$hello}</hello>
 };
 :)
@@ -102,7 +105,16 @@ declare
     %rest:GET
     %rest:path("/test10")
     %rest:query-param("hello", "{$hello}")
-function test:hello10($hello as xs:string) {
+function test:hello10($hello as xs:string?) {
+    <hello>{$hello}</hello>
+};
+:)
+(:
+declare
+    %rest:GET
+    %rest:path("/test11")
+    %rest:query-param("hello", "{$hello}")
+function test:hello11($hello as xs:string) {
     <hello>{$hello}</hello>
 };
 :)
@@ -110,9 +122,20 @@ function test:hello10($hello as xs:string) {
 (:
 declare
     %rest:GET
-    %rest:path("/test11")
+    %rest:path("/test12")
     %rest:query-param("hello", "{$hello}")
-function test:hello11($hello, $other as xs:string+) {
+function test:hello12($hello, $other as xs:string+) {
+    <hello>{$hello}</hello>
+};
+:)
+(: fail - has two mapped parameters of the same name in different annotations:)
+(:
+declare
+    %rest:GET
+    %rest:path("/test13")
+    %rest:query-param("hello", "{$hello}")
+    %rest:query-param("hello", "{$hello}")
+function test:hello13($hello) {
     <hello>{$hello}</hello>
 };
 :)
