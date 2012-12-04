@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
+import java.util.List;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
@@ -69,20 +70,10 @@ public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnota
                     }
                 } else if(queryParam instanceof String) {
                     return new SequenceImpl<String>(new StringTypedValue((String)queryParam));
+                } else if(queryParam instanceof List) {
+                    final List<String> queryParamValues = (List<String>)queryParam;
+                    return collectionToSequence(queryParamValues);
                 }
-                
-                //TODO cope with the situation whereby there may be more than a single value
-                /*
-                if(formField instanceof List) {
-                    final List<String> fieldValues = (List<String>)formField;
-                    final ValueSequence vals = new ValueSequence();
-                    for(String fieldValue : fieldValues) {
-                        vals.add(new StringValue(fieldValue));
-                    }
-                    
-                    return vals;
-                }*/
-                
                 return null;
             }
             

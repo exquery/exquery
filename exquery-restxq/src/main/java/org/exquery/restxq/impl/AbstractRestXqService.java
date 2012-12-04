@@ -239,7 +239,7 @@ public abstract class AbstractRestXqService implements RestXqService {
 
                 @Override
                 public Sequence getTypedValue() {
-                    return new SequenceImpl(typedArgumentValue.getTypedValue());
+                    return typedArgumentValue.getTypedValue();
                 }
             });
         }

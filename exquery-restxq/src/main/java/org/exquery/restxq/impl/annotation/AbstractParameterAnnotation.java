@@ -26,13 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.ParameterAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xdm.type.SequenceImpl;
+import org.exquery.xdm.type.StringTypedValue;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
+import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 
 /**
@@ -125,6 +129,13 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         return new ParameterAnnotationMapping(keyStr, varName);
     }
     
+    protected Sequence<String> collectionToSequence(final Collection<String> collection) {
+        final SequenceImpl<String> sequence = new SequenceImpl<String>();
+        for(final String value : collection) {
+            sequence.add(new StringTypedValue(value));
+        }
+        return sequence;
+    }
     
 
     /**
