@@ -66,6 +66,10 @@ public class ResourceFunctionFactory {
         final ResourceFunctionImpl resourceFunction = new ResourceFunctionImpl();
         resourceFunction.setXQueryLocation(xQueryLocation);
         
+        if(annotations == null || annotations.isEmpty()) {
+            throw new ExQueryException("A Resource Function must have at least one RESTXQ Annotation");
+        }
+        
         for(final Annotation annotation : annotations) {
             if(!isResourceFunctionAnnotation(annotation.getName())) {
                 throw new ExQueryException("Annotation is not a valid EXQuery RESTXQ or Serialization Annotation");
@@ -86,12 +90,10 @@ public class ResourceFunctionFactory {
             }
         }
         
-        if(resourceFunction.getPathAnnotation() == null) {
-            throw new ExQueryException("Resource Function must have a Path Annotation");
-        }
+        //TODO we must do some cross-checking here i.e. 1) make sure two annotations do not point at the same named parameter. 2) make sure any parameters not consumed by annotations are optional cardinality
         
-        //borrow the function signature from the PathAnnotation which is mandatory (it will be the same anyways)
-        resourceFunction.setFunctionSignature(resourceFunction.getPathAnnotation().getFunctionSignature());
+        //borrow the function signature from any annotation (it will be the same anyways for all passed in annotations)
+        resourceFunction.setFunctionSignature(annotations.iterator().next().getFunctionSignature());
         
         return resourceFunction;
     }

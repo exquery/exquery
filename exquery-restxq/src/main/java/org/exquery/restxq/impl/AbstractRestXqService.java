@@ -87,6 +87,8 @@ public abstract class AbstractRestXqService implements RestXqService {
      * Rules are (must all apply):
      * 1) Can this Service service the HTTP Method of the request
      * 2) Does the ResourceFunction of this RESTXQ Service apply to the Request Path
+     * 3) Can we consume the request i.e. Content-Type header
+     * 4) Can we produce the response i.e. Accept header
      * 
      * @see org.exquery.restxq.RestXqService#canService(org.exquery.http.HttpRequest)
      */
@@ -97,20 +99,23 @@ public abstract class AbstractRestXqService implements RestXqService {
         if(getServicedMethods().contains(request.getMethod())) {
             
             //2) check the path matches
-            if(getResourceFunction().getPathAnnotation().matchesPath(request.getPath())) {
-                
-                if(!canServiceConsume(request)) {
-                    //TODO HTTP 415 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
-                    return false;
-                }
-                
-                if(!canServiceProduce(request)) {
-                    //TODO HTTP 406 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
-                    return false;
-                }
-                
-                return true;
+            if(getResourceFunction().getPathAnnotation() != null && !getResourceFunction().getPathAnnotation().matchesPath(request.getPath())) {
+                return false;
             }
+            
+            //3) check we can consume the request
+            if(!canServiceConsume(request)) {
+                //TODO HTTP 415 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
+                return false;
+            }
+                
+            //4) check we can produce the request
+            if(!canServiceProduce(request)) {
+                //TODO HTTP 406 - in RESTXQServiceRegistry.findService, if no service matches we should be able to return a HTTP reason!
+                return false;
+            }
+                
+            return true;
         }
         
         return false;
@@ -187,26 +192,28 @@ public abstract class AbstractRestXqService implements RestXqService {
      * @return The Map of Parameters to values, the key is the parameter
      * name and the value is the sequence of values extracted from the request
      *
-     * @throws RestXqServiceException If an error occured whilst processing the request
+     * @throws RestXqServiceException If an error occurred whilst processing the request
      */
     protected Set<TypedArgumentValue> extractParameters(final HttpRequest request) throws RestXqServiceException {
         
         final Set<TypedArgumentValue> paramNameValues = new HashSet<TypedArgumentValue>();
         
         //extract the param mappings for the Path Annotation
-        for(final Entry<String, String> pathParameter : getResourceFunction().getPathAnnotation().extractPathParameters(request.getPath()).entrySet()) {
-            
-            paramNameValues.add(new TypedArgumentValue<String>(){
-                @Override
-                public String getArgumentName() {
-                    return pathParameter.getKey();
-                }
+        if(getResourceFunction().getPathAnnotation() != null) {
+            for(final Entry<String, String> pathParameter : getResourceFunction().getPathAnnotation().extractPathParameters(request.getPath()).entrySet()) {
 
-                @Override
-                public Sequence<String> getTypedValue() {
-                    return new SequenceImpl<String>(new StringTypedValue(pathParameter.getValue()));
-                }
-            });
+                paramNameValues.add(new TypedArgumentValue<String>(){
+                    @Override
+                    public String getArgumentName() {
+                        return pathParameter.getKey();
+                    }
+
+                    @Override
+                    public Sequence<String> getTypedValue() {
+                        return new SequenceImpl<String>(new StringTypedValue(pathParameter.getValue()));
+                    }
+                });
+            }
         }
         
         //extract the param mappings for the Body Content Annotations
@@ -319,7 +326,21 @@ public abstract class AbstractRestXqService implements RestXqService {
             return 1;
         }
         
-        long result = getResourceFunction().getPathAnnotation().getPathSpecificityMetric() - ((RestXqService)other).getResourceFunction().getPathAnnotation().getPathSpecificityMetric();
+        final long pathSpecificityMetric;
+        if(getResourceFunction().getPathAnnotation() != null) {
+            pathSpecificityMetric = getResourceFunction().getPathAnnotation().getPathSpecificityMetric();
+        } else {
+            pathSpecificityMetric = 0;
+        }
+        
+        final long otherPathSpecificityMetric;
+        if(other.getResourceFunction().getPathAnnotation() != null) {
+            otherPathSpecificityMetric = other.getResourceFunction().getPathAnnotation().getPathSpecificityMetric();
+        } else {
+            otherPathSpecificityMetric = 0;
+        }
+        
+        long result = otherPathSpecificityMetric - pathSpecificityMetric;
         if(result > 0) {
             return 1;
         } else if(result < 0) {

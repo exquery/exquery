@@ -26,14 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
-import org.exquery.restxq.annotation.RestAnnotationName;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Type;
-import org.exquery.xquery3.Annotation;
 
 /**
  * Base class for RESTXQ Method Annotation Implementations
@@ -41,8 +38,6 @@ import org.exquery.xquery3.Annotation;
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotation implements HttpMethodAnnotation {
-
-    //TODO cosider allowing a catch all Method Annotation, i.e. with no Path Annotation, should work as the PathSegmentCount would just be 0 or -1 for sorting
     
     /**
      * Checks that a Path Annotation is present
@@ -53,24 +48,6 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
     @Override
     public void initialise() throws RestAnnotationException {
         super.initialise();
-        checkForPathAnnotation();
-    }
-
-    /**
-     * Ensures that the Resource Function which declared
-     * this HTTP Method Annotation, also declares a Path Annotation
-     * 
-     * @throws RestAnnotationException if the ResourceFunction
-     * does not also declare a Path Annotation
-     */
-    protected void checkForPathAnnotation() throws RestAnnotationException {
-        for(Annotation annotation : getFunctionSignature().getAnnotations()) {
-            if(annotation.getName().equals(RestAnnotationName.path.getQName())) {
-                return;
-            }
-        }
-	        
-        throw new RestAnnotationException(RestXqErrorCodes.RQST0009);
     }
 
     /**

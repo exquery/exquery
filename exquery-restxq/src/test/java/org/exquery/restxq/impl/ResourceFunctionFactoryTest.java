@@ -34,7 +34,6 @@ import javax.xml.namespace.QName;
 import org.exquery.ExQueryException;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.ResourceFunction;
-import org.exquery.restxq.annotation.HttpMethodAnnotation;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.xquery3.Annotation;
 import static org.junit.Assert.assertEquals;
@@ -65,14 +64,10 @@ public class ResourceFunctionFactoryTest {
     }
     
     @Test(expected=ExQueryException.class)
-    public void create_failsForRESTXQAnnotations_Without_PathAnnotation() throws URISyntaxException, ExQueryException {
+    public void create_fails_when_there_are_no_annotations() throws URISyntaxException, ExQueryException {
         final QName qnHttpMethodAnnotation = new QName(Namespace.ANNOTATION_NS, "GET");
-        final HttpMethodAnnotation mckHttpMethodAnnotation = mock(HttpMethodAnnotation.class);
         
         final Set<Annotation> annotations = new HashSet<Annotation>();
-        annotations.add(mckHttpMethodAnnotation);
-        
-        when(mckHttpMethodAnnotation.getName()).thenReturn(qnHttpMethodAnnotation);
         
         final ResourceFunction resourceFunction = ResourceFunctionFactory.create(new URI("/some.xquery"), annotations);
     }

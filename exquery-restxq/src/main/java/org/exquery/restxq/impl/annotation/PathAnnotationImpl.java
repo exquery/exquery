@@ -38,10 +38,8 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.PathAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
-import org.exquery.xquery.FunctionArgument;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
-import org.exquery.xquery3.FunctionSignature;
 
 /**
  * Implementation of RESTXQ Path Annotation
@@ -236,6 +234,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
     //TODO enforcing that annotations other than path annotations have optional parameters is not the right thing to do here!
     //as it does not allow us to have annotations with default-args etc
+    //probably need to do this in ResourceFunctionFactory.create(...)
     /*
     @Override
     protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {

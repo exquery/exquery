@@ -41,7 +41,7 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0002 = new RestXqErrorCode("RQST0002", "It is a static error if a Path annotation is not a literal String");
     public static RestXqErrorCode RQST0003 = new RestXqErrorCode("RQST0003", "It is a static error if a Path annotation is empty");
     public static RestXqErrorCode RQST0004 = new RestXqErrorCode("RQST0004", "It is a static error if a Path annotation provides an invalid URI");
-    public static RestXqErrorCode RQST0009 = new RestXqErrorCode("RQST0009", "It is a static error if a function has a REST method annotation, but does not contain a REST path annotation");
+    //public static RestXqErrorCode RQST0009 = new RestXqErrorCode("RQST0009", "It is a static error if a function has a REST method annotation, but does not contain a REST path annotation");
     
     //annotated function errors
     public static RestXqErrorCode RQST0005 = new RestXqErrorCode("RQST0005", "It is a static error if an annotated function parameter maps to a function parameter whoose cardinality is not Exactly One");
