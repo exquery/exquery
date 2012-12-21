@@ -38,7 +38,7 @@ import org.exquery.xquery.Literal;
  */
 public class MediaTypeAnnotation extends AbstractSerializationAnnotation {
     
-    private final static Pattern ptnMediaType = Pattern.compile("[a-z]+/[a-z\\-](?:(\\+[a-z\\-]+)?)");
+    private final static Pattern ptnMediaType = Pattern.compile("[a-z]+/[a-z\\-]+(?:(\\+[a-z\\-]+)?)");
     
     private String mediaType;
     
@@ -73,7 +73,7 @@ public class MediaTypeAnnotation extends AbstractSerializationAnnotation {
         }
     }
 
-    private String parseMediaType(final Literal mediaType) throws SerializationAnnotationException {
+    protected String parseMediaType(final Literal mediaType) throws SerializationAnnotationException {
         
         final String mediaTypeStr = mediaType.getValue();
         if(mediaTypeStr.isEmpty()) {
