@@ -44,6 +44,13 @@ public class ConsumesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     public boolean matchesMediaType(final HttpRequest request) {
         final String contentType = request.getContentType();
         
+        //if there is no contentType provided in the request then we cannot consume it!
+        //TODO what about if we consume */* - perhaps that should not be allowed, as that is the same
+        //as having no consumes annotation
+        if(contentType == null) {
+            return false;
+        }
+        
         final Matcher mtcConsumesContentType = getMediaTypesPatternMatcher().matcher(contentType);
         return mtcConsumesContentType.matches();
     }
