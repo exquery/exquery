@@ -118,6 +118,9 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
      * @return The returned value encodes both the specificity and the path
      * structure in binary. A templated path segment is 0 and a concrete path
      * segment is 1. The binary number has a leading 1 bit.
+     * 
+     * When comparing paths, the path with the higher Specificity Metric
+     * is considered more specific
      */
     @Override
     public long getPathSpecificityMetric() {
