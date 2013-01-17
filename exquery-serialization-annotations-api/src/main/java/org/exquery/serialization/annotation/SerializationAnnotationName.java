@@ -32,7 +32,7 @@ import org.exquery.serialization.Namespace;
 /**
  * Names for the Serialization Annotations
  * 
- * @author aretter
+ * @author Adam Retter <adam.retter@googlemail.com>
  */
 public enum SerializationAnnotationName {
     
@@ -56,7 +56,7 @@ public enum SerializationAnnotationName {
 
     public static SerializationAnnotationName valueOf(final QName name) { 
 
-        for(SerializationAnnotationName an : SerializationAnnotationName.values()) {
+        for(final SerializationAnnotationName an : SerializationAnnotationName.values()) {
             if(an.name.equals(name)) {
                 return an;
             }

@@ -38,6 +38,7 @@ import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.impl.serialization.XmlWriter.Attribute;
+import org.exquery.serialization.annotation.MediaTypeAnnotation;
 import org.exquery.serialization.annotation.MethodAnnotation;
 import org.exquery.serialization.annotation.MethodAnnotation.SupportedMethod;
 import org.exquery.serialization.annotation.SerializationAnnotation;
@@ -163,6 +164,9 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
             if(serializationAnnotation instanceof MethodAnnotation) {
                 final String method = ((MethodAnnotation)serializationAnnotation).getMethod();
                 serializationProperties.put(SerializationProperty.METHOD, method);
+            } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
+                final String mediaType = ((MediaTypeAnnotation)serializationAnnotation).getMediaType();
+                serializationProperties.put(SerializationProperty.MEDIA_TYPE, mediaType);
             }
         }
     }
@@ -203,6 +207,11 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
             } else if(method.equals(SupportedMethod.json)) {
                 response.setContentType(InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
             }
+        }
+        
+        final String mediaType = serializationProperties.get(SerializationProperty.MEDIA_TYPE);
+        if(mediaType != null && !mediaType.isEmpty()) {
+            response.setContentType(mediaType);
         }
         
         if(method != null && method.equals(SupportedMethod.binary)) {
