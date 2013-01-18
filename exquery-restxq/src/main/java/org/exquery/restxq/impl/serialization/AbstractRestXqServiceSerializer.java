@@ -212,6 +212,16 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
         
         SupportedMethod method = null;
         
+        try {
+            final String methodProp = serializationProperties.get(SerializationProperty.METHOD);
+            method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
+        } catch(final IllegalArgumentException iae) {
+            //do nothing
+
+            //TODO debugging
+            System.out.println(iae.getMessage());
+        }
+        
         //set the media-type
         final String mediaType = serializationProperties.get(SerializationProperty.MEDIA_TYPE);
         if(mediaType != null && !mediaType.isEmpty()) {
