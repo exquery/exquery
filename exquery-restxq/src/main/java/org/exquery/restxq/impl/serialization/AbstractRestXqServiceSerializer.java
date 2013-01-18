@@ -159,15 +159,43 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      */
     protected void processSerializationAnnotations(final Set<SerializationAnnotation> serializationAnnotations, final Map<SerializationProperty, String> serializationProperties) {
         
+        String mediaType = null;
+        
         //get the serialzation annotations
         for(SerializationAnnotation serializationAnnotation : serializationAnnotations) {
             if(serializationAnnotation instanceof MethodAnnotation) {
-                final String method = ((MethodAnnotation)serializationAnnotation).getMethod();
-                serializationProperties.put(SerializationProperty.METHOD, method);
+                final String methodProp = ((MethodAnnotation)serializationAnnotation).getMethod();
+                serializationProperties.put(SerializationProperty.METHOD, methodProp);
+                
+                SupportedMethod method = null;
+                try {
+                    method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
+                } catch(final IllegalArgumentException iae) {
+                    //do nothing
+
+                    //TODO debugging
+                    System.out.println(iae.getMessage());
+                }
+                
+                //set the default media-type for the method
+                if(method != null) {
+                    if(method.equals(SupportedMethod.xml) || method.equals(SupportedMethod.xhtml)) {
+                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, getDefaultContentType());
+                    } else if(method.equals(SupportedMethod.html) || method.equals(SupportedMethod.html5)) {
+                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.TEXT_HTML.getMediaType() + "; charset=" + getDefaultEncoding());
+                    } else if(method.equals(SupportedMethod.json)) {
+                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
+                    }
+                }
+                
             } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
-                final String mediaType = ((MediaTypeAnnotation)serializationAnnotation).getMediaType();
-                serializationProperties.put(SerializationProperty.MEDIA_TYPE, mediaType);
+                mediaType = ((MediaTypeAnnotation)serializationAnnotation).getMediaType();
             }
+        }
+
+        //%output:media-type overrides the defaults
+        if(mediaType != null) {
+            serializationProperties.put(SerializationProperty.MEDIA_TYPE, mediaType);
         }
     }
     
@@ -184,31 +212,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
         
         SupportedMethod method = null;
         
-        try {
-            final String methodProp = serializationProperties.get(SerializationProperty.METHOD);
-            
-            //use the specified method or fallback to xml
-            method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
-        } catch(IllegalArgumentException iae) {
-            //do nothing
-            
-            //TODO debugging
-            System.out.println(iae.getMessage());
-        }
-        
-        if(method != null) {
-            //TODO probably a nicer way to do this?
-            //set mime-type depending on method of serialization
-            
-            if(method.equals(SupportedMethod.xml) || method.equals(SupportedMethod.xhtml)) {
-                response.setContentType(getDefaultContentType());
-            } else if(method.equals(SupportedMethod.html) || method.equals(SupportedMethod.html5)) {
-                response.setContentType(InternetMediaType.TEXT_HTML.getMediaType() + "; charset=" + getDefaultEncoding());
-            } else if(method.equals(SupportedMethod.json)) {
-                response.setContentType(InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
-            }
-        }
-        
+        //set the media-type
         final String mediaType = serializationProperties.get(SerializationProperty.MEDIA_TYPE);
         if(mediaType != null && !mediaType.isEmpty()) {
             response.setContentType(mediaType);
