@@ -185,6 +185,8 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                         serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.TEXT_HTML.getMediaType() + "; charset=" + getDefaultEncoding());
                     } else if(method.equals(SupportedMethod.json)) {
                         serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
+                    } else if(method.equals(SupportedMethod.binary)) {
+                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.APPLICATION_OCTET_STREAM.getMediaType());
                     }
                 }
                 

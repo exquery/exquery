@@ -33,6 +33,7 @@ package org.exquery;
  */
 public enum InternetMediaType {
     
+    APPLICATION_OCTET_STREAM("application/octet-stream"),
     APPLICATION_JSON("application/json"),
     APPLICATION_XML("application/xml"),
     
