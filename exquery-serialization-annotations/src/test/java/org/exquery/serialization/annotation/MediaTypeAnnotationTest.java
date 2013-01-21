@@ -58,4 +58,49 @@ public class MediaTypeAnnotationTest {
         assertEquals(JSON_MEDIATYPE, mediaType);
     }
     
+    @Test
+    public void ooxml_mediaType() throws SerializationAnnotationException {
+        final String OOXML_MEDIATYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        
+        final MediaTypeAnnotation mediaTypeAnnotation = new MediaTypeAnnotation();
+        final String mediaType = mediaTypeAnnotation.parseMediaType(new Literal(){
+
+            @Override
+            public Type getType() {
+                return Type.STRING;
+            }
+
+            @Override
+            public String getValue() {
+                return OOXML_MEDIATYPE;
+            }
+        });
+        
+        assertEquals(OOXML_MEDIATYPE, mediaType);
+    }
+    
+    @Test
+    public void invalid_mediaType() throws SerializationAnnotationException {
+        final String OOXML_MEDIATYPE = "application/vnd/openxmlformats";
+        
+        final MediaTypeAnnotation mediaTypeAnnotation = new MediaTypeAnnotation();
+        
+        try {
+            final String mediaType = mediaTypeAnnotation.parseMediaType(new Literal(){
+
+                @Override
+                public Type getType() {
+                    return Type.STRING;
+                }
+
+                @Override
+                public String getValue() {
+                    return OOXML_MEDIATYPE;
+                }
+            });
+        } catch(final SerializationAnnotationException sae) {
+            assertEquals(SerializationAnnotationErrorCodes.SEST0012, sae.getErrorCode());
+        }
+    }
+    
 }

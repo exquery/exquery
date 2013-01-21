@@ -28,6 +28,7 @@ package org.exquery.serialization.annotation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.exquery.http.InternetMediaType;
 import org.exquery.xquery.Literal;
 
 /**
@@ -38,7 +39,8 @@ import org.exquery.xquery.Literal;
  */
 public class MediaTypeAnnotation extends AbstractSerializationAnnotation {
     
-    private final static Pattern ptnMediaType = Pattern.compile("[a-z]+/[a-z\\-]+(?:(\\+[a-z\\-]+)?)");
+    //Regular Expression to match any Internet Media Type
+    private final static Pattern ptnMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
     
     private String mediaType;
     

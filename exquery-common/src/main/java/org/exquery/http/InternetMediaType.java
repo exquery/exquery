@@ -58,4 +58,6 @@ public interface InternetMediaType {
     public final static char subtypeSeparator = '/';
     
     public final static String mediaType_regExp = typeName_regExp + subtypeSeparator + subtypeName_regExp; 
+    
+    //TODO add support for parameters of media types - see http://tools.ietf.org/html/rfc2231#section-7
 }
