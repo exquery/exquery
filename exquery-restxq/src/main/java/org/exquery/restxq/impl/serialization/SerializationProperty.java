@@ -35,6 +35,5 @@ public enum SerializationProperty {
     INDENT,
     ENCODING,
     MEDIA_TYPE,
-    CONTENT_TYPE,
     METHOD;
 }

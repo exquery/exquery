@@ -132,7 +132,7 @@ public class RestResponseHandler {
             final String value = elemHeader.getAttribute(VALUE_ATTR_NAME);
             
             if(name.equals(HttpHeader.CONTENT_TYPE.getHeaderName())) {
-                serializationProperties.put(SerializationProperty.CONTENT_TYPE, value);
+                serializationProperties.put(SerializationProperty.MEDIA_TYPE, value);
                 //TODO how to select the Serializer based on the Content-Type? Should probably just use the %output:method
             }
             
