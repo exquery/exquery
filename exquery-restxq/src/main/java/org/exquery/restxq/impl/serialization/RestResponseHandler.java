@@ -29,6 +29,7 @@ package org.exquery.restxq.impl.serialization;
 import java.util.EnumMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import org.exquery.http.HttpHeader;
 import org.exquery.http.HttpResponse;
 import org.exquery.http.HttpStatus;
 import org.exquery.restxq.Namespace;
@@ -130,12 +131,12 @@ public class RestResponseHandler {
             final String name = elemHeader.getAttribute(NAME_ATTR_NAME);
             final String value = elemHeader.getAttribute(VALUE_ATTR_NAME);
             
-            //if(name.equals(HttpHeader.CONTENT_TYPE.getHeaderName())) {
-                //serializationProperties.put(name, value);
+            if(name.equals(HttpHeader.CONTENT_TYPE.getHeaderName())) {
+                serializationProperties.put(SerializationProperty.CONTENT_TYPE, value);
                 //TODO how to select the Serializer based on the Content-Type? Should probably just use the %output:method
-            //} else {
-                response.setHeader(name, value);
-            //}
+            }
+            
+            response.setHeader(name, value);
         }
     }
 }
