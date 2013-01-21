@@ -90,7 +90,7 @@ public abstract class AbstractParameterWithDefaultAnnotation extends AbstractPar
             }
             
             //if a default value(s) is provided make sure it matches the type of the function parameter declared
-            checkFnDeclaresParameterWithType(getFunctionSignature(), mapping.getParameterName(), requiredType, getInvalidDefaultValueTypeErr());
+            checkFnDeclaresParameterWithType(getFunctionSignature(), mapping.getFunctionArgumentName(), requiredType, getInvalidDefaultValueTypeErr());
         }
         
         return new ParameterAnnotationMapping(mapping.getParameterName(), mapping.getFunctionArgumentName(), defaultValueLiterals);
