@@ -37,7 +37,8 @@ public enum InternetMediaType {
     APPLICATION_JSON("application/json"),
     APPLICATION_XML("application/xml"),
     
-    TEXT_HTML("text/html");
+    TEXT_HTML("text/html"),
+    TEXT_PLAIN("text/plain");
     
     private final String mediaType;
     

@@ -28,6 +28,7 @@ package org.exquery.serialization.annotation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.exquery.InternetMediaType;
 import org.exquery.xquery.Literal;
 
 /**
@@ -92,14 +93,24 @@ public class MethodAnnotation extends AbstractSerializationAnnotation {
      * supported by this Implementation
      */
     public static enum SupportedMethod {
-        xml,
-        xhtml,
-        html,
-        html5,
-        json,
-        text,
-        binary;
+        xml(InternetMediaType.APPLICATION_XML),
+        xhtml(InternetMediaType.APPLICATION_XML),
+        html(InternetMediaType.TEXT_HTML),
+        html5(InternetMediaType.TEXT_HTML),
+        json(InternetMediaType.APPLICATION_JSON),
+        text(InternetMediaType.TEXT_PLAIN),
+        binary(InternetMediaType.APPLICATION_OCTET_STREAM);
+        
+        private InternetMediaType defaultInternetMediaType;
+        
+        SupportedMethod(final InternetMediaType defaultInternetMediaType) {
+            this.defaultInternetMediaType = defaultInternetMediaType;
+        }
 
+        public InternetMediaType getDefaultInternetMediaType() {
+            return defaultInternetMediaType;
+        }
+        
         public static Pattern getPattern() {
             final SupportedMethod supportedMethods[] = values();
             final StringBuilder builder = new StringBuilder();

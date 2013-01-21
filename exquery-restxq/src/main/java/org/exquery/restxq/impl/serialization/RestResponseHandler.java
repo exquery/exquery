@@ -85,7 +85,7 @@ public class RestResponseHandler {
         //get the output method
         final NodeList nlMethod = serializationParameters.getElementsByTagNameNS(METHOD_ELEMENT_NAME.getNamespaceURI(), METHOD_ELEMENT_NAME.getLocalPart());
         if(nlMethod.getLength() == 1) {
-            Element elemMethod = (Element)nlMethod.item(0);
+            final Element elemMethod = (Element)nlMethod.item(0);
             final String strMethod = elemMethod.getAttribute(VALUE_ATTR_NAME);
             if(strMethod != null && !strMethod.isEmpty()) {
                 serializationProperties.put(SerializationProperty.METHOD, strMethod);

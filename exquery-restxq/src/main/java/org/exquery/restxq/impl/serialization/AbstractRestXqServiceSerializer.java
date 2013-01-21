@@ -170,24 +170,15 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                 SupportedMethod method = null;
                 try {
                     method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
+                    
+                    //set the default media-type for the method
+                    final String defaultMethodMediaType = getDefaultMediaTypeForMethod(method);
+                    serializationProperties.put(SerializationProperty.MEDIA_TYPE, defaultMethodMediaType);
                 } catch(final IllegalArgumentException iae) {
                     //do nothing
 
                     //TODO debugging
                     System.out.println(iae.getMessage());
-                }
-                
-                //set the default media-type for the method
-                if(method != null) {
-                    if(method.equals(SupportedMethod.xml) || method.equals(SupportedMethod.xhtml)) {
-                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, getDefaultContentType());
-                    } else if(method.equals(SupportedMethod.html) || method.equals(SupportedMethod.html5)) {
-                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.TEXT_HTML.getMediaType() + "; charset=" + getDefaultEncoding());
-                    } else if(method.equals(SupportedMethod.json)) {
-                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
-                    } else if(method.equals(SupportedMethod.binary)) {
-                        serializationProperties.put(SerializationProperty.MEDIA_TYPE, InternetMediaType.APPLICATION_OCTET_STREAM.getMediaType());
-                    }
                 }
                 
             } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
@@ -199,6 +190,22 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
         if(mediaType != null) {
             serializationProperties.put(SerializationProperty.MEDIA_TYPE, mediaType);
         }
+    }
+    
+    public static String getDefaultMediaTypeForMethod(final SupportedMethod method) {
+        
+        final String mediaType;
+        if(method != null) {
+            if(method.equals(SupportedMethod.binary)) {
+                mediaType = InternetMediaType.APPLICATION_OCTET_STREAM.getMediaType();
+            } else {
+                mediaType = method.getDefaultInternetMediaType().getMediaType() + "; charset=" + DEFAULT_ENCODING;   
+            }
+        } else {
+            mediaType = DEFAULT_CONTENT_TYPE;
+        }
+        
+        return mediaType;
     }
     
     /**
