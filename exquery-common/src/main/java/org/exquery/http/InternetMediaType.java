@@ -38,8 +38,6 @@ public interface InternetMediaType {
     /**
      * Internet Media Type valid characters from RFC 4288
      * 
-     * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: §4.2 Naming Requirements</a>
-     * 
      * type-name = reg-name
      * subtype-name = reg-name
      * 
@@ -47,6 +45,8 @@ public interface InternetMediaType {
      * reg-name-chars = ALPHA / DIGIT / "!" /
      *                  "#" / "$" / "&" / "." /
      *                  "+" / "-" / "^" / "_"
+     * 
+     * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: 4.2 Naming Requirements</a>
      */
     
     public final static String regNameChars_regExp = "[a-z0-9!#\\$&\\.\\+\\-\\^_]";
