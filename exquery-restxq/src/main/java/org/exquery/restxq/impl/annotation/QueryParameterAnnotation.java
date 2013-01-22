@@ -91,7 +91,7 @@ public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnota
     }
 
     /**
-     * @see AbstractParameterAnnotation#getInvalidKeyErr()
+     * @see AbstractParameterAnnotation#getInvalidParameterNameErr()
      */
     @Override
     protected RestXqErrorCode getInvalidParameterNameErr() {
@@ -99,7 +99,7 @@ public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnota
     }
 
     /**
-     * @see AbstractParameterAnnotation#getInvalidValueErr()
+     * @see AbstractParameterAnnotation#getInvalidFunctionArgumentNameErr()
      */
     @Override
     protected RestXqErrorCode getInvalidFunctionArgumentNameErr() {
@@ -123,7 +123,7 @@ public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnota
     }
     
     /**
-     * @see AbstractParameterAnnotation#getInvalidAnnotationParamSyntaxErr()
+     * @see AbstractParameterAnnotation#getInvalidAnnotationParametersSyntaxErr()
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParametersSyntaxErr() {

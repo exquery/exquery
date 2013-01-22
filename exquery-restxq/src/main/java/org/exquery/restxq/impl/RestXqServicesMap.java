@@ -100,7 +100,7 @@ public class RestXqServicesMap {
     /**
      * Iterate over the Services Map
      * 
-     * @param The visitor which visits the services map
+     * @param visitor The visitor which visits the services map
      * @param eagerLockAll true if all methods should be locked before visiting anything, false to lock methods as they are visited
      * 
      */

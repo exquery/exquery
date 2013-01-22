@@ -90,7 +90,7 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
      * 
      * @param parameterName The name of the Parameter
      * @param functionArgumentName The name of the Function Argument
-     * @param defaultValue The default value if provided, or null otherwise
+     * @param requiredCardinality The cardinality required of the function parameter
      * 
      * @return A description of the mapping between the Parameter and the Function Argument
      * 

@@ -29,7 +29,7 @@ package org.exquery.http;
 /**
  * URI concepts from RFC 3986
  * 
- * @see http://tools.ietf.org/html/rfc3986
+ * @see <a href="http://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource Identifier (URI): Generic Syntax</a>
  * 
  * Not intended as a replacement for java.net.URI,
  * rather it just contains declarations to assist
@@ -45,7 +45,7 @@ public interface URI {
     /**
      * URI path segment valid characters from RFC 3986
      * 
-     * @see http://labs.apache.org/webarch/uri/rfc/rfc3986.html#collected-abnf
+     * @see <a href="http://tools.ietf.org/html/rfc3986#appendix-A">RFC 3986: §Appendix A. Collected ABNF for URI</a>
      * 
      * pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
      * unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"

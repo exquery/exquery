@@ -29,7 +29,7 @@ package org.exquery.http;
 /**
  * Internet Media Type concepts from RFC 4288
  * 
- * @see http://tools.ietf.org/html/rfc4288
+ * @see <a href="http://tools.ietf.org/html/rfc4288">RFC 4288: Media Type Specifications and Registration Procedures</a>
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -38,7 +38,7 @@ public interface InternetMediaType {
     /**
      * Internet Media Type valid characters from RFC 4288
      * 
-     * @see http://tools.ietf.org/html/rfc4288#section-4.2
+     * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: §4.2 Naming Requirements</a>
      * 
      * type-name = reg-name
      * subtype-name = reg-name

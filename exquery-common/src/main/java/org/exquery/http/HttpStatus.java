@@ -29,7 +29,7 @@ package org.exquery.http;
 /**
  * HTTP 1.1 Status Codes from RFC 2616
  * 
- * @see http://tools.ietf.org/html/rfc2616
+ * @see <a href="http://tools.ietf.org/html/rfc2616">RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1</a>
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -94,7 +94,7 @@ public enum HttpStatus {
      * 
      * @return The matching HttpStatus Enumerated value
      * 
-     * @thows IllegalArgumentException if the HTTP Status is not a valid HTTP
+     * @throws IllegalArgumentException if the HTTP Status is not a valid HTTP
      * 1.1 status
      */
     public static HttpStatus fromStatus(final int code) {

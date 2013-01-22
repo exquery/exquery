@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 /**
  * Model of a Sequence from W3C XQuery 1.0 and XPath 2.0 Data Model (XDM)
  * 
- * @see http://www.w3.org/TR/xpath-datamodel/#types
+ * @see <a href="http://www.w3.org/TR/xpath-datamodel/#types">XDM Types</a>
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */

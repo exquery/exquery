@@ -108,7 +108,7 @@ public class FormParameterAnnotation extends AbstractParameterWithDefaultAnnotat
     }
 
     /**
-     * @see AbstractParameterAnnotation#getInvalidKeyErr()
+     * @see AbstractParameterAnnotation#getInvalidParameterNameErr()
      */
     @Override
     protected RestXqErrorCode getInvalidParameterNameErr() {
@@ -116,7 +116,7 @@ public class FormParameterAnnotation extends AbstractParameterWithDefaultAnnotat
     }
 
     /**
-     * @see AbstractParameterAnnotation#getInvalidValueErr()
+     * @see AbstractParameterAnnotation#getInvalidFunctionArgumentNameErr()
      */
     @Override
     protected RestXqErrorCode getInvalidFunctionArgumentNameErr() {
@@ -140,7 +140,7 @@ public class FormParameterAnnotation extends AbstractParameterWithDefaultAnnotat
     }
     
     /**
-     * @see AbstractParameterAnnotation#getInvalidAnnotationParamSyntaxErr()
+     * @see AbstractParameterAnnotation#getInvalidAnnotationParametersSyntaxErr()
      */
     @Override
     protected RestXqErrorCode getInvalidAnnotationParametersSyntaxErr() {

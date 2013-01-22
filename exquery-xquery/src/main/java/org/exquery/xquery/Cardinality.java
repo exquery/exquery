@@ -48,7 +48,7 @@ public enum Cardinality {
      * 
      * @param value integer representation of the cardinality (must be distinct in base two)
      */
-    Cardinality(int value) {
+    Cardinality(final int value) {
         this.value = value;
     }
     
@@ -66,7 +66,7 @@ public enum Cardinality {
     /**
      * Checks if this Cardinality satisfies the required Cardinality
      * 
-     * @requiredCardinality The cardinality that is required
+     * @param requiredCardinality The cardinality that is required
      */
     public boolean hasRequiredCardinality(final Cardinality requiredCardinality) {
         return ((requiredCardinality.value & value) == requiredCardinality.value);

@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Model of W3C XQuery 1.0 and XPath 2.0 XDM Types
  * 
- * @see http://www.w3.org/TR/xpath-datamodel/#types
+ * @see <a href="http://www.w3.org/TR/xpath-datamodel/#types">XDM Types</a>
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
