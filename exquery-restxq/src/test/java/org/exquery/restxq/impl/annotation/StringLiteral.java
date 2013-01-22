@@ -30,7 +30,8 @@ import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
 /**
- *
+ * Simple String Literal implementation for testing annotations
+ * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public class StringLiteral implements Literal {
