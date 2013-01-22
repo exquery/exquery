@@ -24,13 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.restxq.impl;
+package org.exquery.restxq.impl.annotation;
 
 import javax.xml.namespace.QName;
 import org.exquery.ErrorCodes.ErrorCode;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.annotation.RestAnnotationException;
-import org.exquery.restxq.impl.annotation.PathAnnotationImpl;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.FunctionArgument;
 import org.exquery.xquery.Literal;
@@ -434,24 +433,6 @@ public class PathAnnotationImplTest {
         @Override
         public Annotation[] getAnnotations() {
             return new Annotation[]{};
-        }
-    }
-    
-    public class StringLiteral implements Literal {
-        private final String str;
-
-        public StringLiteral(final String str) {
-            this.str = str;
-        }
-        
-        @Override
-        public Type getType() {
-            return Type.STRING;
-        }
-
-        @Override
-        public String getValue() {
-            return str;
         }
     }
 }

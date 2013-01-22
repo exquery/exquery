@@ -32,7 +32,7 @@ import org.exquery.http.HttpRequest;
 import org.exquery.http.InternetMediaType;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
-import org.exquery.restxq.annotation.ConsumesAnnotation;
+import org.exquery.restxq.annotation.ProducesAnnotation;
 
 /**
  * Implementation of RESTXQ Produces Annotation
@@ -40,15 +40,13 @@ import org.exquery.restxq.annotation.ConsumesAnnotation;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implements ConsumesAnnotation {
-    
-    private final static String ANY_MEDIA_TYPE = "*.*";
+public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implements ProducesAnnotation {
     
     @Override
     public boolean matchesMediaType(final HttpRequest request) {
         final String acceptHeader = request.getHeader(HttpHeaderName.Accept.toString());
         
-        if(acceptHeader.indexOf(ANY_MEDIA_TYPE) > -1) {
+        if(acceptHeader.equals(org.exquery.InternetMediaType.ANY.getMediaType())) {
             return true;
         }
         

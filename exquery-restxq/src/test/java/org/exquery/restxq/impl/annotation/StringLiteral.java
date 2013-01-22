@@ -24,31 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery;
+package org.exquery.restxq.impl.annotation;
+
+import org.exquery.xquery.Literal;
+import org.exquery.xquery.Type;
 
 /**
- * Internet Media Types
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public enum InternetMediaType {
-    
-    APPLICATION_OCTET_STREAM("application/octet-stream"),
-    APPLICATION_JSON("application/json"),
-    APPLICATION_XML("application/xml"),
-    
-    TEXT_HTML("text/html"),
-    TEXT_PLAIN("text/plain"),
-    
-    ANY("*/*");
-    
-    private final String mediaType;
-    
-    InternetMediaType(final String mediaType) {
-        this.mediaType = mediaType;
+public class StringLiteral implements Literal {
+    private final String str;
+
+    public StringLiteral(final String str) {
+        this.str = str;
     }
-    
-    public final String getMediaType() {
-        return mediaType;
+
+    @Override
+    public Type getType() {
+        return Type.STRING;
+    }
+
+    @Override
+    public String getValue() {
+        return str;
     }
 }
