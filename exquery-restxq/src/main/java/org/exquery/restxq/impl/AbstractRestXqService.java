@@ -163,7 +163,7 @@ public abstract class AbstractRestXqService implements RestXqService {
         
         final Set<TypedArgumentValue> typedArgumentValues = extractParameters(request);
         
-        final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues);
+        final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues, request);
         
         restXqServiceSerializer.serialize(result, getResourceFunction().getSerializationAnnotations(), response);
     }

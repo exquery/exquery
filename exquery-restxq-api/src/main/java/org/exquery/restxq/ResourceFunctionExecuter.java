@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq;
 
+import org.exquery.http.HttpRequest;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.TypedArgumentValue;
 
@@ -41,10 +42,11 @@ public interface ResourceFunctionExecuter {
      * 
      * @param resourceFunction The Resource Function to execute
      * @param arguments The arguments to the function
+     * @param request The HTTP request that lead to the execution of this Resource Function
      * 
      * @return The result of the function
      * 
      * @throws RestXqServiceException If an unexpected error occurred during processing
      */
-    public Sequence execute(final ResourceFunction resourceFunction, final Iterable<TypedArgumentValue> arguments) throws RestXqServiceException;
+    public Sequence execute(final ResourceFunction resourceFunction, final Iterable<TypedArgumentValue> arguments, final HttpRequest request) throws RestXqServiceException;
 }
