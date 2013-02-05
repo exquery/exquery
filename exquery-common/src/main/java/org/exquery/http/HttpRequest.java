@@ -28,7 +28,7 @@ package org.exquery.http;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Interface for a HTTP Request
@@ -143,9 +143,9 @@ public interface HttpRequest {
     /**
      * Gets the names of HTTP Header in the HTTP Request
      * 
-     * @return The set of HTTP Header names
+     * @return The list of HTTP Header names
      */
-    public Set<String> getHeaderNames();
+    public List<String> getHeaderNames();
     
     /**
      * Gets the value of a HTTP Header
@@ -165,9 +165,9 @@ public interface HttpRequest {
     /**
      * Get the names of parameters available in the request
      * 
-     * @return the set of parameter names in the request
+     * @return the list of parameter names in the request
      */
-    public Set<String> getParameterNames();
+    public List<String> getParameterNames();
     
     public <F> F getFormParam(String key);
 
