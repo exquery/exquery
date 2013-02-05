@@ -28,6 +28,7 @@ package org.exquery.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 /**
  * Interface for a HTTP Request
@@ -44,11 +45,91 @@ public interface HttpRequest {
     public HttpMethod getMethod();
     
     /**
+     * Gets the HTTP Scheme of the HTTP Request
+     * 
+     * @return the HttpScheme of the request
+     */
+    public String getScheme();
+    
+    /**
+     * Get the Name of the Host that received the HTTP Request
+     * 
+     * @return the Hostname of the host that received the request
+     */
+    public String getHostname();
+    
+    
+    /**
+     * Get the Port fragment of the Authority component of the URI of the HTTP Request.
+     * If the port is not explicitly specified in the URI, then the default port for
+     * the HTTP Scheme is returned (i.e. 21 for FTP, 80 for HTTP and 443 for HTTPS).
+     * 
+     * @return the TCP server port
+     */
+    public int getPort();
+    
+    /**
+     * Get the Query Component of the HTTP Request URI
+     * 
+     * @return the Query component of the Request URI
+     */
+    public String getQuery();
+    
+    /**
      * Get the Path from the URI
      * 
      * @return the Path segment of the URI
      */
     public String getPath();
+    
+    /**
+     * Get the URI of the HTTP Request
+     * 
+     * @return the URI of the HTTP Request
+     */
+    public String getURI();
+    
+    /**
+     * Get the IP Address of the Server
+     * 
+     * @return The IP address of the Server
+     */
+    public String getAddress();
+    
+    /**
+     * Get the fully qualified hostname of the client or the last proxy that
+     * sent the HTTP Request. If the name of the remote host cannot be
+     * established, or an implementation chooses not to establish the
+     * remote hostname, this method behaves as request:remote-address(),
+     * and returns the IP address.
+     * 
+     * @return the Hostname of the client that issued the request
+     */
+    public String getRemoteHostname();
+    
+    /**
+     * Get the IP Address of the client or the last proxy
+     * that sent the HTTP Request.
+     * 
+     * @return The IP address of the Client
+     */
+    public String getRemoteAddress();
+    
+    /**
+     * Get the TCP port of the client
+     * 
+     * @return the TCP port of the client
+     */
+    public int getRemotePort();
+    
+    /**
+     * Get the value of a cookie
+     * 
+     * @param cookieName the name of the cookie
+     * 
+     * @return the value of the cookie
+     */
+    public String getCookieValue(final String cookieName);
     
     /**
      * Gets the InputStream for reading the body of the HTTP Request
@@ -58,6 +139,13 @@ public interface HttpRequest {
      * @throws IOException if a problem occurs when reading the request body
      */
     public InputStream getInputStream() throws IOException;
+    
+    /**
+     * Gets the names of HTTP Header in the HTTP Request
+     * 
+     * @return The set of HTTP Header names
+     */
+    public Set<String> getHeaderNames();
     
     /**
      * Gets the value of a HTTP Header
@@ -74,6 +162,13 @@ public interface HttpRequest {
 
     public String getCharacterEncoding();
 
+    /**
+     * Get the names of parameters available in the request
+     * 
+     * @return the set of parameter names in the request
+     */
+    public Set<String> getParameterNames();
+    
     public <F> F getFormParam(String key);
 
     public <Q> Q getQueryParam(String key);
