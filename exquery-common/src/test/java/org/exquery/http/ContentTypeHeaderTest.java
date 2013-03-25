@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2012, Adam Retter
+Copyright (c) 2013, Adam Retter
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.exquery.InternetMediaType.APPLICATION_XML;
+
 /**
- * Internet Media Type concepts from RFC 4288
- * 
- * @see <a href="http://tools.ietf.org/html/rfc4288">RFC 4288: Media Type Specifications and Registration Procedures</a>
+ * Tests for HTTP ContentType header representation
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public interface InternetMediaType {
-            
-    /**
-     * Internet Media Type valid characters from RFC 4288
-     * 
-     * type-name = reg-name
-     * subtype-name = reg-name
-     * 
-     * reg-name = 1*127reg-name-chars
-     * reg-name-chars = ALPHA / DIGIT / "!" /
-     *                  "#" / "$" / "&" / "." /
-     *                  "+" / "-" / "^" / "_"
-     * 
-     * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: 4.2 Naming Requirements</a>
-     */
+public class ContentTypeHeaderTest {
     
-    public final static String regNameChars_regExp = "[a-z0-9!#\\$&\\.\\+\\-\\^_]";
-    public final static String regName_regExp = regNameChars_regExp + "{1,127}";
+    @Test
+    public void extracts_internetMediaType_and_charsetIsNullWhenNotPresent() {
+        final String headerValue = APPLICATION_XML.getMediaType();
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertNull(header.getCharset());
+    }
     
-    public final static String typeName_regExp = regName_regExp;
-    public final static String subtypeName_regExp = regName_regExp;
+    @Test
+    public void extracts_internetMediaType_and_charset() {
+        final String headerValue = APPLICATION_XML.getMediaType() + "; charset=UTF-8";
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertEquals("UTF-8", header.getCharset());
+    }
     
-    public final static char subtypeSeparator = '/';
-    
-    public final static String mediaType_regExp = typeName_regExp + "\\" + subtypeSeparator + subtypeName_regExp; 
+    @Test
+    public void extracts_internetMediaType_and_charset2() {
+        final String headerValue = APPLICATION_XML.getMediaType() + ";charset=UTF-8";
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertEquals("UTF-8", header.getCharset());
+    }
 }

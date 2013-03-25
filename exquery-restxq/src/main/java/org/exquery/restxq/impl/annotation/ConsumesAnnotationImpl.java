@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq.impl.annotation;
 
 import java.util.regex.Matcher;
+import org.exquery.http.ContentTypeHeader;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
@@ -51,7 +52,9 @@ public class ConsumesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
             return false;
         }
         
-        final Matcher mtcConsumesContentType = getMediaTypesPatternMatcher().matcher(contentType);
+        final ContentTypeHeader contentTypeHeader = new ContentTypeHeader(contentType);
+        
+        final Matcher mtcConsumesContentType = getMediaTypesPatternMatcher().matcher(contentTypeHeader.getInternetMediaType());
         return mtcConsumesContentType.matches();
     }
     

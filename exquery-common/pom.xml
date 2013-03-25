@@ -20,4 +20,13 @@
         <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
         <url>${project.parent.scm.url}</url>
     </scm>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
 </project>

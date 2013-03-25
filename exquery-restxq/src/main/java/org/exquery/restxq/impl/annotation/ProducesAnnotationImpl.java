@@ -44,6 +44,8 @@ public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     
     @Override
     public boolean matchesMediaType(final HttpRequest request) {
+        
+        //TODO move the accept header parsing code into org.exquery.http.AcceptHeader
         final String acceptHeader = request.getHeader(HttpHeaderName.Accept.toString());
         
         if(acceptHeader.equals(org.exquery.InternetMediaType.ANY.getMediaType())) {
@@ -87,7 +89,6 @@ public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     @Override
     protected RestXqErrorCode getEmptyAnnotationParamsErr() {
         return RestXqErrorCodes.RQST0030;
-        
     }
 
     @Override

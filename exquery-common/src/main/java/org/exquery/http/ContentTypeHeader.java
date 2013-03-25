@@ -36,27 +36,36 @@ import java.util.regex.Pattern;
  */
 public class ContentTypeHeader {
     
+    //TODO dont just support charset parameter, add further support for parameters of media types - see http://tools.ietf.org/html/rfc2231#section-7
+    
     private final static String CHARSET_SEPARATOR = ";";
     private final static String CHARSET_KEY = "charset";
     private final static String CHARSET_KEY_VALUE_SEPARATOR = "=";
     
-    public final static Pattern ptnContentType = Pattern.compile("(" + InternetMediaType.mediaType_regExp + ")" + "(" + CHARSET_SEPARATOR + "\\s" + CHARSET_KEY + CHARSET_KEY_VALUE_SEPARATOR + "(.*))?");
+    public final static String contentType_regExp =  "(" + InternetMediaType.mediaType_regExp + ")" + "(" + CHARSET_SEPARATOR + "\\s*" + CHARSET_KEY + CHARSET_KEY_VALUE_SEPARATOR + "(.+))?";
     
-    private final org.exquery.InternetMediaType internetMediaType;
+    public final static Pattern ptnContentType = Pattern.compile(contentType_regExp);
+    
+    private final String internetMediaType;
     private final String charset;
     
     /**
      * @param headerValue The value of the HTTP ContentType header
+     * 
+     * @throws IllegalArgumentException If the headerValue is not a valid value for a ContentType header
      */
-    public ContentTypeHeader(final String headerValue) {
+    public ContentTypeHeader(final String headerValue) throws IllegalArgumentException {
         final Matcher mtcContentType = ptnContentType.matcher(headerValue);
-        this.internetMediaType = org.exquery.InternetMediaType.valueOf(mtcContentType.group(1));
-        if(mtcContentType.groupCount() == 3) {
-            this.charset = mtcContentType.group(3);
+        if(!mtcContentType.matches()) {
+            throw new IllegalArgumentException("Invalid Content Type Header Value: '" + headerValue + "' in respect to pattern: '" + ptnContentType.pattern() + "'");
         } else {
-            this.charset = null;
+            this.internetMediaType = mtcContentType.group(1);
+            if(mtcContentType.groupCount() == 3) {
+                this.charset = mtcContentType.group(3);
+            } else {
+                this.charset = null;
+            }
         }
-        
     }
     
     /**
@@ -64,7 +73,7 @@ public class ContentTypeHeader {
      * 
      * @return The Internet Media Type
      */
-    public org.exquery.InternetMediaType getInternetMediaType() {
+    public String getInternetMediaType() {
         return internetMediaType;
     }
 
