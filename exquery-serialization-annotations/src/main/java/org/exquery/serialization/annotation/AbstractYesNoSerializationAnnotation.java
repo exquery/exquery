@@ -65,6 +65,16 @@ public abstract class AbstractYesNoSerializationAnnotation extends AbstractSeria
         return yes;
     }
     
+    public String getStringValue() {
+        final String stringValue;
+        if(yes) {
+            stringValue = YES;
+        } else {
+            stringValue = NO;
+        }
+        return stringValue;
+    }
+    
     private boolean parseAnnotationValue() throws SerializationAnnotationException {
         final Literal[] annotationValue = getLiterals();
         

@@ -38,9 +38,12 @@ import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.impl.serialization.XmlWriter.Attribute;
+import org.exquery.serialization.annotation.AbstractYesNoSerializationAnnotation;
+import org.exquery.serialization.annotation.IndentAnnotation;
 import org.exquery.serialization.annotation.MediaTypeAnnotation;
 import org.exquery.serialization.annotation.MethodAnnotation;
 import org.exquery.serialization.annotation.MethodAnnotation.SupportedMethod;
+import org.exquery.serialization.annotation.OmitXmlDeclarationAnnotation;
 import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
@@ -164,6 +167,8 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
         //get the serialzation annotations
         for(SerializationAnnotation serializationAnnotation : serializationAnnotations) {
             if(serializationAnnotation instanceof MethodAnnotation) {
+                
+                //serialization method
                 final String methodProp = ((MethodAnnotation)serializationAnnotation).getMethod();
                 serializationProperties.put(SerializationProperty.METHOD, methodProp);
                 
@@ -182,7 +187,22 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                 }
                 
             } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
+                
+                //serialization media type
                 mediaType = ((MediaTypeAnnotation)serializationAnnotation).getMediaType();
+            } else if(serializationAnnotation instanceof AbstractYesNoSerializationAnnotation) {
+                final AbstractYesNoSerializationAnnotation yesNoSerializationAnnotation = (AbstractYesNoSerializationAnnotation)serializationAnnotation;
+                
+                if(yesNoSerializationAnnotation instanceof IndentAnnotation) {
+                    
+                    //serialization indent
+                    serializationProperties.put(SerializationProperty.INDENT, yesNoSerializationAnnotation.getStringValue());
+                } else if(yesNoSerializationAnnotation instanceof OmitXmlDeclarationAnnotation) {
+                    
+                    //serialization omit xml declaration
+                    serializationProperties.put(SerializationProperty.OMIT_XML_DECLARATION, yesNoSerializationAnnotation.getStringValue());
+                }
+                
             }
         }
 

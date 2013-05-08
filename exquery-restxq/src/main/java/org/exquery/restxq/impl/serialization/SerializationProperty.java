@@ -32,8 +32,10 @@ package org.exquery.restxq.impl.serialization;
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public enum SerializationProperty {
-    INDENT,
+    
     ENCODING,
+    INDENT,
     MEDIA_TYPE,
-    METHOD;
+    METHOD,
+    OMIT_XML_DECLARATION;
 }
