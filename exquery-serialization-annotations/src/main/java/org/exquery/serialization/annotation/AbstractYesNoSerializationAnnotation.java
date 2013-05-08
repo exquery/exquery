@@ -40,7 +40,7 @@ import org.exquery.xquery.Literal;
 public abstract class AbstractYesNoSerializationAnnotation extends AbstractSerializationAnnotation {
     
     private final static String YES = "yes";
-    private final static String NO = "yes";
+    private final static String NO = "no";
     
     private final static Pattern ptnYesNo = Pattern.compile(YES + "|" + NO);
     
