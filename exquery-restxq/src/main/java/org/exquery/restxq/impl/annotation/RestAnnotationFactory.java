@@ -32,6 +32,7 @@ import org.exquery.restxq.Namespace;
 import org.exquery.restxq.annotation.RestAnnotation;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.restxq.annotation.RestAnnotationName;
+import static org.exquery.restxq.annotation.RestAnnotationName.headerparam;
 import org.exquery.serialization.annotation.SerializationAnnotationFactory;
 import org.exquery.xquery3.Annotation;
 
@@ -127,6 +128,14 @@ public class RestAnnotationFactory {
                 
             case queryparam:
                 restAnnotation = new QueryParameterAnnotation();
+                break;
+                
+            case headerparam:
+                restAnnotation = new HeaderParameterAnnotation();
+                break;
+                
+            case cookieparam:
+                restAnnotation = new CookieParameterAnnotation();
                 break;
                 
             default:

@@ -62,7 +62,7 @@ public enum RestAnnotationName {
     }
 
     public static RestAnnotationName valueOf(final QName name) {             
-        for(RestAnnotationName an : RestAnnotationName.values()) {
+        for(final RestAnnotationName an : RestAnnotationName.values()) {
             if(an.name.equals(name)) {
                 return an;
             }
