@@ -106,6 +106,11 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
         getServices().removeAll(xqueryLocation, listeners);
     }
     
+    @Override
+    public void deregister(final RestXqService service) {
+        getServices().remove(service, listeners);
+    }
+    
     /**
      * Add a Registry Listener to this Registry to receive event notification
      * 

@@ -59,6 +59,13 @@ public interface RestXqServiceRegistry extends Iterable<RestXqService> {
     public void deregister(URI xqueryLocation);
     
     /**
+     * De-register RESTXQ Service from the registry
+     * 
+     * @param service The service to deregister
+     */
+    public void deregister(RestXqService service);
+    
+    /**
      * Iterate through the RESTXQ Services in the registry
      * 
      * @return Iterator over RestXqService(s)

@@ -183,7 +183,7 @@ public class RestXqServicesMap {
      * located at the URI xqueryLocation
      * 
      * @param xqueryLocation The location of the XQuery
-     * @param listeners Any Listseners that should be notified when a
+     * @param listeners Any Listeners that should be notified when a
      * Service is removed
      */
     public void removeAll(final URI xqueryLocation, final List<RestXqServiceRegistryListener> listeners) {
@@ -198,7 +198,7 @@ public class RestXqServicesMap {
                 final List<RestXqService> servicesToRemove = new ArrayList<RestXqService>();
                 final List<RestXqService> serviceList = orderedServices.get(key);
                 
-                for(RestXqService service : serviceList) {
+                for(final RestXqService service : serviceList) {
                     if(service.getResourceFunction().getXQueryLocation().equals(xqueryLocation)) {
                         //label the service to remove
                         servicesToRemove.add(service);
@@ -219,6 +219,50 @@ public class RestXqServicesMap {
                         for(final RestXqService service : servicesToRemove) {
                             listener.deregistered(service);
                         }
+                    }
+                }
+            } finally {
+                lock.writeLock().unlock();
+            }
+        }
+    }
+    
+    /**
+     * Removes the RESTXQ Service from the Map
+     * 
+     * @param service The RestXQ Service
+     * @param listeners Any Listeners that should be notified when a
+     * Service is removed
+     */
+    public void remove(final RestXqService service, final List<RestXqServiceRegistryListener> listeners) {
+        for(final HttpMethod key : orderedServices.keySet()) {
+            
+            final ReentrantReadWriteLock lock = getOrCreateMethodLock(key);
+            try {
+                lock.writeLock().lock();
+                
+
+                RestXqService serviceToRemove = null;
+                final List<RestXqService> serviceList = orderedServices.get(key);
+                
+                for(final RestXqService orderedService : serviceList) {
+                    if(orderedService.equals(service)) {
+                        //label the service to remove
+                        serviceToRemove = orderedService;
+                        break;
+                    }
+                }
+
+                if(serviceToRemove != null) {
+                    //remove the labelled service
+                    serviceList.remove(serviceToRemove);
+
+                    //update the service list
+                    orderedServices.put(key, serviceList);
+                    
+                    //update the listeners
+                    for(final RestXqServiceRegistryListener listener : listeners) {
+                        listener.deregistered(serviceToRemove);
                     }
                 }
             } finally {
