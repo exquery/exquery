@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNull;
 import static org.exquery.InternetMediaType.APPLICATION_XML;
 
 /**
- * Tests for HTTP ContentType header representation
+ * Tests for HTTP Content-Type header representation
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */

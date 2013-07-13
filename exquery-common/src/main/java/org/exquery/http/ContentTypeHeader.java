@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Representation of a HTTP ContentType header
+ * Representation of a HTTP Content-Type header
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
@@ -50,14 +50,14 @@ public class ContentTypeHeader {
     private final String charset;
     
     /**
-     * @param headerValue The value of the HTTP ContentType header
+     * @param headerValue The value of the HTTP Content-Type header
      * 
-     * @throws IllegalArgumentException If the headerValue is not a valid value for a ContentType header
+     * @throws IllegalArgumentException If the headerValue is not a valid value for a Content-Type header
      */
     public ContentTypeHeader(final String headerValue) throws IllegalArgumentException {
         final Matcher mtcContentType = ptnContentType.matcher(headerValue);
         if(!mtcContentType.matches()) {
-            throw new IllegalArgumentException("Invalid Content Type Header Value: '" + headerValue + "' in respect to pattern: '" + ptnContentType.pattern() + "'");
+            throw new IllegalArgumentException("Invalid Content-Type Header Value: '" + headerValue + "' in respect to pattern: '" + ptnContentType.pattern() + "'");
         } else {
             this.internetMediaType = mtcContentType.group(1);
             if(mtcContentType.groupCount() == 3) {
