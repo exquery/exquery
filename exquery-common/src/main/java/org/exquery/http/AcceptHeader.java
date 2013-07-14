@@ -89,7 +89,7 @@ public class AcceptHeader {
                         //2nd part maybe the qualityFactor or extension
                         if(parts[1].trim().startsWith(String.valueOf(QUALITY_PARAMETER) + PARAMETER_KEY_VALUE_SEPARATOR)) {
                             //2nd part is qualityFactor
-                            final float qualityFactor = Float.parseFloat(parts[1].trim().substring(0, parts[1].trim().indexOf(PARAMETER_KEY_VALUE_SEPARATOR)));
+                            final float qualityFactor = Float.parseFloat(parts[1].trim().substring(parts[1].trim().indexOf(PARAMETER_KEY_VALUE_SEPARATOR) + 1));
 
                             //if 2nd part is qualityFactor, 3rd part maybe extension
                             if(parts.length == 3) {
@@ -161,6 +161,49 @@ public class AcceptHeader {
             return extension;
         }
         
+        @Override
+        public String toString() {
+            final StringBuilder builder = new StringBuilder(getMediaRange());
+            
+            if(getQualityFactor() != DEFAULT_QUALITY_FACTOR) {
+                builder.append(PARAMETER_SEPARATOR);
+                builder.append(QUALITY_PARAMETER);
+                builder.append(PARAMETER_KEY_VALUE_SEPARATOR);
+                builder.append(getQualityFactor());
+            }
+            
+            if(getExtension() != null) {
+                builder.append(PARAMETER_SEPARATOR);
+                builder.append(getExtension().toString());
+            }
+            
+            return builder.toString();
+        }
+        
+        @Override
+        public boolean equals(final Object other) {
+            final boolean equals;
+            if(other != null && other instanceof Accept) {
+                final Accept otherAccept = (Accept)other;
+                equals = otherAccept.getMediaRange().equals(getMediaRange()) &&
+                        otherAccept.getQualityFactor() == getQualityFactor() &&
+                        otherAccept.getExtension() == getExtension();
+            } else {
+                equals = false;
+            }
+            
+            return equals;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 23 * hash + (this.mediaRange != null ? this.mediaRange.hashCode() : 0);
+            hash = 23 * hash + Float.floatToIntBits(this.qualityFactor);
+            hash = 23 * hash + (this.extension != null ? this.extension.hashCode() : 0);
+            return hash;
+        }
+        
         
         public static class Extension {
             final String name;
@@ -177,6 +220,32 @@ public class AcceptHeader {
 
             public String getValue() {
                 return value;
+            }
+            
+            @Override
+            public String toString() {
+                return name + PARAMETER_KEY_VALUE_SEPARATOR + value;
+            }
+            
+            @Override
+            public boolean equals(final Object other) {
+                final boolean equals;
+                if(other != null && other instanceof Extension) {
+                    final Extension otherExtension = ((Extension)other);
+                    equals = otherExtension.getName().equals(getName()) &&
+                            otherExtension.getValue().equals(getValue());
+                } else {
+                    equals = false;
+                }
+                return equals;
+            }
+
+            @Override
+            public int hashCode() {
+                int hash = 7;
+                hash = 61 * hash + (this.name != null ? this.name.hashCode() : 0);
+                hash = 61 * hash + (this.value != null ? this.value.hashCode() : 0);
+                return hash;
             }
         }
     }

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.exquery.http.AcceptHeader.Accept;
+import org.exquery.http.AcceptHeader.Accept.Extension;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.is;
@@ -52,7 +53,7 @@ public class AcceptHeaderTest {
     }
     
     @Test
-    public void multipleMediaRange_withoutWhiteSpace() {
+    public void multipleMediaRanges_withoutWhiteSpace() {
         final String appXml = "application/xml";
         final String appXhtml = "application/xhtml+xml";
         final String appPdf = "application/pdf";
@@ -65,7 +66,7 @@ public class AcceptHeaderTest {
     }
     
     @Test
-    public void multipleMediaRange_withWhiteSpace() {
+    public void multipleMediaRanges_withWhiteSpace() {
         final String appXml = "application/xml";
         final String appXhtml = "application/xhtml+xml";
         final String appPdf = "application/pdf";
@@ -75,6 +76,19 @@ public class AcceptHeaderTest {
         assertEquals(appXml, acceptHeader.getAccepts().get(0).getMediaRange());
         assertEquals(appXhtml, acceptHeader.getAccepts().get(1).getMediaRange());
         assertEquals(appPdf, acceptHeader.getAccepts().get(2).getMediaRange());
+    }
+    
+    @Test
+    public void multipleMediaRangesWith_withQualityFactors() {
+        final Accept appXml = new Accept("application/xml");
+        final Accept appXhtml = new Accept("application/xhtml+xml", 0.9f);
+        final Accept appPdf = new Accept("application/pdf", 0.4f);
+        final AcceptHeader acceptHeader = new AcceptHeader(appXml.toString() + "," + appXhtml.toString() + "," + appPdf.toString());
+        
+        assertEquals(3, acceptHeader.getAccepts().size());
+        assertEquals(appXml, acceptHeader.getAccepts().get(0));
+        assertEquals(appXhtml, acceptHeader.getAccepts().get(1));
+        assertEquals(appPdf, acceptHeader.getAccepts().get(2));
     }
     
     @Test
@@ -107,5 +121,41 @@ public class AcceptHeaderTest {
         
         //assert
         assertThat(providedAccepts, is(expectedAccepts));
+    }
+    
+    @Test
+    public void acceptToString_mediaRange() {
+        final String appXmlStr = "application/xml";
+        final Accept appXml = new Accept(appXmlStr);
+        
+        assertEquals(appXmlStr, appXml.toString());
+    }
+    
+    @Test
+    public void acceptToString_mediaRangeAndQualityFactor() {
+        final String appXmlStr = "application/xml";
+        final float qualityFactor = 0.6f;
+        final Accept appXml = new Accept(appXmlStr, qualityFactor);
+        
+        assertEquals(appXmlStr + ";q=" + Float.toString(qualityFactor), appXml.toString());
+    }
+    
+    @Test
+    public void acceptToString_mediaRangeAndExtension() {
+        final String appXmlStr = "application/xml";
+        final Extension extension = new Extension("x", "y");
+        final Accept appXml = new Accept(appXmlStr, extension);
+        
+        assertEquals(appXmlStr + ";x=y", appXml.toString());
+    }
+    
+    @Test
+    public void acceptToString_mediaRangeQualityFactorAndExtension() {
+        final String appXmlStr = "application/xml";
+        final float qualityFactor = 0.6f;
+        final Extension extension = new Extension("x", "y");
+        final Accept appXml = new Accept(appXmlStr, qualityFactor, extension);
+        
+        assertEquals(appXmlStr + ";q=" + Float.toString(qualityFactor) + ";x=y", appXml.toString());
     }
 }
