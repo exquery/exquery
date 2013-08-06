@@ -55,7 +55,12 @@ public class AcceptHeader {
     
     private final static String acceptParams_regExp = "(?:" + QUALITY_PARAM_REGEX + ")?\\s?(?:" + EXTENSION_PARAM_REGEX + ")?";
     
-    public final static String accept_regExp = InternetMediaType.mediaType_regExp + acceptParams_regExp;
+    public final static char WILDCARD = '*';
+    
+    public final static String anyRange_regExp = "\\" + WILDCARD + "\\" + InternetMediaType.subtypeSeparator + "\\" + WILDCARD;
+    public final static String anySubtype_regExp = "\\" + WILDCARD + "\\" + InternetMediaType.subtypeSeparator + "\\" + InternetMediaType.subtypeName_regExp;
+    
+    public final static String accept_regExp = "(?:(?:" + anyRange_regExp + ")|(?:" + anySubtype_regExp + ")|(?:" + InternetMediaType.mediaType_regExp + "))" + acceptParams_regExp;
     public final static Pattern ptnAccept = Pattern.compile(accept_regExp);
     
     public final static String accepts_regExp = "(" + accept_regExp + ")(,\\s?" + accept_regExp + ")*";
@@ -130,8 +135,16 @@ public class AcceptHeader {
             this(mediaRange, DEFAULT_QUALITY_FACTOR);
         }
         
+        public Accept(final org.exquery.InternetMediaType internetMediaType) {
+            this(internetMediaType.getMediaType());
+        }
+        
         public Accept(final String mediaRange, final float qualityFactor) {
             this(mediaRange, qualityFactor, null);
+        }
+        
+        public Accept(final org.exquery.InternetMediaType internetMediaType, final float qualityFactor) {
+            this(internetMediaType.getMediaType(), qualityFactor);
         }
         
         public Accept(final String mediaRange, final Accept.Extension extension) {

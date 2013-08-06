@@ -26,13 +26,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
+//TODO decide on either this class of HttpHeaderName class!
+
 /**
  * Enumeration of Common HTTP Header Names
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public enum HttpHeader {
-    CONTENT_TYPE("Content-Type");
+    CONTENT_TYPE("Content-Type"),
+    ACCEPT("Accept");
 
     private final String headerName;
     

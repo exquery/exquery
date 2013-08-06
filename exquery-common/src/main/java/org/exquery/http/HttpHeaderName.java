@@ -26,6 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.http;
 
+//TODO decide on either this class of HttpHeader class!
+
 /**
  * HTTP Header Names
  *

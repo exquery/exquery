@@ -35,7 +35,11 @@ public enum InternetMediaType {
     
     APPLICATION_OCTET_STREAM("application/octet-stream"),
     APPLICATION_JSON("application/json"),
+    
     APPLICATION_XML("application/xml"),
+    APPLICATION_XHTML_XML("application/xhtml+xml"),
+    
+    APPLICATION_PDF("application/pdf"),
     
     TEXT_HTML("text/html"),
     TEXT_PLAIN("text/plain"),
