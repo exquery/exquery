@@ -29,7 +29,7 @@ package org.exquery.http;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.exquery.InternetMediaType;
+import static org.exquery.InternetMediaType.*;
 import org.exquery.http.AcceptHeader.Accept;
 import org.exquery.http.AcceptHeader.Accept.Extension;
 import org.junit.Test;
@@ -54,8 +54,8 @@ public class AcceptHeaderTest {
     
     @Test
     public void singleWildcardMediaRange() {
-        final String ANY = InternetMediaType.ANY.getMediaType();
-        final AcceptHeader acceptHeader = new AcceptHeader(ANY);
+        final String any = ANY.getMediaType();
+        final AcceptHeader acceptHeader = new AcceptHeader(any);
         
         assertEquals(1, acceptHeader.getAccepts().size());
         assertEquals(ANY, acceptHeader.getAccepts().get(0).getMediaRange());
@@ -63,9 +63,9 @@ public class AcceptHeaderTest {
     
     @Test
     public void multipleMediaRanges_withoutWhiteSpace() {
-        final String appXml = InternetMediaType.APPLICATION_XML.getMediaType();
-        final String appXhtml = InternetMediaType.APPLICATION_XHTML_XML.getMediaType();
-        final String appPdf = InternetMediaType.APPLICATION_PDF.getMediaType();
+        final String appXml = APPLICATION_XML.getMediaType();
+        final String appXhtml = APPLICATION_XHTML_XML.getMediaType();
+        final String appPdf = APPLICATION_PDF.getMediaType();
         final AcceptHeader acceptHeader = new AcceptHeader(appXml + "," + appXhtml + "," + appPdf);
         
         assertEquals(3, acceptHeader.getAccepts().size());
@@ -76,9 +76,9 @@ public class AcceptHeaderTest {
     
     @Test
     public void multipleMediaRanges_withWhiteSpace() {
-        final String appXml = InternetMediaType.APPLICATION_XML.getMediaType();
-        final String appXhtml = InternetMediaType.APPLICATION_XHTML_XML.getMediaType();
-        final String appPdf = InternetMediaType.APPLICATION_PDF.getMediaType();
+        final String appXml = APPLICATION_XML.getMediaType();
+        final String appXhtml = APPLICATION_XHTML_XML.getMediaType();
+        final String appPdf = APPLICATION_PDF.getMediaType();
         final AcceptHeader acceptHeader = new AcceptHeader(appXml + ", " + appXhtml + ", " + appPdf);
         
         assertEquals(3, acceptHeader.getAccepts().size());
@@ -89,9 +89,9 @@ public class AcceptHeaderTest {
     
     @Test
     public void multipleMediaRangesWith_withQualityFactors() {
-        final Accept appXml = new Accept(InternetMediaType.APPLICATION_XML);
-        final Accept appXhtml = new Accept(InternetMediaType.APPLICATION_XHTML_XML, 0.9f);
-        final Accept appPdf = new Accept(InternetMediaType.APPLICATION_PDF, 0.4f);
+        final Accept appXml = new Accept(APPLICATION_XML);
+        final Accept appXhtml = new Accept(APPLICATION_XHTML_XML, 0.9f);
+        final Accept appPdf = new Accept(APPLICATION_PDF, 0.4f);
         final AcceptHeader acceptHeader = new AcceptHeader(appXml.toString() + "," + appXhtml.toString() + "," + appPdf.toString());
         
         assertEquals(3, acceptHeader.getAccepts().size());
@@ -103,11 +103,11 @@ public class AcceptHeaderTest {
     @Test
     public void qualityFactorOrderingOfAccepts() {
         
-        final Accept txtHtml = new Accept(InternetMediaType.TEXT_HTML);
-        final Accept appXhtml = new Accept(InternetMediaType.APPLICATION_XHTML_XML);
-        final Accept appXml = new Accept(InternetMediaType.APPLICATION_XML, 0.8f);
-        final Accept appPdf = new Accept(InternetMediaType.APPLICATION_PDF, 0.6f);
-        final Accept any = new Accept(InternetMediaType.ANY, 0.1f);
+        final Accept txtHtml = new Accept(TEXT_HTML);
+        final Accept appXhtml = new Accept(APPLICATION_XHTML_XML);
+        final Accept appXml = new Accept(APPLICATION_XML, 0.8f);
+        final Accept appPdf = new Accept(APPLICATION_PDF, 0.6f);
+        final Accept any = new Accept(ANY, 0.1f);
         
         //expected result
         final List<Accept> expectedAccepts = new ArrayList<Accept>(){{
@@ -134,7 +134,7 @@ public class AcceptHeaderTest {
     
     @Test
     public void acceptToString_mediaRange() {
-        final String appXmlStr = InternetMediaType.APPLICATION_XML.getMediaType();
+        final String appXmlStr = APPLICATION_XML.getMediaType();
         final Accept appXml = new Accept(appXmlStr);
         
         assertEquals(appXmlStr, appXml.toString());
@@ -142,7 +142,7 @@ public class AcceptHeaderTest {
     
     @Test
     public void acceptToString_mediaRangeAndQualityFactor() {
-        final String appXmlStr = InternetMediaType.APPLICATION_XML.getMediaType();
+        final String appXmlStr = APPLICATION_XML.getMediaType();
         final float qualityFactor = 0.6f;
         final Accept appXml = new Accept(appXmlStr, qualityFactor);
         
@@ -151,7 +151,7 @@ public class AcceptHeaderTest {
     
     @Test
     public void acceptToString_mediaRangeAndExtension() {
-        final String appXmlStr = InternetMediaType.APPLICATION_XML.getMediaType();
+        final String appXmlStr = APPLICATION_XML.getMediaType();
         final Extension extension = new Extension("x", "y");
         final Accept appXml = new Accept(appXmlStr, extension);
         
@@ -160,7 +160,7 @@ public class AcceptHeaderTest {
     
     @Test
     public void acceptToString_mediaRangeQualityFactorAndExtension() {
-        final String appXmlStr = InternetMediaType.APPLICATION_XML.getMediaType();
+        final String appXmlStr = APPLICATION_XML.getMediaType();
         final float qualityFactor = 0.6f;
         final Extension extension = new Extension("x", "y");
         final Accept appXml = new Accept(appXmlStr, qualityFactor, extension);
