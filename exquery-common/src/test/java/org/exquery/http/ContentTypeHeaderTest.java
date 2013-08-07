@@ -29,6 +29,7 @@ package org.exquery.http;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.exquery.InternetMediaType.ANY;
 import static org.exquery.InternetMediaType.APPLICATION_XML;
 
 /**
@@ -66,5 +67,10 @@ public class ContentTypeHeaderTest {
         
         assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
         assertEquals("UTF-8", header.getCharset());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void rejects_wildcard_internetMediaType() {
+        final ContentTypeHeader header = new ContentTypeHeader(ANY.getMediaType());
     }
 }
