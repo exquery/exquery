@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2012, Adam Retter
+Copyright (c) 2013, Adam Retter
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,14 +26,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import static org.exquery.InternetMediaType.*;
-import org.exquery.http.HttpHeaderName;
-import org.exquery.http.HttpRequest;
 import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Literal;
+import static org.exquery.InternetMediaType.*;
+import org.exquery.http.HttpRequest;
+import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,39 +40,39 @@ import static org.mockito.Mockito.when;
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class ProducesAnnotationImplTest {
+public class ConsumesAnnotationImplTest {
     
     @Test
     public void matchesMediaType_simple_match() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
             new StringLiteral(APPLICATION_XML.getMediaType())
         });
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(APPLICATION_XML.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(APPLICATION_XML.getMediaType());
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
     @Test
     public void matchesMediaType_simple_non_match() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
             new StringLiteral(APPLICATION_XML.getMediaType())
         });
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(TEXT_HTML.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(TEXT_HTML.getMediaType());
         
         assertFalse(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
     @Test
     public void matchesMediaType_multiple_match() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
             new StringLiteral(APPLICATION_XML.getMediaType()),
             new StringLiteral(TEXT_HTML.getMediaType()),
@@ -82,14 +81,14 @@ public class ProducesAnnotationImplTest {
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(APPLICATION_XML.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(APPLICATION_XML.getMediaType());
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
     @Test
     public void matchesMediaType_multiple_non_match() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
             new StringLiteral(APPLICATION_XML.getMediaType()),
             new StringLiteral(TEXT_HTML.getMediaType()),
@@ -98,14 +97,14 @@ public class ProducesAnnotationImplTest {
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(APPLICATION_OCTET_STREAM.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(APPLICATION_OCTET_STREAM.getMediaType());
         
         assertFalse(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
     @Test
     public void matchesMediaType_multiple_match_2() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
             new StringLiteral(APPLICATION_XML.getMediaType()),
             new StringLiteral(TEXT_HTML.getMediaType()),
@@ -114,35 +113,35 @@ public class ProducesAnnotationImplTest {
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(TEXT_HTML.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(TEXT_HTML.getMediaType());
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
-    @Test
+    @Test(expected = RestAnnotationException.class)
     public void matchesMediaType_single_match_wildcard() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
-            new StringLiteral(APPLICATION_XML.getMediaType())
+            new StringLiteral(ANY.getMediaType())
         });
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(ANY.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(ANY.getMediaType());
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
     
     @Test
     public void matchesMediaType_single_match_wildSubType() throws RestAnnotationException {
-        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        final ConsumesAnnotationImpl mediaTypeAnnotation = new ConsumesAnnotationImpl();
         mediaTypeAnnotation.setLiterals(new Literal[] {
-            new StringLiteral(APPLICATION_XML.getMediaType())
+            new StringLiteral(APPLICATION_ANY.getMediaType())
         });
         mediaTypeAnnotation.initialise();
         
         final HttpRequest httpRequest = mock(HttpRequest.class);
-        when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(APPLICATION_ANY.getMediaType());
+        when(httpRequest.getContentType()).thenReturn(APPLICATION_XML.getMediaType());
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
