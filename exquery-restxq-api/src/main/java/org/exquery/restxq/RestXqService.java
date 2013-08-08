@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.exquery.restxq;
 
 import java.util.EnumSet;
+import org.exquery.http.AcceptHeader;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.http.HttpResponse;
@@ -67,6 +68,18 @@ public interface RestXqService extends Comparable<RestXqService> {
      * @throws RestXqServiceException
      */
     public boolean canService(final HttpRequest httpRequest);
+    
+    /**
+     * Given an Accept header calculate the Quality Factory of each
+     * Internet Media Type in all ProducesAnnotations and return
+     * the maximum value.
+     * 
+     * @param acceptHeader The HTTP Accept Header of the HTTP Request that
+     * the Service may consume.
+     * 
+     * @return The maximum quality factor of the Produced Internet Media Types
+     */
+    public float maxProducesQualityFactor(final AcceptHeader acceptHeader);
     
     /**
      * Service the incoming HttpRequest with the RESTXQ Service

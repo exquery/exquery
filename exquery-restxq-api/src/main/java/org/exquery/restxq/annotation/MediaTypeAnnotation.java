@@ -43,6 +43,17 @@ public interface MediaTypeAnnotation extends ConstraintAnnotation {
      * Determines whether the Http Request matches
      * the Media Type Annotation
      * 
+     * @param mediaType the Internet Media Type to check against
+     * the Media Type Annotation constraints
+     * 
+     * @return true if the media type matches, false otherwise
+     */
+    public boolean matchesMediaType(final String mediaType);
+    
+    /**
+     * Determines whether the Http Request matches
+     * the Media Type Annotation
+     * 
      * @param request the Http Request to check against
      * the Media Type Annotation constraints
      * 
