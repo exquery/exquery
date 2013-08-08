@@ -58,7 +58,16 @@ public class AcceptHeaderTest {
         final AcceptHeader acceptHeader = new AcceptHeader(any);
         
         assertEquals(1, acceptHeader.getAccepts().size());
-        assertEquals(ANY, acceptHeader.getAccepts().get(0).getMediaRange());
+        assertEquals(any, acceptHeader.getAccepts().get(0).getMediaRange());
+    }
+    
+    @Test
+    public void singleSubtypeWildcardMediaRange() {
+        final String anySubtype = APPLICATION_ANY.getMediaType();
+        final AcceptHeader acceptHeader = new AcceptHeader(anySubtype);
+        
+        assertEquals(1, acceptHeader.getAccepts().size());
+        assertEquals(anySubtype, acceptHeader.getAccepts().get(0).getMediaRange());
     }
     
     @Test

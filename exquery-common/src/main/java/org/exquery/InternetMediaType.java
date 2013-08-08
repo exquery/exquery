@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2012, Adam Retter
+Copyright (c) 2013, Adam Retter
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,72 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery;
 
+import static org.exquery.InternetMediaType.Type.APPLICATION;
+import static org.exquery.InternetMediaType.Type.TEXT;
+
 /**
- * Internet Media Types
+ * Some common Internet Media Types
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 public enum InternetMediaType {
     
-    APPLICATION_OCTET_STREAM("application/octet-stream"),
-    APPLICATION_JSON("application/json"),
+    APPLICATION_OCTET_STREAM(APPLICATION, "octet-stream"),
+    APPLICATION_JSON(APPLICATION, "json"),
     
-    APPLICATION_XML("application/xml"),
-    APPLICATION_XHTML_XML("application/xhtml+xml"),
+    APPLICATION_XML(APPLICATION, "xml"),
+    APPLICATION_XHTML_XML(APPLICATION, "xhtml+xml"),
     
-    APPLICATION_PDF("application/pdf"),
+    APPLICATION_PDF(APPLICATION, "pdf"),
     
-    TEXT_HTML("text/html"),
-    TEXT_PLAIN("text/plain"),
+    APPLICATION_ANY(APPLICATION),
     
-    ANY("*/*");
+    TEXT_HTML(TEXT, "html"),
+    TEXT_PLAIN(TEXT, "plain"),
     
-    private final String mediaType;
+    ANY("*");   //would be nice to use ANY(WILDCARD) here, but it would be a compiler error due to the forward reference
     
-    InternetMediaType(final String mediaType) {
-        this.mediaType = mediaType;
+    public final static char SUBTYPE_DELIMITER = '/';
+    public final static char WILDCARD = '*';
+    
+    private final String typeName;
+    private final String subTypeName;
+    
+    InternetMediaType(final Type type, final String subTypeName) {
+        this.typeName = type.getName();
+        this.subTypeName = subTypeName;
+    }
+    
+    InternetMediaType(final String typeName, final String subTypeName) {
+        this.typeName = typeName;
+        this.subTypeName = subTypeName;
+    }
+    
+    InternetMediaType(final Type type) {
+        this.typeName = type.getName();
+        this.subTypeName = String.valueOf(WILDCARD);
+    }
+    
+    InternetMediaType(final String typeName) {
+        this.typeName = typeName;
+        this.subTypeName = String.valueOf(WILDCARD);
     }
     
     public final String getMediaType() {
-        return mediaType;
+        return typeName + SUBTYPE_DELIMITER + subTypeName;
+    }
+    
+    public enum Type {
+        APPLICATION("application"),
+        TEXT("text");
+        
+        final String name;
+        Type(final String name) {
+            this.name = name;
+        }
+        
+        public String getName() {
+            return name;
+        }
     }
 }

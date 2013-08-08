@@ -55,7 +55,5 @@ public interface InternetMediaType {
     public final static String typeName_regExp = regName_regExp;
     public final static String subtypeName_regExp = regName_regExp;
     
-    public final static char subtypeSeparator = '/';
-    
-    public final static String mediaType_regExp = typeName_regExp + "\\" + subtypeSeparator + subtypeName_regExp; 
+    public final static String mediaType_regExp = typeName_regExp + "\\" + org.exquery.InternetMediaType.SUBTYPE_DELIMITER + subtypeName_regExp; 
 }
