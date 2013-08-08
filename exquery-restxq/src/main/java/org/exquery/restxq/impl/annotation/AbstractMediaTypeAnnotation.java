@@ -26,14 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.exquery.http.InternetMediaType;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.MediaTypeAnnotation;
-import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
-import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
 
 /**
@@ -43,95 +39,7 @@ import org.exquery.xquery.Type;
  */
 public abstract class AbstractMediaTypeAnnotation extends AbstractRestAnnotation implements MediaTypeAnnotation {
     
-    //Regular Expression to match any Internet Media Type
-    private final static Pattern ptnMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
-    
-    private Pattern ptnMatchMediaTypes;
-    
-    /**
-     * Checks that the Parameter Annotation is compatible
-     * with the function which it annotates
-     *
-     * @throws RestAnnotationException if the Parameter could not be parsed
-     */
-    @Override
-    public void initialise() throws RestAnnotationException {
-        super.initialise();
-        this.ptnMatchMediaTypes = parseAnnotationValue();
-    }
-    
-    protected Pattern getMediaTypesPatternMatcher() {
-        return ptnMatchMediaTypes;
-    }
-    
-    /**
-     * Parses the Media Type Annotation Value
-     * 
-     * @return The RegularExpression describing the media types against which a media type may be matched
-     * @throws RestAnnotationException if the media type annotations values are invalid
-     */
-    protected Pattern parseAnnotationValue() throws RestAnnotationException {
-        final Literal[] annotationLiterals = getLiterals();
-        
-        if(annotationLiterals.length == 0) {
-            throw new RestAnnotationException(getEmptyAnnotationParamsErr());
-        }
-        
-        return parseAnnotationLiterals(annotationLiterals);
-    }
-    
-    /**
-     * Parses the Media Type Annotations Literal Values
-     * 
-     * @param mediaTypesLiterals The literals of the Media Type annotation
-     * 
-     * @return The RegularExpression describing the media types against which a media type may be matched
-     * 
-     * @throws RestAnnotationException if the media type annotations values are invalid
-     */
-    protected Pattern parseAnnotationLiterals(final Literal mediaTypesLiterals[]) throws RestAnnotationException {
-
-        Matcher mtcMediaType = null;
-        
-        final StringBuilder builder = new StringBuilder();
-        
-        for(final Literal mediaTypeLiteral : mediaTypesLiterals) {
-        
-            if(mediaTypeLiteral.getType() != Type.STRING) {
-                throw new RestAnnotationException(getInvalidMediaTypeLiteralErr());
-            }
-        
-            final String mediaType = mediaTypeLiteral.getValue();
-            if(mediaType.isEmpty()) {
-                throw new RestAnnotationException(getInvalidMediaTypeErr());
-            }
-            
-            if(mtcMediaType == null) {
-                mtcMediaType = ptnMediaType.matcher(mediaType);
-            } else {
-                mtcMediaType = mtcMediaType.reset(mediaType);
-            }
-            
-            if(!mtcMediaType.matches()) {
-                throw new RestAnnotationException(getInvalidMediaTypeErr());
-            }
-            
-            //add to match pattern
-            if(builder.length() != 0) {
-                builder.append("|");
-            }
-            builder.append("(?:(");
-            builder.append(encodeAsRegExp(mediaType));
-            builder.append("))");
-        }
-        
-        return Pattern.compile(builder.toString());
-    }
-    
-    private String encodeAsRegExp(String mediaType) {
-        
-        //expand subtype wildcard to valid regexp
-        mediaType = mediaType.replace("*", InternetMediaType.subtypeName_regExp);
+    protected String encodeAsRegExp(String mediaType) {
         
         //escape chars in an Internet Media Type that have significance in a regexp
         mediaType = mediaType.replace("$", "\\$");
@@ -139,6 +47,10 @@ public abstract class AbstractMediaTypeAnnotation extends AbstractRestAnnotation
         mediaType = mediaType.replace("+", "\\+");
         mediaType = mediaType.replace("-", "\\-");
         mediaType = mediaType.replace("^", "\\^");
+        mediaType = mediaType.replace("/", "\\/");
+        
+        //expand subtype wildcard to valid regexp
+        mediaType = mediaType.replace("*", InternetMediaType.subtypeName_regExp);
         
         return mediaType;
     }

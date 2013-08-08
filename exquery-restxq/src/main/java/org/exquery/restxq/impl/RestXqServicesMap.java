@@ -29,6 +29,8 @@ package org.exquery.restxq.impl;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.exquery.http.AcceptHeader;
+import org.exquery.http.HttpHeader;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.restxq.RestXqService;
@@ -157,21 +159,35 @@ public class RestXqServicesMap {
     public RestXqService get(final HttpMethod method, final HttpRequest request) {
         final ReentrantReadWriteLock lock = getOrCreateMethodLock(method);
         
+        RestXqService result = null;
         try {
             lock.readLock().lock();
             
-            final List<RestXqService> list = orderedServices.get(method);
-            if(list == null) {
-                return null;
-            }
-            
-            for(final RestXqService value : list) {
-                if(value.canService(request)) {
-                    return value;
+            final List<RestXqService> services = orderedServices.get(method);
+            if(services != null) {
+                
+                final String acceptHeaderValue = request.getHeader(HttpHeader.ACCEPT.getHeaderName());
+                final AcceptHeader acceptHeader = acceptHeaderValue != null ? new AcceptHeader(acceptHeaderValue) : null;
+                
+                for(final RestXqService service : services) {
+                    if(service.canService(request)) {
+                        if(acceptHeader != null && result != null) {
+                            /* Does this service Produce an Internet Media Type
+                             * which has a higher Quality Factor in the Accept header
+                             * that the last result?
+                             */
+                            if(service.maxProducesQualityFactor(acceptHeader) > result.maxProducesQualityFactor(acceptHeader)) {
+                                //yes, so this service has preference over the last result
+                                result = service;
+                            }
+                        } else {
+                            result = service;
+                        }
+
+                    }
                 }
             }
-            
-            return null;
+            return result;
             
         } finally {
             lock.readLock().unlock();

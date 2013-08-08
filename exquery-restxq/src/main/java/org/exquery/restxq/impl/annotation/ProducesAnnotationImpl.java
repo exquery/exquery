@@ -26,13 +26,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.exquery.http.AcceptHeader;
+import org.exquery.http.AcceptHeader.Accept;
 import org.exquery.http.HttpHeaderName;
 import org.exquery.http.HttpRequest;
 import org.exquery.http.InternetMediaType;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 import org.exquery.restxq.annotation.ProducesAnnotation;
+import org.exquery.restxq.annotation.RestAnnotationException;
+import org.exquery.xquery.Literal;
+import org.exquery.xquery.Type;
 
 /**
  * Implementation of RESTXQ Produces Annotation
@@ -42,44 +50,107 @@ import org.exquery.restxq.annotation.ProducesAnnotation;
  */
 public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implements ProducesAnnotation {
     
+    //Regular Expression to match any Internet Media Type
+    private final static Pattern ptnMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
+    
+    private Set<String> internetMediaTypes;
+    
+    /**
+     * Checks that the Parameter Annotation is compatible
+     * with the function which it annotates
+     *
+     * @throws RestAnnotationException if the Parameter could not be parsed
+     */
     @Override
-    public boolean matchesMediaType(final HttpRequest request) {
+    public void initialise() throws RestAnnotationException {
+        super.initialise();
+        this.internetMediaTypes = parseAnnotationValue();
+    }
+    
+    /**
+     * Parses the Media Type Annotation Value
+     * 
+     * @return The media type which we will produce
+     * @throws RestAnnotationException if the media type annotations values are invalid
+     */
+    //protected Set<String> parseAnnotationValue() throws RestAnnotationException {
+    protected Set<String> parseAnnotationValue() throws RestAnnotationException {
+        final Literal[] annotationLiterals = getLiterals();
         
-        //TODO move the accept header parsing code into org.exquery.http.AcceptHeader
-        final String acceptHeader = request.getHeader(HttpHeaderName.Accept.toString());
-        
-        if(acceptHeader.equals(org.exquery.InternetMediaType.ANY.getMediaType())) {
-            return true;
+        if(annotationLiterals.length == 0) {
+            throw new RestAnnotationException(getEmptyAnnotationParamsErr());
         }
         
-        Matcher mtcProducesContentType = null;
-        final String accepts[] = acceptHeader.split("\\,");
-        for(String accept : accepts) {
-            
-            //to lowercase as media types are case insensitive
-            //and all our processing is done in lower case
-            accept = accept.toLowerCase();
-            
-            //remove whitespace
-            accept = accept.replaceAll("\\s", "");
-            
-            //strip out qvalue and extensions
-            final int idxExt = accept.indexOf(";");
-            if(idxExt > -1) {
-                accept = accept.substring(0, idxExt);
+        return parseAnnotationLiterals(annotationLiterals);
+    }
+    
+    /**
+     * Parses the Media Type Annotations Literal Values
+     * 
+     * @param mediaTypesLiterals The literals of the Media Type annotation
+     * 
+     * @return The RegularExpression describing the media types against which a media type may be matched
+     * 
+     * @throws RestAnnotationException if the media type annotations values are invalid
+     */
+    protected Set<String> parseAnnotationLiterals(final Literal mediaTypesLiterals[]) throws RestAnnotationException {
+
+        Matcher mtcMediaType = null;
+        
+        final Set<String> mediaTypes = new HashSet<String>();
+        
+        for(final Literal mediaTypeLiteral : mediaTypesLiterals) {
+        
+            if(mediaTypeLiteral.getType() != Type.STRING) {
+                throw new RestAnnotationException(getInvalidMediaTypeLiteralErr());
+            }
+        
+            final String mediaType = mediaTypeLiteral.getValue();
+            if(mediaType.isEmpty()) {
+                throw new RestAnnotationException(getInvalidMediaTypeErr());
             }
             
-            //replace "/*" in media type with "/any" to enable matching against our regexp
-            accept = accept.replaceFirst(InternetMediaType.subtypeSeparator + "\\*", InternetMediaType.subtypeSeparator + "any");
-            
-            if(mtcProducesContentType == null) {
-                mtcProducesContentType = getMediaTypesPatternMatcher().matcher(accept);
+            if(mtcMediaType == null) {
+                mtcMediaType = ptnMediaType.matcher(mediaType);
             } else {
-                mtcProducesContentType = mtcProducesContentType.reset(accept);
+                mtcMediaType = mtcMediaType.reset(mediaType);
             }
             
-            if(mtcProducesContentType.matches()) {
-                return true;
+            if(!mtcMediaType.matches()) {
+                throw new RestAnnotationException(getInvalidMediaTypeErr());
+            }
+            
+            mediaTypes.add(mediaType);
+        }
+        
+        return mediaTypes;
+    }
+    
+    @Override
+    public boolean matchesMediaType(final HttpRequest request) {
+        final String acceptHeaderValue = request.getHeader(HttpHeaderName.Accept.toString());
+        return matchesMediaType(acceptHeaderValue);
+    }
+    
+    @Override
+    public boolean matchesMediaType(final String mediaType) {
+        
+        final AcceptHeader acceptHeader = new AcceptHeader(mediaType);
+        for(final Accept accept : acceptHeader.getAccepts()) {
+        
+            final Pattern pEncodedMediaType = Pattern.compile(encodeAsRegExp(accept.getMediaRange()));
+            Matcher mtcMediaType = null;
+
+            for(final String internetMediaType : internetMediaTypes) {
+                if(mtcMediaType == null) {
+                    mtcMediaType = pEncodedMediaType.matcher(internetMediaType);
+                } else {
+                    mtcMediaType = mtcMediaType.reset(internetMediaType);
+                }
+
+                if(mtcMediaType.matches()) {
+                    return true;
+                }
             }
         }
         

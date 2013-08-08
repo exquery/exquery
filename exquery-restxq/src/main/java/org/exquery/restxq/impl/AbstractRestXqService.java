@@ -30,6 +30,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.exquery.http.AcceptHeader;
+import org.exquery.http.AcceptHeader.Accept;
 import org.exquery.http.HttpMethod;
 import org.exquery.http.HttpRequest;
 import org.exquery.http.HttpResponse;
@@ -120,7 +122,7 @@ public abstract class AbstractRestXqService implements RestXqService {
         
         return false;
     }
-    
+
     private boolean canServiceConsume(final HttpRequest request) {
         if(getResourceFunction().getConsumesAnnotations().isEmpty()) {
             
@@ -151,6 +153,28 @@ public abstract class AbstractRestXqService implements RestXqService {
         }
         
         return false;
+    }
+    
+    /**
+     * @see org.exquery.restxq.RestXqService#maxProducesQualityFactory(org.exquery.http.AcceptHeader)
+     */
+    @Override
+    public float maxProducesQualityFactor(final AcceptHeader acceptHeader) {
+        
+        //if there are no produces annotations, the quality factor is zero
+        float max = 0;
+        
+        for(final Accept accept : acceptHeader.getAccepts()) {
+            for(final ProducesAnnotation producesAnnotation : getResourceFunction().getProducesAnnotations()) {
+                if(producesAnnotation.matchesMediaType(accept.getMediaRange())) {
+                    if(accept.getQualityFactor() > max) {
+                        max = accept.getQualityFactor();
+                    }
+                }
+            }
+        }
+        
+        return max;
     }
     
     /**
