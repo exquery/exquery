@@ -103,6 +103,9 @@ public class RestXqErrorCodes extends ErrorCodes {
     public static RestXqErrorCode RQST0031 = new RestXqErrorCode("RQST0031", "It is a static error if a REST produces Annotation contains literals which are not strings");
     public static RestXqErrorCode RQST0032 = new RestXqErrorCode("RQST0032", "It is a static error if a REST produces Annotation contains string literals which are not valid Internet Media Types");
     
+    //restxq module xquery functions
+    public static RestXqErrorCode RQDY0101 = new RestXqErrorCode("RQDY0101", "It is a dynamic error if a REST Module XQuery Function is invoked outside of the REST context");
+    
     public static class RestXqErrorCode extends ErrorCode {
 
         private RestXqErrorCode(final String code, final String description) {
