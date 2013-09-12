@@ -16,8 +16,8 @@
     <description>Common EXQuery code</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <connection>${project.parent.scm.connection}</connection>
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
         <url>${project.parent.scm.url}</url>
     </scm>
     

@@ -37,8 +37,8 @@
     </licenses>
     
     <scm>
-        <connection>scm:git:git://github.com/exquery/exquery.git</connection> <!-- TODO change me -->
-        <developerConnection>scm:git:git://github.com/exquery/exquery.git</developerConnection> <!-- TODO change me -->
+        <connection>scm:git:https://github.com/exquery/exquery.git</connection>
+        <developerConnection>scm:git:https://github.com/exquery/exquery.git</developerConnection>
         <url>http://github.com/exquery/exquery</url>
     </scm>
     
@@ -136,7 +136,7 @@
         
         <plugins>
             <!-- TODO dependency analysis seems to break build of exquery-xquery, fix this later -->
-            <!-- plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -147,11 +147,10 @@
                         </goals>
                         <configuration>
                             <failOnWarning>true</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin -->
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
