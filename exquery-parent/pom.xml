@@ -157,7 +157,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <inherited>true</inherited>
                 <configuration>
-                    <header>../exquery-distribution/header.txt</header>
+                    <header>com/mycila/maven/plugin/license/templates/BSD-3.txt</header>
                     <failIfMissing>true</failIfMissing>
                     <aggregate>true</aggregate>
                     <strictCheck>true</strictCheck>
@@ -165,10 +165,7 @@
                         <exclude>**/pom.xml</exclude>
                     </excludes>
                     <properties>
-                        <year>${project.inceptionYear}</year>
-                        <copyrightholder>Adam Retter</copyrightholder>
-                        <organisation>${project.organization.name}</organisation>
-                        <email>info@exquery.org</email>
+                        <owner>Adam Retter / EXQuery</owner>
                     </properties>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
