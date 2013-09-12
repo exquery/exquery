@@ -92,9 +92,9 @@
                     <version>2.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>1.1</version>
+                    <groupId>com.code54.mojo</groupId>
+                    <artifactId>buildversion-plugin</artifactId>
+                    <version>1.0.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -180,20 +180,16 @@
                 </executions>
             </plugin -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
+                <groupId>com.code54.mojo</groupId>
+                <artifactId>buildversion-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>validate</phase>
                         <goals>
-                            <goal>create</goal>
+                            <goal>set-properties</goal>
                         </goals>
-                    </execution>
+                  </execution>
                 </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -221,8 +217,11 @@
                         <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                     </manifest>
                     <manifestEntries>
-                        <Source-Revision>${buildNumber}</Source-Revision>
-                        <Build-Timestamp>${timestamp}</Build-Timestamp>
+                        <Build-Tag>${build-tag}</Build-Tag>
+                        <Git-Commit>${build-commit}</Git-Commit>
+                        <Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+                        <Build-Version>${build-version}</Build-Version>
+                        <Build-Timestamp>${build-tstamp}</Build-Timestamp>
                         <Source-Repository>${project.scm.connection}</Source-Repository>
                         <Description>${project.description}</Description>
                         <Implementation-URL>http://exquery.org</Implementation-URL>
@@ -241,8 +240,11 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Source-Revision>${buildNumber}</Source-Revision>
-                            <Build-Timestamp>${timestamp}</Build-Timestamp>
+                            <Build-Tag>${build-tag}</Build-Tag>
+                            <Git-Commit>${build-commit}</Git-Commit>
+                            <Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+                            <Build-Version>${build-version}</Build-Version>
+                            <Build-Timestamp>${build-tstamp}</Build-Timestamp>
                             <Source-Repository>${project.scm.connection}</Source-Repository>
                             <Description>${project.description}</Description>
                             <Implementation-URL>http://exquery.org</Implementation-URL>
@@ -290,8 +292,11 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Source-Revision>${buildNumber}</Source-Revision>
-                            <Build-Timestamp>${timestamp}</Build-Timestamp>
+                            <Build-Tag>${build-tag}</Build-Tag>
+                            <Git-Commit>${build-commit}</Git-Commit>
+                            <Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+                            <Build-Version>${build-version}</Build-Version>
+                            <Build-Timestamp>${build-tstamp}</Build-Timestamp>
                             <Source-Repository>${project.scm.connection}</Source-Repository>
                             <Description>${project.description}</Description>
                             <Implementation-URL>http://exquery.org</Implementation-URL>
@@ -308,6 +313,18 @@
             </plugin>
         </plugins>
     </build>
+    
+    <pluginRepositories>
+        <!-- required for buildversion-plugin dependencies -->
+        <pluginRepository>
+          <id>sonatype-releases</id>
+          <url>http://oss.sonatype.org/content/repositories/releases</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>clojars.org</id>
+          <url>http://clojars.org/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
     
     <profiles>
         <profile>
