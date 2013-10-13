@@ -64,6 +64,11 @@ public class SequenceImpl<T> implements Sequence<T> {
     public Iterator<TypedValue<T>> iterator() {
         return sequence.iterator();
     }
+
+    @Override
+    public TypedValue<T> head() {
+        return sequence.get(0);
+    }
     
     @Override
     public Sequence<T> tail() {

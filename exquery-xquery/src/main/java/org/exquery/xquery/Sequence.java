@@ -42,6 +42,14 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
     public Iterator<TypedValue<T>> iterator();
     
     /**
+     * Get the head of the Sequence
+     * 
+     * @return the head of the Sequence
+     * @throws IndexOutOfBoundsException if the sequence is empty
+     */
+    public TypedValue<T> head();
+    
+    /**
      * Gets the tail of the Sequence
      * 
      * @return The Sequence without the first Item
@@ -76,6 +84,11 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
             return EMPTY_ITERATOR;
         }
 
+        @Override
+        public TypedValue<Void> head() {
+            throw new IndexOutOfBoundsException("The sequence is empty!");
+        }
+        
         @Override
         public Sequence<Void> tail() {
             return EMPTY_SEQUENCE;
