@@ -109,7 +109,11 @@ public class RestAnnotationFactory {
             case PUT:
                 restAnnotation = new PutMethodAnnotation();
                 break;
-                
+
+            case OPTIONS:
+                restAnnotation = new OptionsMethodAnnotation();
+                break;
+
             case path:
                 restAnnotation = new PathAnnotationImpl();
                 break;

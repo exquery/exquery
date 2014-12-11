@@ -24,54 +24,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.restxq.annotation;
+package org.exquery.restxq.impl.annotation;
 
-import javax.xml.namespace.QName;
-import org.exquery.restxq.Namespace;
+import org.exquery.http.HttpMethod;
 
 /**
- * Names for the RESTXQ Annotations
- *
+ * Implementation of RESTXQ OPTIONS Annotation
+ * i.e. %rest:OPTIONS
+ * 
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public enum RestAnnotationName {
-        
-    GET("GET"),
-    HEAD("HEAD"),
-    DELETE("DELETE"),
-    POST("POST"),
-    PUT("PUT"),
-    OPTIONS("OPTIONS"),
+public class OptionsMethodAnnotation extends AbstractHttpMethodAnnotation {
 
-    path,
-    produces,
-    consumes,
-
-    formparam("form-param"),
-    queryparam("query-param"),
-    headerparam("header-param"),
-    cookieparam("cookie-param");
-
-    final QName name;
-    RestAnnotationName() {
-        this.name = new QName(Namespace.ANNOTATION_NS, name());
-    }
-    
-    RestAnnotationName(final String name) {
-        this.name = new QName(Namespace.ANNOTATION_NS, name);
-    }
-
-    public static RestAnnotationName valueOf(final QName name) {             
-        for(final RestAnnotationName an : RestAnnotationName.values()) {
-            if(an.name.equals(name)) {
-                return an;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown name: " + name.toString());
-    }
-
-    public QName getQName() {
-        return name;
+    /**
+     * @see org.exquery.restxq.annotation.HttpMethodAnnotation#getHttpMethod()
+     * 
+     * @return HttpMethod.GET
+     */
+    @Override
+    public HttpMethod getHttpMethod() {
+        return HttpMethod.OPTIONS;
     }
 }
