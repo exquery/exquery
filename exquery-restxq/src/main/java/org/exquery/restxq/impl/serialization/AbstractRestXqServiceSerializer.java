@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import org.exquery.InternetMediaType;
+import org.exquery.http.ContentTypeHeader;
 import org.exquery.http.HttpResponse;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
@@ -187,9 +188,9 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                 }
                 
             } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
-                
+
                 //serialization media type
-                mediaType = ((MediaTypeAnnotation)serializationAnnotation).getMediaType();
+                mediaType = ((MediaTypeAnnotation) serializationAnnotation).getMediaType();
             } else if(serializationAnnotation instanceof AbstractYesNoSerializationAnnotation) {
                 final AbstractYesNoSerializationAnnotation yesNoSerializationAnnotation = (AbstractYesNoSerializationAnnotation)serializationAnnotation;
                 
@@ -219,7 +220,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
             if(method.equals(SupportedMethod.binary)) {
                 mediaType = InternetMediaType.APPLICATION_OCTET_STREAM.getMediaType();
             } else {
-                mediaType = method.getDefaultInternetMediaType().getMediaType() + "; charset=" + DEFAULT_ENCODING;   
+                mediaType = method.getDefaultInternetMediaType().getMediaType();
             }
         } else {
             mediaType = DEFAULT_CONTENT_TYPE;
@@ -251,10 +252,11 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
             System.out.println(iae.getMessage());
         }
         
-        //set the media-type
+        //set the HTTP Content-Type header from the serialization properties
         final String mediaType = serializationProperties.get(SerializationProperty.MEDIA_TYPE);
         if(mediaType != null && !mediaType.isEmpty()) {
-            response.setContentType(mediaType);
+            final String encoding = serializationProperties.get(SerializationProperty.ENCODING);
+            response.setContentType(new ContentTypeHeader(mediaType, encoding).toString());
         }
         
         if(method != null && method.equals(SupportedMethod.binary)) {

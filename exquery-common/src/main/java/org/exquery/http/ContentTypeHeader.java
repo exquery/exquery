@@ -41,10 +41,11 @@ public class ContentTypeHeader {
     private final static String CHARSET_SEPARATOR = ";";
     private final static String CHARSET_KEY = "charset";
     private final static String CHARSET_KEY_VALUE_SEPARATOR = "=";
-    
+
     public final static String contentType_regExp =  "(" + InternetMediaType.mediaType_regExp + ")" + "(" + CHARSET_SEPARATOR + "\\s*" + CHARSET_KEY + CHARSET_KEY_VALUE_SEPARATOR + "(.+))?";
-    
     public final static Pattern ptnContentType = Pattern.compile(contentType_regExp);
+
+    private final static Pattern ptnInternetMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
     
     private final String internetMediaType;
     private final String charset;
@@ -67,6 +68,22 @@ public class ContentTypeHeader {
             }
         }
     }
+
+    /**
+     * @param internetMediaType The Internet Media Type to use in the Content-Type header
+     * @param charset The Charset to use in the Content-Type header or null otherwise
+     *
+     * @throws IllegalArgumentException If the internetMediaType is not a valid value for an Internet Media Type
+     */
+    public ContentTypeHeader(final String internetMediaType, final String charset) {
+        final Matcher mtcInternetMediaType = ptnInternetMediaType.matcher(internetMediaType);
+        if(!mtcInternetMediaType.matches()) {
+            throw new IllegalArgumentException("Invalid Internet Media Type value: '" + internetMediaType + "' in respect to pattern: '" + ptnInternetMediaType.pattern() + "'");
+        } else {
+            this.internetMediaType = internetMediaType;
+            this.charset = charset;
+        }
+    }
     
     /**
      * Returns the Internet Media Type component of the ContentType header
@@ -84,5 +101,25 @@ public class ContentTypeHeader {
      */
     public String getCharset() {
         return charset;
+    }
+
+    /**
+     * Returns a string representation as
+     * would be used for the value of a HTTP
+     * Content-Type Header
+     *
+     * @return value for a HTTP Content-Type header
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getInternetMediaType());
+        if(charset != null && !charset.isEmpty()) {
+            builder
+                .append(CHARSET_SEPARATOR)
+                .append(" ")
+                .append(CHARSET_KEY).append(CHARSET_KEY_VALUE_SEPARATOR).append(charset);
+        }
+        return builder.toString();
     }
 }
