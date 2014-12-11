@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <name>Binary Module</name>
+  <description>Implementation of EXPath Binary Module</description>
+  <inceptionYear>2014</inceptionYear>
+
+  <groupId>org.exquery.expath.module</groupId>
+  <artifactId>binary</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <scala.version>2.10.3</scala.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>3.1.6</version>
+        </plugin>
+		<plugin>
+		  <groupId>com.mycila</groupId>
+		  <artifactId>license-maven-plugin</artifactId>
+		  <version>2.6</version>
+		</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-source-plugin</artifactId>
+		  <version>2.2.1</version>
+		</plugin>
+	  	<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-release-plugin</artifactId>
+		  <version>2.4.2</version>
+		</plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <configuration>
+	  	  <recompileMode>all</recompileMode>	<!-- NOTE: "incremental" compilation although faster may require passing to MAVEN_OPTS="-XX:MaxPermSize=128m" -->
+          <useZincServer>true</useZincServer>	<!-- NOTE: if you have Zinc server installed and running, you can get faster compilation by enabling this -->
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+			  <goal>compile</goal>
+			  <goal>testCompile</goal>
+		    </goals>
+		  </execution>
+		  <execution>
+			<id>scala-doc-jar</id>
+			<phase>verify</phase>
+			<goals>
+			  <goal>doc-jar</goal>
+			</goals>
+		  </execution>
+        </executions>
+      </plugin>
+	  <plugin>
+		<groupId>com.mycila</groupId>
+		<artifactId>license-maven-plugin</artifactId>
+		<configuration>
+			<header>com/mycila/maven/plugin/license/templates/BSD-3.txt</header>
+			<properties>
+				<owner>Adam Retter</owner>
+				<year>${project.inceptionYear}</year>
+				<email>adam.retter@googlemail.com</email>
+			</properties>
+			<excludes>
+				<exclude>pom.xml</exclude>
+			</excludes>
+		</configuration>
+		<executions>
+			<execution>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>
+    </plugins>
+
+  </build>
+
+</project>
