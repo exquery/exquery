@@ -86,7 +86,11 @@ public class SerializationAnnotationFactory {
             case mediatype:
                 serializationAnnotation = new MediaTypeAnnotation();
                 break;
-                
+
+            case encoding:
+                serializationAnnotation = new EncodingAnnotation();
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown annotation: " + annotation.getName().toString());
         }

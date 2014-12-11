@@ -26,39 +26,39 @@
  */
 package org.exquery.serialization.annotation;
 
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.exquery.http.InternetMediaType;
 
 /**
- * Serialization Media Type Annotation
- * i.e. %output:media-type
+ * Serialization Encoding Annotation
+ * i.e. %output:encoding
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class MediaTypeAnnotation extends AbstractSingleValueSerializationAnnotation {
-    
-    //Regular Expression to match any Internet Media Type
-    private final static Pattern ptnMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
+public class EncodingAnnotation extends AbstractSingleValueSerializationAnnotation {
+
+    //Regular Expression to match any Encoding
+    private final static Pattern ptnEncoding = Pattern.compile("[a-zA-Z0-9\\-]+");
 
     @Override
     protected boolean validate(final String value) {
-        final Matcher mtcMediaType = ptnMediaType.matcher(value);
-        return mtcMediaType.matches();
+        final Matcher mtcEncoding = ptnEncoding.matcher(value);
+        return mtcEncoding.matches() && Charset.isSupported(value);
     }
 
     @Override
     protected SerializationAnnotationErrorCodes.SerializationAnnotationErrorCode getTooManyLiteralsErr() {
-        return SerializationAnnotationErrorCodes.SEST0010;
+        return SerializationAnnotationErrorCodes.SEST0013;
     }
 
     @Override
     protected SerializationAnnotationErrorCodes.SerializationAnnotationErrorCode getEmptyAnnotationParamsErr() {
-        return SerializationAnnotationErrorCodes.SEST0011;
+        return SerializationAnnotationErrorCodes.SEST0014;
     }
 
     @Override
     protected SerializationAnnotationErrorCodes.SerializationAnnotationErrorCode getInvalidValueErr() {
-        return SerializationAnnotationErrorCodes.SEST0012;
+        return SerializationAnnotationErrorCodes.SEST0015;
     }
 }

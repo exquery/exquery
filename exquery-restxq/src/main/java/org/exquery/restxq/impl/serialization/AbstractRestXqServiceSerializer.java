@@ -39,13 +39,8 @@ import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.impl.serialization.XmlWriter.Attribute;
-import org.exquery.serialization.annotation.AbstractYesNoSerializationAnnotation;
-import org.exquery.serialization.annotation.IndentAnnotation;
-import org.exquery.serialization.annotation.MediaTypeAnnotation;
-import org.exquery.serialization.annotation.MethodAnnotation;
+import org.exquery.serialization.annotation.*;
 import org.exquery.serialization.annotation.MethodAnnotation.SupportedMethod;
-import org.exquery.serialization.annotation.OmitXmlDeclarationAnnotation;
-import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedValue;
@@ -190,7 +185,13 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
             } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
 
                 //serialization media type
-                mediaType = ((MediaTypeAnnotation) serializationAnnotation).getMediaType();
+                mediaType = ((MediaTypeAnnotation) serializationAnnotation).getValue();
+
+            } else if(serializationAnnotation instanceof EncodingAnnotation) {
+
+                //serialization encoding
+                serializationProperties.put(SerializationProperty.ENCODING, ((EncodingAnnotation)serializationAnnotation).getValue());
+
             } else if(serializationAnnotation instanceof AbstractYesNoSerializationAnnotation) {
                 final AbstractYesNoSerializationAnnotation yesNoSerializationAnnotation = (AbstractYesNoSerializationAnnotation)serializationAnnotation;
                 

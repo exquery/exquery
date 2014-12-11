@@ -28,21 +28,22 @@ package org.exquery.serialization.annotation;
 
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
-public class MediaTypeAnnotationTest {
+public class EncodingAnnotationTest {
     
     @Test
-    public void json_mediaType() throws SerializationAnnotationException {
-        final String JSON_MEDIATYPE = "application/json";
+    public void utf8_encoding() throws SerializationAnnotationException {
+        final String UTF8_ENCODING = "utf-8";
         
-        final MediaTypeAnnotation mediaTypeAnnotation = new MediaTypeAnnotation();
-        final String mediaType = mediaTypeAnnotation.parseValue(new Literal(){
+        final EncodingAnnotation encodingAnnotation = new EncodingAnnotation();
+        final String encoding = encodingAnnotation.parseValue(new Literal() {
 
             @Override
             public Type getType() {
@@ -51,19 +52,19 @@ public class MediaTypeAnnotationTest {
 
             @Override
             public String getValue() {
-                return JSON_MEDIATYPE;
+                return UTF8_ENCODING;
             }
         });
         
-        assertEquals(JSON_MEDIATYPE, mediaType);
+        assertEquals(UTF8_ENCODING, encoding);
     }
-    
+
     @Test
-    public void ooxml_mediaType() throws SerializationAnnotationException {
-        final String OOXML_MEDIATYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        
-        final MediaTypeAnnotation mediaTypeAnnotation = new MediaTypeAnnotation();
-        final String mediaType = mediaTypeAnnotation.parseValue(new Literal(){
+    public void UTF8_encoding() throws SerializationAnnotationException {
+        final String UTF8_ENCODING = "UTF-8";
+
+        final EncodingAnnotation encodingAnnotation = new EncodingAnnotation();
+        final String encoding = encodingAnnotation.parseValue(new Literal() {
 
             @Override
             public Type getType() {
@@ -72,21 +73,63 @@ public class MediaTypeAnnotationTest {
 
             @Override
             public String getValue() {
-                return OOXML_MEDIATYPE;
+                return UTF8_ENCODING;
             }
         });
-        
-        assertEquals(OOXML_MEDIATYPE, mediaType);
+
+        assertEquals(UTF8_ENCODING, encoding);
     }
-    
+
     @Test
-    public void invalid_mediaType() throws SerializationAnnotationException {
-        final String OOXML_MEDIATYPE = "application/vnd/openxmlformats";
-        
-        final MediaTypeAnnotation mediaTypeAnnotation = new MediaTypeAnnotation();
-        
+    public void utf16_encoding() throws SerializationAnnotationException {
+        final String UTF8_ENCODING = "utf-16";
+
+        final EncodingAnnotation encodingAnnotation = new EncodingAnnotation();
+        final String encoding = encodingAnnotation.parseValue(new Literal() {
+
+            @Override
+            public Type getType() {
+                return Type.STRING;
+            }
+
+            @Override
+            public String getValue() {
+                return UTF8_ENCODING;
+            }
+        });
+
+        assertEquals(UTF8_ENCODING, encoding);
+    }
+
+    @Test
+    public void UTF16_encoding() throws SerializationAnnotationException {
+        final String UTF16_ENCODING = "UTF-16";
+
+        final EncodingAnnotation encodingAnnotation = new EncodingAnnotation();
+        final String encoding = encodingAnnotation.parseValue(new Literal() {
+
+            @Override
+            public Type getType() {
+                return Type.STRING;
+            }
+
+            @Override
+            public String getValue() {
+                return UTF16_ENCODING;
+            }
+        });
+
+        assertEquals(UTF16_ENCODING, encoding);
+    }
+
+    @Test
+    public void invalid_encoding() throws SerializationAnnotationException {
+        final String FAKE_ENCODING = "UTF12345";
+
+        final EncodingAnnotation encodingAnnotation = new EncodingAnnotation();
+
         try {
-            final String mediaType = mediaTypeAnnotation.parseValue(new Literal(){
+            final String encoding = encodingAnnotation.parseValue(new Literal(){
 
                 @Override
                 public Type getType() {
@@ -95,12 +138,11 @@ public class MediaTypeAnnotationTest {
 
                 @Override
                 public String getValue() {
-                    return OOXML_MEDIATYPE;
+                    return FAKE_ENCODING;
                 }
             });
         } catch(final SerializationAnnotationException sae) {
-            assertEquals(SerializationAnnotationErrorCodes.SEST0012, sae.getErrorCode());
+            assertEquals(SerializationAnnotationErrorCodes.SEST0015, sae.getErrorCode());
         }
     }
-    
 }
