@@ -252,7 +252,11 @@ public abstract class AbstractRestXqService implements RestXqService {
 
                     @Override
                     public Sequence getTypedValue() {
-                        return requestBody;
+                        if(requestBody != null) {
+                            return requestBody;
+                        } else {
+                            return Sequence.EMPTY_SEQUENCE;
+                        }
                     }
                 });
             }
@@ -288,7 +292,8 @@ public abstract class AbstractRestXqService implements RestXqService {
      * @param request The HTTP Request to extract the request body from
      * 
      * @return The Sequence of values extracted from the request body,
-     * typically a single item but possibly more for a multi-part request
+     * typically a single item but possibly more for a multi-part request.
+     * If there is no request body, then Sequence.EMPTY_SEQUENCE should be returned.
      * 
      * @throws RestXqServiceException If an error occurred whilst processing the Request Body
      */
