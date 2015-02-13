@@ -269,8 +269,12 @@ trait FileModule {
    * @param dir
    * @param recursive Whether we should list files and directories from all descendant directories too
    * @param pattern An optional glob pattern for filtering the returned file/directory names
+   *
+   * @return A process that produces relative paths
    */
-  def list(dir: String, recursive: Boolean = false, pattern: Maybe[String]) : \/[FileModuleError, Process[Task, String]]  = {
+  def list(dir: String, recursive: Boolean = false, pattern: Maybe[String]) : \/[FileModuleError, Process[Task, String]] = ls(dir, recursive, pattern, relative = true)
+
+  private def ls(dir: String, recursive: Boolean = false, pattern: Maybe[String], relative : Boolean = false) : \/[FileModuleError, Process[Task, String]]  = {
     toPath(dir).leftMap(_ => FileModuleErrors.NoDir).map {
       p =>
         (p,
@@ -402,6 +406,15 @@ trait FileModule {
   def parent(path: String) = Path.fromString(path).parent.toMaybe.map(_.toAbsolute.path)
 
   /**
+   * Get the immediate children of a directory indicated by the path
+   *
+   * @param path
+   * 
+   * @return A process that produces absolute paths
+   */
+  def children(path: String) : \/[FileModuleError, Process[Task, String]] = ls(path, recursive = false, empty, relative = false)
+
+  /**
    * Convert a path into the native representation used by the
    * operating system.
    *
@@ -448,6 +461,11 @@ trait FileModule {
    */
   lazy val tempDir : String = sys.props("java.io.tmpdir")
 
+  /**
+   * The path to the current working directory of where the operating
+   * process is executing.
+   */
+  lazy val currentDir : String = sys.props("user.dir")
 
   /**
    * Looks up a character set by name
