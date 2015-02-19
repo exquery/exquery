@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RESTXQ 1.0: RESTful Annotations for XQuery 3.0</title>
+    <title>RESTXQ 1.0: RESTful Annotations for XQuery</title>
     <meta charset='utf-8'/>
     <script src='http://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
     <script class='remove'>
@@ -10,7 +10,7 @@
           specStatus:           "unofficial",
           
           // the specification's short name, as in http://www.w3.org/TR/short-name/
-          shortName:            "xxx-xxx",
+          shortName:            "restxq",
 
           // if your specification has a subtitle that goes below the main
           // formal title, define it here
@@ -39,17 +39,19 @@
           // only "name" is required
           editors:  [
               { name: "Adam Retter", url: "http://adamretter.org.uk/",
-                company: "Adam Retter Consulting", companyURL: "http://adamretter.org.uk/" },
+                company: "Adam Retter Consulting", companyURL: "http://adamretter.org.uk/" }
           ],
 
           // authors, add as many as you like. 
           // This is optional, uncomment if you have authors as well as editors.
           // only "name" is required. Same format as editors.
 
-          //authors:  [
-          //    { name: "Your Name", url: "http://example.org/",
-          //      company: "Your Company", companyURL: "http://example.com/" },
-          //],
+          authors:  [
+              { name: "Adam Retter", url: "http://adamretter.org.uk/",
+                company: "Adam Retter Consulting", companyURL: "http://adamretter.org.uk/" },
+              { name: "Christian Grün", url: "http://christian-gruen.de/",
+                company: "BaseX GmbH", companyURL: "http://basex.org/" }
+          ],
           
           // name of the WG
           wg:           "EXQuery RESTXQ WG",
@@ -115,7 +117,7 @@
     <section id='abstract'>
       Whilst XQuery [[!XQUERY]] was originally envisaged and designed as a query language for XML,
       it has been adopted by many as a language for application development. This specification
-      describes a set of XQuery 3.0 Annotations [[!XQUERY-30]] and a small set of functions to enable XQuery
+      describes a set of XQuery Annotations [[!XQUERY-30]] and a small set of functions to enable XQuery
       to provide RESTful services, thus enabling Web Application development in XQuery.
     </section>
     
@@ -129,11 +131,11 @@
       <p>
         XQuery has long been recognised as a good language for producing XHTML and HTML from
         complex data queries, however XQuery is almost completely ignorant of the Web.
-        XQuery provides no native capabilties for either making Web requests or operating
+        XQuery provides no native capabilities for either making Web requests or operating
         as a server-side scripting language and processing Web requests.
       </p>
       <p>
-        As of XQuery 3.0 there is still no standard way to create Web Applications in XQuery.
+        As of XQuery 3.0, there is still no standard way to create Web Applications in XQuery.
         Many vendors provide extensions to their XQuery implementations which allow users
         to serve web requests using XQuery processing.
         Whilst vendors have borrowed ideas from each other, there is no standard for Web capabilities
@@ -143,8 +145,8 @@
       </p>
       <p>
         RESTXQ attempts to resolve these problem of interoperablility. RESTXQ defines a standard set of
-        vendor agnostic XQuery Annotations and functions for XQuery 3.0. When implemented by vendors,
-        these annotations provide a standard W3C XQuery 3.0 compliant approach to delivering RESTful
+        vendor agnostic XQuery Annotations and functions for XQuery. When implemented by vendors,
+        these annotations provide a standard W3C XQuery compliant approach to delivering RESTful
         Web Services from XQuery, whilst the functions provide user convenience for interacting with
         implementations of RESTXQ.
       </p>
@@ -155,10 +157,10 @@
           <dl>
             <dt>Interoperability</dt>
               <dd>
-                Only features that are already present in XQuery 3.0 MUST be applied to create RESTXQ.
-                Any XQuery code that makes use of RESTXQ instead of vendor extensions, is valid XQuery 3.0
-                code, and therefore portable. Note, RESTXQ support is required in the XQuery processor to
-                execute resource functions in a Web context.
+                Only features that are already present in XQuery MUST be applied to create RESTXQ.
+                Any XQuery code that makes use of RESTXQ instead of vendor extensions, is valid XQuery
+                code, and therefore portable. Note that RESTXQ support is required in the XQuery
+                processor to execute resource functions in a Web context.
               </dd>
             <dt>Simplicity for XQuery developers</dt>
               <dd>XQuery developers MUST NOT have to maintain external or complex code for wiring RESTful
@@ -166,12 +168,12 @@
               </dd>
             <dt>Vendor Agnostic</dt>
               <dd>RESTXQ MUST NOT assume anything about an implementation above what is defined in
-                XQuery 3.0. RESTXQ MUST be equally implementable by any vendor.
+                XQuery. RESTXQ MUST be equally implementable by any vendor.
               </dd>
             <dt>Technical improvement</dt>
             <dd>RESTXQ MUST improve on the current approaches, a comprehensive review was undertaken
-              <a href="http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf" title="RESTful XQuery, Standardised XQuery 3.0 Annotations for REST">here</a>.
-            </dd>              
+              <a href="http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf" title="RESTful XQuery, Standardised XQuery Annotations for REST">here</a>.
+            </dd>
           </dl>
         </p>
       </section>
@@ -184,7 +186,7 @@
           of this specification.
         </p>
         <p>
-          This document assumes that readers already have at least a basic understanding of XQuery 3.0, and
+          This document assumes that readers already have at least a basic understanding of XQuery, and
           an understanding of Web technologies and server side scripting.
         </p>
       </section>
@@ -218,157 +220,440 @@
     </section>
     <section id="annotations">
       <h2>Annotations</h2>
+
       <section id="annotations-background">
         <h3>Background</h3>
-        <section id="xquery3annotations">
-          <h4>XQuery 3.0 Annotations</h4>
+        <p>
+          RESTXQ is heavily influenced by JAX-RS [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
+          predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
+          and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
+          to XQuery invocation, our unit of granularity is the XQuery function.
+        </p>
+        <p>
+          Through the use of annotations on functions in XQuery, we declaratively mark-up the HTTP capabilities
+          of a function. To minimise refactoring by developers when adding annotations to existing code, two measures
+          must be respected by implementations:
+        </p>
+        <ol>
+          <li>Implementations of RESTXQ MUST support annotated functions which have additional
+            function parameters which are not annotation mapped, providing the cardinality type
+            of those un-mapped parameters accepts an empty sequence.
+          </li>
+          <li>Implementors MUST not enforce the order of function parameters. Whether mapped
+            by annotations or not is unimportant, as annotations explicitly name the parameters
+            to which they are mapped.
+          </li>
+        </ol>
+      </section>
+    </section>
+
+    <section id="resource-functions">
+      <h3>Resource Functions</h3>
+      <p>
+        A Resource Function is an XQuery function which has been marked up with RESTXQ annotations.
+        These annotations indicate to a processor that when presented with a RESTful web service
+        request, that matches the constraints indicated by the annotations, that the function
+        SHOULD be invoked and the result SHOULD be returned as the result of the service request.
+      </p>
+      <p>There are two types of Resource Function Annotations described in RESTXQ:</p>
+      <ul>
+        <li>Constraints (<a href="#resource-function-constraints" class="sectionRef"></a>)</li>
+        <li>Parameters (<a href="#resource-function-parameters" class="sectionRef"></a>)</li>
+      </ul>
+
+      <section id="templates">
+        <h4>Templates</h4>
+        <p>
+          Some of the RESTXQ Annotations make use of Templates, which allow for the substitution of parameters
+          from the request into the query. The syntax of these templates is very simple and is designed to be
+          familiar to existing XQuery developers, it is expressed in <a href="#template-grammar" class="sectionRef"></a>.
+        </p>
+        <p>The Template appears inside a string literal within the annotation, but the meaning is that the
+          value of the templated substitution MUST be used as the parameter to the named argument of the
+          annotated function.</p>
+        <pre class="example" title="Template">
+          {$number-of-cats}
+        </pre>
+        <p>
+          In the example above, a parameter given from the template substitution MUST be
+          set for the function argument called <code>number-of-cats</code> on the annotated function.
+        </p>
+      </section>
+
+      <section id="resource-function-constraints">
+        <h4>Resource Function Constraints</h4>
+        <p>Constraints restrict the service requests that a Resource Function MAY process.</p>
+        <section id="path-annotation">
+          <h5>Path Annotation</h5>
           <p>
-            Whilst XQuery 3.0 introduces many new features, an understanding of Annotations in XQuery 3.0
-            is fundamental to this specification. Annotations declare properties of functions or variables,
-            zero or more annotations may be added to a function or variable declaration. Annotations start
-            with the '%' character and consist of an expanded qualified name and an optional value, the
-            value being a sequence of literals.
+            A Path Annotation maps the URI of a RESTful web service to a Resource Function and
+            provides for path templates.
           </p>
-          <pre class="example" title="XQuery 3.0 Annotations">
-        xquery version "3.0";
-        
-        declare namespace java = "http://java";
-        
-        declare
-        %java:method("java.lang.Math.sin")
-        function local:calculate-sin($a as xs:double) as xs:double external
-        
-        &lt;sin&gt;{
-          local:calculate-sin(1.4)
-        }&lt;/sin&gt;
-          </pre>
-          <p>
-            Apart from the <code>%private</code> and <code>%public</code> annotations, no other annotations are defined by
-            the XQuery 3.0 specification. However, the specification states,
-            &quot;Implementations MAY define further annotations, whose behaviour is implementation-defined&quot;.
-            It is this property which this specification exploits to define a standard set of RESTful Annotations for XQuery 3.0.
-          </p>
-        </section>
-        <section id="approach">
-          <h4>Approach</h4>
-          <p>
-            RESTXQ is heavily influenced by that of JAX-RS [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
-            predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
-            and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
-            to XQuery invocation, our unit of granularity is the XQuery function.
+          <p> <!-- TODO also consider allowing zero or more path annotations -->
+            A Resource Function MUST contain a single path annotation. Additional annotations
+            MAY be used to constrain or parameterize the Resource Function.
           </p>
           <p>
-            Through the use of annotations on functions in XQuery, we declaratively mark-up the HTTP capabilities
-            of a function. To minimise refactoring by developers when adding annotations to existing code, two measures
-            must be respected by implementations:
+            The path annotation is named <code>%rest:path</code> and takes a single mandatory
+            literal string, which describes the URI path for this service. The URI path is
+            considered relative to a base URI (<a href="#base-uri" class="sectionRef"></a>),
+            which is implementation-defined.
+          </p>
+          <p>
+            The URI path itself MAY contain zero or more URI templates which denote path segments
+            that MUST map to named function parameters. Parameters addressed by templates in the
+            URI path MUST meet the following constraints:
           </p>
           <ol>
-            <li>Implementations of RESTXQ MUST support annotated functions which have additional function parameters which are not annotation mapped, providing the cardinality type of those un-mapped parameters accepts an empty sequence.</li>
-            <li>Implementors MUST not enforce the order of function parameters. Whether mapped by annotations or not is unimportant, as annotations explicitly name the parameters to which they are mapped.</li>
+            <li>
+              <!-- TODO describe error codes -->
+              The cardinality MUST allow for an atomic value, otherwise an error should be raised by the
+              implementation, i.e., it must not be of type empty-sequence().</li>
+            <li>
+              <!-- TODO describe error codes -->
+              The type MUST inherit from xs:anyAtomicType, otherwise, an error should be raised by the implementation.
+            </li>
           </ol>
-        </section>
-      </section>
-      <section id="resource-functions">
-        <h3>Resource Functions</h3>
-        <p>
-          A Resource Function is an XQuery function which has been marked up with RESTXQ annotations. These annotations
-          indicate to a processor that when presented with a RESTful web service request, that matches the constraints
-          indicated by the annotations, that the function SHOULD be invoked and the result SHOULD be returned as the result of
-          the service request.
-        </p>
-        <p>There are two types of Resource Function Annotations described in RESTXQ:</p>
-        <ul>
-          <li>Constraints (<a href="#resource-function-constraints" class="sectionRef"></a>)</li>
-          <li>Parameters (<a href="#resource-function-parameters" class="sectionRef"></a>)</li>
-        </ul>
-        <section id="templates">
-          <h4>Templates</h4>
           <p>
-            Some of the RESTXQ Annotations make use of Templates, which allow for the substitution of parameters
-            from the request into the query. The syntax of these templates is very simple and is designed to be
-            familiar to existing XQuery developers, it is expressed in <a href="#template-grammar" class="sectionRef"></a>.
+            <!-- TODO describe type conversion -->
+            Conversion from the URI segment string to the required type should be performed
+            at run-time, and an error should be raised if conversion is impossible.
           </p>
-          <p>The Template appears inside a string literal within the annotation, but the meaning is that the
-            value of the templated substitution MUST be used as the parameter to the named argument of the
-            annotated function.</p>
-          <pre class="example" title="Template">
-            {$number-of-cats}
+          <pre class="example" title="Path Annotation">
+            declare
+              %rest:path("/stock/widget/{$id}")
+            function local:widget($id as xs:int) {
+          
+              (: get the widget :)
+              fn:collection("/db/widgets")/widget[@id eq $id]
+            };
           </pre>
           <p>
-            In the example above, a parameter given from the template substitution MUST be
-            set for the function argument called <code>number-of-cats</code> on the annotated function.
+            In the above example, a HTTP GET on the following URI would cause the widget
+            with the <code>id</code> of '1981' to be retrieved:<br/>
+            <code>http://www.widget-factory.com/stock/widget/{$id}</code>.
           </p>
+          <div class="note">
+            When many Resource Functions are defined, there can be many Path Annotations,
+            as such conflicts may occur, the resolution of such conflicts MUST be processed
+            as described in <a href="#path-preference"></a>.
+          </div>
         </section>
-        <section id="resource-function-constraints">
-          <h4>Resource Function Constraints</h4>
-          <p>Constraints restrict the service requests that a Resource Function MAY process.</p>
-          <section id="path-annotation">
-            <h5>Path Annotation</h5>
-            <p>
-              A Path Annotation maps the URI of a RESTful web service to a Resource Function and provides for path templates.
-            </p>
-            <p> <!-- TODO also consider allowing zero or more path annotations -->
-              A Resource Function MUST contain a single path annotation. Additional annotations MAY also be
-              used to constrain or parameterize the Resource Function.
-            </p>
-            <p>
-              The path annotation is named <code>%rest:path</code> and takes a single mandatory literal string, which
-              describes the URI path for this service. The URI path is considered relative to a base URI (<a href="#base-uri" class="sectionRef"></a>) which is
-              implementation defined.
-            </p>
-            <p>
-              The URI path itself MAY contain zero or more URI templates which denote path segments that MUST
-              map to named function parameters. Parameters addressed by templates in the URI path, MUST meet the
-              following constraints:
-            </p>
+
+        <section id="method-annotation">
+          <h5>Method Annotation</h5>
+          <p>
+            Resource Functions MAY be constrained to zero or more HTTP methods by means of
+            a method annotation. Unless otherwise constrained by a method annotation,
+            the path annotation of a Resource Function applies to all HTTP methods.
+          </p>
+          <p>
+            Annotations are defined for all HTTP 1.1 methods except TRACE and CONNECT.
+            All methods MAY return resources except for HEAD, which must only return a
+            <code>rest:response</code> element.
+          </p>
+          <pre class="example" title="Method Annotation">
+            declare
+              %rest:DELETE
+              %rest:path("/widget/{$id}")
+            function local:widget($id as xs:int) {
+              (: deletes a widget :)
+              delete node fn:collection("/db/widgets")/widget[@id eq $id]
+            };
+          </pre>
+          <p>
+            Method annotations <code>POST</code> and <code>PUT</code> may take an optional string literal which maps
+            the HTTP request body to a named function parameter. The same syntax as that
+            used for URI templates is applied, for example 
+            <code>%rest:POST("{$request-body")</code> would inject the request body into
+            the function through the function parameter named 'request-body'. The
+            function parameter for the request body must meet the following constraints:
             <ol>
               <li>
-                <!-- TODO describe error codes -->
-                Cardinality that MUST allow for an atomic value, otherwise an error should be raised by the
-                implementation. i.e. ONE or ONE_OR_MORE.</li>
+                Cardinality that allows for one or more of the typed item(s).
+              </li>
               <li>
-                <!-- TODO describe error codes -->
-                Type that MUST inherit from xs:anyAtomicType, otherwise, an error should be raised by the implementation.
-                In addition, conversion from the URI segment string to the required type should be performed at run-time,
-                and an error raised if conversion is impossible.
-                <!-- TODO describe type conversion -->
+                Typing that is compatible with the request body. The type of the request
+                body is determined by the HTTP Content Type header and may be constrained
+                by means of the <code>%rest:consumes</code> annotation. The interpretation
+                of the request body is similar to that of the
+                <a href="http://expath.org/spec/http-client">EXPath HTTP Client</a>:
+                <ol>
+                  <li>
+                    If the <code>media-type</code> is textual, the function parameter type will be
+                    <code>xs:string</code>.
+                  </li>
+                  <li>
+                    If the <code>media-type</code> is an XML media-type, the request body is parsed
+                    as XML and the function parameter type will be <code>document-node()</code>.
+                  </li>
+                  <li>
+                    Otherwise, a binary media type is assumed, and the function
+                    parameter type will be <code>xs:base64Binary</code>.
+                  </li>
+                  <li>
+                    An implementation MAY provide support for other input types
+                    such as HTML or JSON.
+                  </li>
+                </ol>
               </li>
             </ol>
-            <pre class="example" title="Path Annotation">
-              declare
-                %rest:path("/stock/widget/{$id}")
-              function local:widget($id as xs:int) {
-            
-                (: get the widget :)
-                fn:collection("/db/widgets")/widget[@id eq $id]
-              };
-            </pre>
-            <p>
-              In the above example, a HTTP GET on the following URI, would cause the Widget with the <code>id</code> of '1981'
-              to be retrieved: <em>http://www.widget-factory.com/stock/widget/<code>{$id}</code></em>.
-            </p>
-            <div class="note">
-              When many Resource Functions are defined, there can be many Path Annotations, as such conflicts may occur, the resolution of such conflicts MUST be processed as described in <a href="#path-preference"></a>.
-            </div>
-          </section>
-          <section id="method-annotation">
-            <h5>Method Annotation</h5>
-            <p><!-- TODO --></p>
+          </p>
         </section>
-        <section id="resource-function-parameters">
-          <h4>Resource Function Parameters</h4>
-          <p><!-- TODO --></p>
+
+        <section id="consumes-annotation">
+          <h5>Consumes Annotation</h5>
+          <p>
+            Resource Functions MAY be constrained to certain media-types by means of
+            a <code>%rest:consumes</code> annotation. A function will only be invoked
+            if the HTTP <code>Content-Type</code> header of the request matches one
+            of the given types.
+          </p>
+        </section>
+
+        <section id="produces-annotation">
+          <h5>Produces Annotation</h5>
+          <p>
+            If the <code>%rest:produces</code> annotation is specified, a function will
+            only be invoked if the HTTP <code>Accept</code> header of the request
+            matches one of the given types.
+          </p>
+          <pre class="example" title="Consumes and Produces Annotation">
+            (: Will only be invoked if a user supplies the specified content types :)
+            declare
+              %rest:path("/widgets")
+              %rest:consumes("application/xml", "application/atom+xml")
+              %rest:produces("application/xml")
+            function local:widgets() {
+              fn:collection('/db/widgets')/widgets
+            };
+          </pre>
         </section>
       </section>
+
+      <section id="resource-function-parameters">
+        <h4>Resource Function Parameters</h4>
+        <p>
+          Parameters to Resource Functions are extracted from the RESTful Web Service
+          request and passed in as additional function parameters. Unlike constraints,
+          parameters are always optional. Resource Function Parameters use the same
+          also make use of the <a href="#templates">template</a> syntax to map the parameter onto a function
+          parameter. They may also provide a default value should the parameter not be
+          present in the request. Resource Function Parameters always place the
+          following constraints on the function parameters that they map to:
+          <ol>
+            <li>
+              Cardinality that allows for zero or many atomic values in the case of
+              <a href="#query-param-annotation">Query</a>, <a href="#form-param-annotation">Form</a> or <a href="#header-param-annotation">Header</a> parameters, or zero or one atomic value in the
+              case of <a href="#cookie-param-annotation">Cookie</a> parameters, otherwise an error should be raised by the
+              implementation.
+            </li>
+            <li>
+              Type that inherits from <code>xs:anyAtomicType</code>, otherwise, an error should
+              be raised by the implementation. In addition, conversion from the
+              parameter string to the required type should be performed at run-time,
+              and an error raised if conversion is impossible.
+            </li>
+          </ol>
+        </p>
+
+        <section id="query-param-annotation">
+          <h5>Query Parameters</h5>
+          <p>
+            The annotation <code>%rest:query-param</code> is provided for accessing
+            parameters in the Query String of the URL used for the RESTful Web Service
+            request.
+          </p>
+          <pre class="example" title="Query Parameter Annotation with a default value">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:query-param("client", "{$client}", "unknown")
+            function local:widget($id as xs:int, $client as xs:string*) {
+              (: get the widget :)
+              fn:collection("/db/widgets")/widget[@id eq $id][@client = $client]
+            };
+          </pre>
+        </section>
+
+        <section id="form-param-annotation">
+          <h5>Form Parameters</h5>
+          <p>
+            The annotation <code>%rest:form-param</code> is provided for accessing
+            parameters from an HTML form submitted in the request body of the RESTful
+            Web Service request with the Internet media-type
+            <code>application/x-www-form-urlencoded</code>.
+          </p>
+          <pre class="example" title="Form Parameter Annotation with a default value">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:form-param("client", "{$client}", "unknown")
+            function local:widget($id as xs:int, $client as xs:string*) {
+              (: get the widget :)
+              fn:collection("/db/widgets")/widget[@id eq $id][@client = $client]
+            };
+          </pre>
+        </section>
+
+        <section id="form-header-annotation">
+          <h5>HTTP Header Parameters</h5>
+          <p>
+            The annotation <code>%rest:header-param</code> is provided for accessing
+            HTTP Request headers from the RESTful Web Service request. If a single
+            Header field value contains comma separated values, an implementation must
+            extract each value from the comma separated list into an item in the sequence
+            provided to the function parameter.
+          </p>
+          <pre class="example" title="Header Parameter Annotation">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:header-param("X-Client-Type", "{$client-type}")
+            function local:widget($id as xs:int, $client-type as xs:string*) {
+              (: get the widget :)
+              fn:collection("/db/widgets")/widget[@id eq $id][@client-type = $client-type]
+            };
+          </pre>
+        </section>
+
+        <section id="form-cookie-annotation">
+          <h5>Cookie Parameters</h5>
+          <p>
+            The annotation <code>%rest:cookie-param</code> is provided for accessing
+            HTTP Cookies from the RESTful Web Service request.
+          </p>
+          <pre class="example" title="Cookie Parameter Annotation">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:header-param("X-Client-Type", "{$client-type}")
+            function local:widget($id as xs:int, $client-type as xs:string*) {
+              (: get the widget :)
+              fn:collection("/db/widgets")/widget[@id eq $id][@client-type = $client-type]
+            };
+          </pre>
+        </section>
+
+      </section>
     </section>
+
+    <section id="response">
+      <h2>Response</h2>
+
+      <section id="serialization">
+        <h3>Serialization</h3>
+        <p>
+          The results of a Resource Function may be serialized back to an HTTP
+          response for the RESTful web service response.
+          A Resource Function may return one of three response types:
+          <ol>
+            <li> A Resource, i.e. just content.</li>
+            <li> HTTP headers, for example acknowledging the request or providing a status
+                 code or additional information.</li>
+            <li> Both HTTP Headers and a Resource</li>
+          </ol>
+          
+          The XQuery Specification states in
+          <a href="http://www.w3.org/TR/xquery-30/#id-serialization">Section 2.2.4</a>
+          how the result of a query is serialized. Serialization may be controlled by
+          the use of Output Declarations. In RESTXQ, the following rules are applied:
+          
+          <ol>
+            <li>
+              If the function is from within a Main Module, and if an output declaration
+              exists, then we use this as the default serialization settings for each
+              Resource Function in that module.
+            </li>
+            <li>
+              Output Declarations may be re-written as annotations on any Resource
+              Function, e.g. <code>%output:method("xml")</code>. These annotation output
+              declarations override any defaults from (1).
+            </li>
+            <li>
+              If no Output Declaration, annotated or otherwise, is provided, then the
+              default is to serialize as XML, UTF-8 encoding, with indenting.
+            </li>
+          </ol>
+
+          Each of the three possible result types of a Resource Function needs to be
+          handled in a different manner by an implementation, and as such we provide
+          appropriate function signature restrictions, and detail how annotations
+          interact with these:
+          
+          <ol>
+            <li>
+              For a function that returns just a resource, either:
+              <ol>
+                <li>
+                  If the result type is omitted from the function, it is assumed to be
+                  <code>document-node(element())</code> or just <code>element()</code>,
+                  and XML Serialization should be applied to the result of the function.
+                  The annotation <code>%output:method</code>, if present,
+                  must be set to <code>xml</code>.
+                </li>
+                <li>
+                  If the result type is present, it MUST be a type which is compatible with
+                  the chosen serialization method, defined by either the XQuery output
+                  declaration or overridden by the <code>%output:method</code> annotation on
+                  the Resource Function. The default serialization method is XML.
+                  If the result type is not compatible with the serialization,
+                  an implementation MUST throw an error. 
+                </li>
+              </ol>
+            </li>
+            <li>
+              For a function that returns just HTTP headers, the result type of the function
+              must be defined as <code>document-node(element(rest:response))</code>.
+              Any other annotations that effect the serialization of the result are ignored.
+            </li>
+            <li>
+              For a function that returns both HTTP headers and a resource, the result type
+              of the function must be defined as <code>item()+</code>. The first item in the
+              result sequence is the HTTP headers i.e.
+              <code>document-node(element(rest:response)</code>, the second item in the
+              result sequence is the resource itself. The rules of both (1) and (2) must be
+              applied to the result sequence.
+            </li>
+          </ol>
+        </p>
+      </section>
+
+      <section id="rest-response">
+        <h3>REST Response Format</h3>
+        <p>
+          A REST Response document may be returned from a function either with or without
+          a Resource. The purpose of this document is to control the REST (in this case HTTP)
+          response sent back to the client of the RESTful web service.
+        </p>
+
+        <pre class="example" title="REST Response Format">
+          &lt;rest:response&gt;
+            (http:response?)
+          &lt;/rest:response&gt;
+          &lt;http:response status?="integer" reason?="string"&gt;
+            (http:header*)
+          &lt;/http:response&gt;
+          &lt;http:header name="string" value="string"/&gt;
+        </pre>
+        
+        <p>
+          Should the status be omitted for the response, or a REST Response document not
+          returned from a Resource Function, then the status defaults to 200 OK.
+          It is expected that implementations will make use of sane defaults for HTTP
+          headers as part of their HTTP responses, however any default headers must be
+          overridable by those values set in the REST Response document.
+        </p>
+      </section>
     </section>
+
     <section id="http-mechanics">
       <h2>HTTP Mechanics</h2>
       <p><!--TODO --></p>
       <section id="base-uri">
         <h3>Base URI</h3>
         <p>
-          The base URI of a Resource Function is implementation defined. That is to say that an implementation
+          The base URI of a Resource Function is implementation-defined. That is to say that an implementation
           is free to define either statically or dynamically the URI part that appears before the
           relative URI of any Path Annotation.(<a href="#path-annotation" class="sectionRef"></a>)
           <!-- TODO if a path annotation is not specified then the remaining URIs apply to the base uri -->
@@ -378,6 +663,7 @@
           <p><!-- TODO --></p>
         </section>
       </section>
+
       <section>
         <h3>HTTP Request Matching</h3>
         <p>
@@ -429,6 +715,7 @@ local:function-2() {
 };
           </pre>
         </section>
+
         <section id="path-preference">
           <h4>Path Preference</h4>
           <p>
@@ -460,9 +747,10 @@ local:function-2() {
               <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.
             </pre>
           </ol>
-          <pre class="example" title="Path Specificity">
-              For five possible paths, when listed most specific first, we would see:
-              
+          <p>
+            The following example contains six paths sorted by their specifity:
+          </p>
+          <pre class="example" title="Path Specificity">              
               <code>/person/elisabeth</code>
               <code>/person/{$name}</code>
               <code>/{$type}/elisabeth</code>
@@ -489,6 +777,7 @@ local:function-2() {
         </section>
       </section>
     </section>
+
     <section id="functions">
       <h2>RESTXQ Function Module</h2>
       <p>RESTXQ offers a few simple functions to assist with the construction of RESTful Web Services.</p>
@@ -531,7 +820,7 @@ local:function-2() {
             <pre><code class="function">rest:base-uri</code>() as <code class="type">xs:anyURI</code></pre>
           </div>
           <p>
-            Summary: This function returns the implementation defined base URI
+            Summary: This function returns the implementation-defined base URI
             (<a href="#base-uri" class="sectionRef"></a>) of the Resource Function.
           </p>
         </section>
@@ -547,6 +836,7 @@ local:function-2() {
         </section>
       </section>
     </section>
+
     <section class="appendix">
       <h2>Resources for Implementers</h2>
       <p>
@@ -559,7 +849,7 @@ local:function-2() {
     
     <section class="appendix" id="template-grammar">
       <h2>Annotation Template Grammar</h2>
-      <p>The grammar used for RESTXQ Templates is expressed in EBNF and re-uses the <a href="http://www.w3.org/TR/xquery-30/#prod-xquery30-EQName" title="EQName">EQName</a> from the XQuery 3.0 grammar</p>
+      <p>The grammar used for RESTXQ Templates is expressed in EBNF and re-uses the <a href="http://www.w3.org/TR/xquery-30/#prod-xquery30-EQName" title="EQName">EQName</a> from the XQuery grammar</p>
       <table>
           <tr>
             <td>[1]</td>
