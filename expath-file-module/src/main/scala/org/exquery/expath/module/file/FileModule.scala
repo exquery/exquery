@@ -64,21 +64,21 @@ trait FileModule {
    *
    * @param path
    */
-  def exists(path: String) : Boolean = toPath(path).isRight
+  def exists(path: String) : Boolean = existingPath(path).isRight
 
   /**
    * Determine if the path points to a directory on the filesystem
    *
    * @param path
    */
-  def isDir(path: String) : Boolean = Path.fromString(path).isDirectory
+  def isDir(path: String) : Boolean = asPath(path).isDirectory
 
   /**
    * Determine if the path points to a file on the filesystem
    *
    * @param path
    */
-  def isFile(path: String) : Boolean = Path.fromString(path).isFile
+  def isFile(path: String) : Boolean = asPath(path).isFile
 
   /**
    * Retrieve the last modified time of the file/directory
@@ -86,7 +86,7 @@ trait FileModule {
    *
    * @param path
    */
-  def lastModified(path: String) : \/[FileModuleError, Long] = toPath(path).map(_.lastModified)
+  def lastModified(path: String) : \/[FileModuleError, Long] = existingPath(path).map(_.lastModified)
 
   /**
    * Determine the size of the file on the filesystem
@@ -95,7 +95,7 @@ trait FileModule {
    * @param path
    */
   def fileSize(file: String) : \/[FileModuleError, Long] = {
-    toPath(file).map {
+    existingPath(file).map {
       p =>
         if(p.isDirectory) {
           Some(0l)
@@ -158,7 +158,7 @@ trait FileModule {
    * @param target the destination for the copy
    */
   def copy(source: String, target: String): Maybe[FileModuleError] = {
-    toPath(source).flatMap {
+    existingPath(source).flatMap {
       src =>
         val trg = Path.fromString(target)
         if (src.isDirectory && trg.exists && trg.isFile) {
@@ -247,7 +247,7 @@ trait FileModule {
    * @param recursive required when deleting a non-empty directory
    */
   def delete(path: String, recursive: Boolean = false): Maybe[FileModuleError] = {
-    toPath(path).flatMap {
+    existingPath(path).flatMap {
       p =>
         try {
           if (recursive) {
@@ -275,7 +275,7 @@ trait FileModule {
   def list(dir: String, recursive: Boolean = false, pattern: Maybe[String]) : \/[FileModuleError, Process[Task, String]] = ls(dir, recursive, pattern, relative = true)
 
   private def ls(dir: String, recursive: Boolean = false, pattern: Maybe[String], relative : Boolean = false) : \/[FileModuleError, Process[Task, String]]  = {
-    toPath(dir).leftMap(_ => FileModuleErrors.NoDir).map {
+    existingPath(dir).leftMap(_ => FileModuleErrors.NoDir).map {
       p =>
         (p,
         if(recursive) {
@@ -305,7 +305,7 @@ trait FileModule {
    * @param target the destination for the move
    */
   def move(source: String, target: String): Maybe[FileModuleError] = {
-    toPath(source).flatMap {
+    existingPath(source).flatMap {
       src =>
         val trg = Path.fromString(target)
         if (src.isDirectory && trg.exists && trg.isFile) {
@@ -332,7 +332,7 @@ trait FileModule {
    * @param length Optionally the length of data to read. If unspecified then all data is read.
    */
   def readBinary(file: String, offset: Int = 0, length: Maybe[Int] = empty) : \/[FileModuleError, Channel[Task, Int, ByteVector]] = {
-    toPath(file).flatMap {
+    existingPath(file).flatMap {
       p =>
         if(p.isDirectory) {
           FileModuleErrors.IsDir.left
@@ -351,7 +351,7 @@ trait FileModule {
    * @param encoding Optionally the character encoding to use, otherwise UTF-8 will be used.
    */
   def readText(file: String, encoding: String = DEFAULT_CHAR_ENCODING) : \/[FileModuleError, Process[Task, String]] = {
-    toPath(file).flatMap {
+    existingPath(file).flatMap {
       p =>
         if(p.isDirectory) {
           FileModuleErrors.IsDir.left
@@ -396,14 +396,14 @@ trait FileModule {
    *
    * @param path
    */
-  def name(path: String) = Path.fromString(path).name
+  def name(path: String) = asPath(path).name
 
   /**
    * Get the parent path of a file/directory indicated by the path
    *
    * @param path
    */
-  def parent(path: String) = Path.fromString(path).parent.toMaybe.map(_.toAbsolute.path)
+  def parent(path: String) = asPath(path).parent.toMaybe.map(_.toAbsolute.path)
 
   /**
    * Get the immediate children of a directory indicated by the path
@@ -421,7 +421,7 @@ trait FileModule {
    * @param path
    */
   def pathToNative(path: String): \/[FileModuleError, String] = try {
-    Path.fromString(path).toAbsolute.path.right
+    asPath(path).toAbsolute.path.right
   } catch {
     case e: IOException =>
       FileModuleErrors.IoError(e).left
@@ -432,14 +432,14 @@ trait FileModule {
    *
    * @param path
    */
-  def pathToUri(path: String) = Path.fromString(path).toURI
+  def pathToUri(path: String) = asPath(path).toURI
 
   /**
    * Resolves a path relative to the current working directory
    *
    * @param path
    */
-  def resolvePath(path: String) = Path.fromString(path).toAbsolute.path
+  def resolvePath(path: String) = asPath(path).toAbsolute.path
 
   /**
    * The directory separator used by the operating system.
@@ -613,14 +613,33 @@ trait FileModule {
     }
 
   /**
+   * Constructs a Path object from a `path`
+   * as defined by the EXPath File Module spec
+   *
+   * @param path A path may either:
+   *   1) An absolute or relative UNIX/Linux path
+   *   2) An absolute or relative Windows path
+   *   3) An absolute file URI
+   *
+   * @return A Path object
+   */
+  private def asPath(path: String) : Path = {
+    if(path.startsWith("file:")) {
+      Path(new java.io.File(new java.net.URI(path)))
+    } else {
+      Path.fromString(path)
+    }
+  }
+
+  /**
    * Constructs a path object only it the path already exists on the filesystem
    *
    * @param path The filesystem path
    *
    * @return Either NotFound error or a Path object
    */
-  private def toPath(path: String) : \/[FileModuleError, Path] = {
-    val p = Path.fromString(path)
+  private def existingPath(path: String) : \/[FileModuleError, Path] = {
+    val p = asPath(path)
     if(!p.exists) {
       FileModuleErrors.NotFound.left
     } else {
