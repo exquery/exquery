@@ -102,10 +102,7 @@ trait FileModule {
         } else {
           p.size
         }
-    }.flatMap {
-      case Some(size) => size.right
-      case None => FileModuleErrors.IoError.left
-    }
+    }.flatMap(_.getOrElse(0l).right)
   }
 
   /**
