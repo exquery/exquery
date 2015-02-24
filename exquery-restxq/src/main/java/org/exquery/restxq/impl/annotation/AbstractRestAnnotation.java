@@ -1,28 +1,28 @@
-/*
-Copyright (c) 2012, Adam Retter
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Adam Retter Consulting nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL Adam Retter BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/**
+ * Copyright © 2012, Adam Retter / EXQuery
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the <organization> nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.annotation;
 
@@ -72,7 +72,8 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
 
             if(fnArgument.getName().equals(fnArgumentName)) {
                 
-                if(!fnArgument.getType().isSubTypeOf(requiredArgumentType)) {
+                //if(!fnArgument.getType().isSubTypeOf(requiredArgumentType)) {
+                if(!hasCompatibleType(fnArgument.getType(), requiredArgumentType)) {
                     throw new RestAnnotationException(errorCode);
                 }
 
@@ -95,10 +96,15 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
      * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
     protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName) throws RestAnnotationException {
+        checkFnDeclaresParameter(functionSignature, fnArgumentName, getRequiredFunctionParameterCardinality());
+    }
+    
+    //TODO remove above fn wrapper and remove abstract getRequiredFunctionParameterCardinality() method
+    protected void checkFnDeclaresParameter(final FunctionSignature functionSignature, final String fnArgumentName, final Cardinality requiredCardinality) throws RestAnnotationException {
         final List<String> fnParamNames = new ArrayList<String>(1);
         fnParamNames.add(fnArgumentName);
         
-        checkFnDeclaresParameters(functionSignature, fnParamNames);
+        checkFnDeclaresParameters(functionSignature, fnParamNames, requiredCardinality);
     }
     
     /**
@@ -111,6 +117,11 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
      * @throws RestAnnotationException If the function arguments are not compatible with the function signature
      */
     protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames) throws RestAnnotationException {
+        checkFnDeclaresParameters(functionSignature, fnArgumentNames, getRequiredFunctionParameterCardinality());
+    }
+    
+    //TODO rm above fn wrapper and remove abstract getRequiredFunctionParameterCardinality() method
+    protected void checkFnDeclaresParameters(final FunctionSignature functionSignature, final List<String> fnArgumentNames, final Cardinality requiredCardinality) throws RestAnnotationException {
         
         final FunctionArgument[] fnArguments = functionSignature.getArguments();
         
@@ -122,12 +133,13 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                 
                 if(fnArgument.getName().equals(fnArgumentName)) {
                     
-                    if(fnArgument.getCardinality().hasRequiredCardinality(Cardinality.ONE)) {
-                        throw new RestAnnotationException(RestXqErrorCodes.RQST0005);
+                    if(!fnArgument.getCardinality().hasRequiredCardinality(requiredCardinality)) {
+                        throw new RestAnnotationException(getInvalidFunctionParameterCardinalityErr());
                     }
                     
-                    if(!fnArgument.getType().isSubTypeOf(Type.ITEM)) {
-                        throw new RestAnnotationException(RestXqErrorCodes.RQST0006);
+                    //if(!(fnArgument.getType().hasSubType(getRequiredFunctionParameterType()) | getRequiredFunctionParameterType().hasSubType(fnArgument.getType()))) {
+                    if(!hasCompatibleType(fnArgument.getType(), getRequiredFunctionParameterType())) {
+                        throw new RestAnnotationException(getInvalidFunctionParameterTypeErr());
                     }
                     
                     found = true;
@@ -139,27 +151,39 @@ public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnno
                 throw new RestAnnotationException(RestXqErrorCodes.RQST0007);
             }
         }
-        
-     
-        //2) make sure that each function parameter which does not have a path parameter is optional
-        for(final FunctionArgument fnArgument : fnArguments) {
-            boolean found = false;
-            
-            for(final String fnArgumentName : fnArgumentNames) {    
-                if(fnArgumentName.equals(fnArgument.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-            
-            if(!found) {
-                final Cardinality paramCardinality = fnArgument.getCardinality();
-                if(paramCardinality != Cardinality.ZERO
-                && paramCardinality != Cardinality.ZERO_OR_ONE
-                && paramCardinality != Cardinality.ZERO_OR_MORE) {
-                    throw new RestAnnotationException(RestXqErrorCodes.RQST0008);
-                }
-            }
-        }
     }
+
+    private boolean hasCompatibleType(final Type actualType, final Type requiredType) {
+        return actualType.hasSubType(requiredType) | requiredType.hasSubType(actualType);
+    }
+    
+    /**
+     * Get the Cardinality of Function Parameters required by parameters
+     * in this Resource Function annotation
+     * 
+     * @return The required Cardinality
+     */
+    protected abstract Cardinality getRequiredFunctionParameterCardinality();
+
+    /**
+     * Get the Error Code for invalid Function Parameter Cardinality
+     * 
+     * @return The ErrorCode for invalid Function parameter cardinality
+     */
+    protected abstract RestXqErrorCode getInvalidFunctionParameterCardinalityErr();
+
+    /**
+     * Get the Type of Function Parameters required by parameters
+     * in this Resource Function annotation
+     * 
+     * @return The required Type
+     */
+    protected abstract Type getRequiredFunctionParameterType();
+    
+    /**
+     * Get the Error Code for invalid Function Parameter Type
+     * 
+     * @return The ErrorCode for invalid Function parameter type
+     */
+    protected abstract RestXqErrorCode getInvalidFunctionParameterTypeErr();
 }

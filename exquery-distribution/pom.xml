@@ -16,8 +16,8 @@
     <description>Module for building an EXQuery distribution</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <connection>${project.parent.scm.connection}</connection>
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
         <url>${project.parent.scm.url}</url>
     </scm>
     
@@ -32,6 +32,7 @@
         <module>../exquery-serialization-annotations</module>
 	<module>../exquery-restxq-api</module>
         <module>../exquery-restxq</module>
+        <module>../expath-file-module</module>
     </modules>
     
 </project>

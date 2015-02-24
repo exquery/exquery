@@ -16,16 +16,35 @@
     <description>EXQuery abstractions for XQuery 1.0</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <connection>${project.parent.scm.connection}</connection>
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
         <url>${project.parent.scm.url}</url>
     </scm>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <usedDependencies>
+                        <usedDependency>org.exquery:exquery-common</usedDependency>
+                    </usedDependencies>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     
     <dependencies>
         <dependency>
             <groupId>org.exquery</groupId>
             <artifactId>exquery-common</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

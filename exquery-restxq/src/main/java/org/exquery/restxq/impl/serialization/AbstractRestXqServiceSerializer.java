@@ -1,28 +1,28 @@
-/*
-Copyright (c) 2012, Adam Retter
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Adam Retter Consulting nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL Adam Retter BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/**
+ * Copyright © 2012, Adam Retter / EXQuery
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the <organization> nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.exquery.restxq.impl.serialization;
 
@@ -33,14 +33,14 @@ import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import org.exquery.InternetMediaType;
+import org.exquery.http.ContentTypeHeader;
 import org.exquery.http.HttpResponse;
 import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
 import org.exquery.restxq.RestXqServiceSerializer;
 import org.exquery.restxq.impl.serialization.XmlWriter.Attribute;
-import org.exquery.serialization.annotation.MethodAnnotation;
+import org.exquery.serialization.annotation.*;
 import org.exquery.serialization.annotation.MethodAnnotation.SupportedMethod;
-import org.exquery.serialization.annotation.SerializationAnnotation;
 import org.exquery.xquery.Sequence;
 import org.exquery.xquery.Type;
 import org.exquery.xquery.TypedValue;
@@ -136,13 +136,14 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
                 processSerializationAnnotations(serializationAnnotations, serializationProperties);
                 new RestResponseHandler().process(elem, serializationProperties, response);
                 if(itResult.hasNext()) {
-                    final TypedValue secondResultPart = itResult.next();
-                    serializeBody(secondResultPart, response, serializationProperties);
+                    
+                    final Sequence seqBody = result.tail();
+                    serializeBody(seqBody, response, serializationProperties);
                 }
             } else {
                 //serialize just the body
                 processSerializationAnnotations(serializationAnnotations, serializationProperties);
-                serializeBody(firstResultPart, response, serializationProperties);
+                serializeBody(result, response, serializationProperties);
             }
         }
     }
@@ -157,13 +158,76 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      */
     protected void processSerializationAnnotations(final Set<SerializationAnnotation> serializationAnnotations, final Map<SerializationProperty, String> serializationProperties) {
         
+        String mediaType = null;
+        
         //get the serialzation annotations
         for(SerializationAnnotation serializationAnnotation : serializationAnnotations) {
             if(serializationAnnotation instanceof MethodAnnotation) {
-                final String method = ((MethodAnnotation)serializationAnnotation).getMethod();
-                serializationProperties.put(SerializationProperty.METHOD, method);
+                
+                //serialization method
+                final String methodProp = ((MethodAnnotation)serializationAnnotation).getMethod();
+                serializationProperties.put(SerializationProperty.METHOD, methodProp);
+                
+                SupportedMethod method = null;
+                try {
+                    method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
+                    
+                    //set the default media-type for the method
+                    final String defaultMethodMediaType = getDefaultMediaTypeForMethod(method);
+                    serializationProperties.put(SerializationProperty.MEDIA_TYPE, defaultMethodMediaType);
+                } catch(final IllegalArgumentException iae) {
+                    //do nothing
+
+                    //TODO debugging
+                    System.out.println(iae.getMessage());
+                }
+                
+            } else if(serializationAnnotation instanceof MediaTypeAnnotation) {
+
+                //serialization media type
+                mediaType = ((MediaTypeAnnotation) serializationAnnotation).getValue();
+
+            } else if(serializationAnnotation instanceof EncodingAnnotation) {
+
+                //serialization encoding
+                serializationProperties.put(SerializationProperty.ENCODING, ((EncodingAnnotation)serializationAnnotation).getValue());
+
+            } else if(serializationAnnotation instanceof AbstractYesNoSerializationAnnotation) {
+                final AbstractYesNoSerializationAnnotation yesNoSerializationAnnotation = (AbstractYesNoSerializationAnnotation)serializationAnnotation;
+                
+                if(yesNoSerializationAnnotation instanceof IndentAnnotation) {
+                    
+                    //serialization indent
+                    serializationProperties.put(SerializationProperty.INDENT, yesNoSerializationAnnotation.getStringValue());
+                } else if(yesNoSerializationAnnotation instanceof OmitXmlDeclarationAnnotation) {
+                    
+                    //serialization omit xml declaration
+                    serializationProperties.put(SerializationProperty.OMIT_XML_DECLARATION, yesNoSerializationAnnotation.getStringValue());
+                }
+                
             }
         }
+
+        //%output:media-type overrides the defaults
+        if(mediaType != null) {
+            serializationProperties.put(SerializationProperty.MEDIA_TYPE, mediaType);
+        }
+    }
+    
+    public static String getDefaultMediaTypeForMethod(final SupportedMethod method) {
+        
+        final String mediaType;
+        if(method != null) {
+            if(method.equals(SupportedMethod.binary)) {
+                mediaType = InternetMediaType.APPLICATION_OCTET_STREAM.getMediaType();
+            } else {
+                mediaType = method.getDefaultInternetMediaType().getMediaType();
+            }
+        } else {
+            mediaType = DEFAULT_CONTENT_TYPE;
+        }
+        
+        return mediaType;
     }
     
     /**
@@ -175,33 +239,25 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      *
      * @throws RestXqServiceException  
      */
-    protected void serializeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
+    protected void serializeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
         
         SupportedMethod method = null;
         
         try {
             final String methodProp = serializationProperties.get(SerializationProperty.METHOD);
-            
-            //use the specified method or fallback to xml
             method = (methodProp == null ? SupportedMethod.xml : SupportedMethod.valueOf(methodProp));
-        } catch(IllegalArgumentException iae) {
+        } catch(final IllegalArgumentException iae) {
             //do nothing
-            
+
             //TODO debugging
             System.out.println(iae.getMessage());
         }
         
-        if(method != null) {
-            //TODO probably a nicer way to do this?
-            //set mime-type depending on method of serialization
-            
-            if(method.equals(SupportedMethod.xml) || method.equals(SupportedMethod.xhtml)) {
-                response.setContentType(getDefaultContentType());
-            } else if(method.equals(SupportedMethod.html) || method.equals(SupportedMethod.html5)) {
-                response.setContentType(InternetMediaType.TEXT_HTML.getMediaType() + "; charset=" + getDefaultEncoding());
-            } else if(method.equals(SupportedMethod.json)) {
-                response.setContentType(InternetMediaType.APPLICATION_JSON.getMediaType() + "; charset=" + getDefaultEncoding());
-            }
+        //set the HTTP Content-Type header from the serialization properties
+        final String mediaType = serializationProperties.get(SerializationProperty.MEDIA_TYPE);
+        if(mediaType != null && !mediaType.isEmpty()) {
+            final String encoding = serializationProperties.get(SerializationProperty.ENCODING);
+            response.setContentType(new ContentTypeHeader(mediaType, encoding).toString());
         }
         
         if(method != null && method.equals(SupportedMethod.binary)) {
@@ -219,7 +275,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      * 
      * @throws RestXqServiceException If an error occurred whilst serializing the result
      */
-    protected abstract void serializeBinaryBody(final TypedValue result, final HttpResponse response) throws RestXqServiceException;
+    protected abstract void serializeBinaryBody(final Sequence result, final HttpResponse response) throws RestXqServiceException;
     
     /**
      * Serialize the Result
@@ -235,7 +291,7 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
      * 
      * @throws RestXqServiceException If an error occurred whilst serializing the result
      */
-    protected abstract void serializeNodeBody(final TypedValue result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException;
+    protected abstract void serializeNodeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException;
     
     
     /**

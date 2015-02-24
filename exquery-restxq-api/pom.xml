@@ -16,18 +16,28 @@
     <description>EXQuery RESTXQ Project API</description>
   
     <scm>
-        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <connection>${project.parent.scm.connection}</connection>
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
         <url>${project.parent.scm.url}</url>
     </scm>
     
      <dependencies>
+         <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exquery</groupId>
             <artifactId>exquery-annotations-common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency> <!--TODO remove in favour of exquery-annotations? -->
+        <dependency>
+            <groupId>org.exquery</groupId>
+            <artifactId>exquery-xquery</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exquery</groupId>
             <artifactId>exquery-xquery3</artifactId>
             <version>${project.version}</version>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <name>EXPath File Module Abstractions</name>
+  <description>Abstractions for the EXPath File Module</description>
+  <inceptionYear>2015</inceptionYear>
+
+  <groupId>org.exquery.expath</groupId>
+  <artifactId>expath-file-module</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <scala.lib.version>2.11</scala.lib.version>
+    <scala.version>2.11.5</scala.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scalaz</groupId>
+      <artifactId>scalaz-core_${scala.lib.version}</artifactId>
+      <version>7.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scalaz.stream</groupId>
+      <artifactId>scalaz-stream_${scala.lib.version}</artifactId>
+      <version>0.6a</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.scala-incubator.io</groupId>
+      <artifactId>scala-io-file_${scala.lib.version}</artifactId>
+      <version>0.4.3-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.specs2</groupId>
+      <artifactId>specs2_${scala.lib.version}</artifactId>
+      <version>2.4.16</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.mmakowski</groupId>
+          <artifactId>specs2-maven-plugin</artifactId>
+          <version>0.4.4</version>
+        </plugin>
+		<plugin>
+		  <groupId>com.mycila</groupId>
+		  <artifactId>license-maven-plugin</artifactId>
+		  <version>2.9</version>
+		</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-source-plugin</artifactId>
+		  <version>2.4</version>
+		</plugin>
+	  	<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-release-plugin</artifactId>
+		  <version>2.5.1</version>
+		</plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <configuration>
+	  	  <recompileMode>all</recompileMode>	<!-- NOTE: "incremental" compilation although faster may require passing to MAVEN_OPTS="-XX:MaxPermSize=128m" -->
+          <useZincServer>true</useZincServer>	<!-- NOTE: if you have Zinc server installed and running, you can get faster compilation by enabling this -->
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+			  <goal>compile</goal>
+			  <goal>testCompile</goal>
+		    </goals>
+		  </execution>
+		  <execution>
+			<id>scala-doc-jar</id>
+			<phase>verify</phase>
+			<goals>
+			  <goal>doc-jar</goal>
+			</goals>
+		  </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.mmakowski</groupId>
+        <artifactId>specs2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>run-specs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+	  <plugin>
+		<groupId>com.mycila</groupId>
+		<artifactId>license-maven-plugin</artifactId>
+		<configuration>
+			<header>com/mycila/maven/plugin/license/templates/BSD-3.txt</header>
+			<properties>
+				<owner>Adam Retter</owner>
+				<year>${project.inceptionYear}</year>
+				<email>adam.retter@googlemail.com</email>
+			</properties>
+			<excludes>
+				<exclude>pom.xml</exclude>
+			</excludes>
+		</configuration>
+		<executions>
+			<execution>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>
+    </plugins>
+
+  </build>
+
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/scalaz/releases</url>
+        </repository>
+    </repositories>
+    
+</project>

@@ -16,8 +16,23 @@
     <description>Common EXQuery code</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection> <!-- TODO change me -->
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection> <!-- TODO change me -->
+        <connection>${project.parent.scm.connection}</connection>
+        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
         <url>${project.parent.scm.url}</url>
     </scm>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
 </project>
