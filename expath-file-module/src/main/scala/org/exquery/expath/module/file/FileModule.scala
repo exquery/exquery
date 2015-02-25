@@ -52,8 +52,8 @@ object FileModule {
 }
 
 /**
- * Abstract functions for the EXPath
- * File module
+ * Abstract implementation of functions for the EXPath
+ * File module {@see http://expath.org/spec/file}
  */
 trait FileModule {
 
@@ -201,6 +201,8 @@ trait FileModule {
    * @param dir Optionally an existing directory in which to create the
    *            new temporary directory. If not specified then the JVM
    *            default temporary directory is used
+   *
+   * @return Either an error or the full path to the created directory
    */
   def createTempDir(prefix: String, suffix: String, dir: Maybe[String]) : \/[FileModuleError, String] = {
     val mkdirF = targetDir(dir).map(_.map {
@@ -208,7 +210,7 @@ trait FileModule {
     }) | ((prefix: String, suffix: String) => Path.createTempDirectory(prefix, suffix)).right
 
     try {
-      mkdirF.map(_(prefix, suffix).path)
+      mkdirF.map(_(prefix, suffix).path + dirSeparator)
     } catch {
       case e: Exception =>
         FileModuleErrors.IoError(e).left
@@ -286,10 +288,11 @@ trait FileModule {
           ps =>
             lazy val it = ps.iterator
             Task.delay {
-              if(it.hasNext)
-                it.next.relativize(p).path
-              else
+              if(it.hasNext) {
+                pathResult(it.next.relativize(p))
+              } else {
                 throw Cause.Terminated(Cause.End)
+              }
             }
         }
     }
@@ -400,16 +403,16 @@ trait FileModule {
    *
    * @param path
    */
-  def parent(path: String) = asPath(path).parent.toMaybe.map(_.toAbsolute.path)
+  def parent(path: String) = asPath(path).parent.toMaybe.map(_.toAbsolute.path + dirSeparator)
 
-  /**
-   * Get the immediate children of a directory indicated by the path
-   *
-   * @param path
-   * 
-   * @return A process that produces absolute paths
-   */
-  def children(path: String) : \/[FileModuleError, Process[Task, String]] = ls(path, recursive = false, empty, relative = false)
+  // /**
+  //  * Get the immediate children of a directory indicated by the path
+  //  *
+  //  * @param path
+  //  * 
+  //  * @return A process that produces absolute paths
+  //  */
+  // def children(path: String) : \/[FileModuleError, Process[Task, String]] = ls(path, recursive = false, empty, relative = false)
 
   /**
    * Convert a path into the native representation used by the
@@ -418,7 +421,7 @@ trait FileModule {
    * @param path
    */
   def pathToNative(path: String): \/[FileModuleError, String] = try {
-    asPath(path).toAbsolute.path.right
+    pathResult(asPath(path).toAbsolute).right
   } catch {
     case e: IOException =>
       FileModuleErrors.IoError(e).left
@@ -436,7 +439,7 @@ trait FileModule {
    *
    * @param path
    */
-  def resolvePath(path: String) = asPath(path).toAbsolute.path
+  def resolvePath(path: String) = pathResult(asPath(path).toAbsolute)
 
   /**
    * The directory separator used by the operating system.
@@ -456,13 +459,13 @@ trait FileModule {
   /**
    * The path to the temporary directory used by the JVM on this system.
    */
-  lazy val tempDir : String = sys.props("java.io.tmpdir")
+  lazy val tempDir : String = sys.props("java.io.tmpdir") + dirSeparator
 
   /**
    * The path to the current working directory of where the operating
    * process is executing.
    */
-  lazy val currentDir : String = sys.props("user.dir")
+  lazy val currentDir : String = sys.props("user.dir") + dirSeparator
 
   /**
    * Looks up a character set by name
@@ -641,6 +644,24 @@ trait FileModule {
       FileModuleErrors.NotFound.left
     } else {
       p.right
+    }
+  }
+
+  /**
+   * Paths returned by the EXPath File Module
+   * must be suffixed with the system directory
+   * separator according to the spec; Seems dumb
+   * to me but hey-ho!
+   *
+   * @param p
+   * @return a path as defined by the EXPath
+   *   File Module spec
+   */
+  private def pathResult(p: Path) : String = {
+    if(p.isDirectory) {
+      p.path + dirSeparator
+    } else {
+      p.path
     }
   }
 }
