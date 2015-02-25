@@ -146,4 +146,17 @@ public class ProducesAnnotationImplTest {
         
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
+
+    @Test
+    public void matchesMediaType_no_accept_header() throws RestAnnotationException {
+        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        mediaTypeAnnotation.setLiterals(new Literal[] {
+                new StringLiteral(APPLICATION_XML.getMediaType())
+        });
+        mediaTypeAnnotation.initialise();
+
+        final HttpRequest httpRequest = mock(HttpRequest.class);
+
+        assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
+    }
 }
