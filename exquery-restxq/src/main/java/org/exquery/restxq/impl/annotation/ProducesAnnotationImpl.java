@@ -128,7 +128,11 @@ public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     
     @Override
     public boolean matchesMediaType(final HttpRequest request) {
-        final String acceptHeaderValue = request.getHeader(HttpHeaderName.Accept.toString());
+        String acceptHeaderValue = request.getHeader(HttpHeaderName.Accept.toString());
+
+        if (acceptHeaderValue == null)
+            acceptHeaderValue = "*/*";
+
         return matchesMediaType(acceptHeaderValue);
     }
     
