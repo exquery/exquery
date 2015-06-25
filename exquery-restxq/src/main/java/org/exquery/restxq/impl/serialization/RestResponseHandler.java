@@ -116,10 +116,12 @@ public class RestResponseHandler {
         final String reason = httpResponse.getAttribute(REASON_ATTR_NAME);
         
         //set the status and reason
-        if(httpStatus != null && (reason != null && !reason.isEmpty())) {
-            response.setStatus(httpStatus, reason);
-        } else {
-            response.setStatus(httpStatus);
+        if(httpStatus != null) {
+            if(reason != null && !reason.isEmpty()) {
+                response.setStatus(httpStatus, reason);
+            } else {
+                response.setStatus(httpStatus);
+            }
         }
         
         //process the http headers
