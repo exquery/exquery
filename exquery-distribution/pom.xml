@@ -33,7 +33,7 @@
         <module>../exquery-serialization-annotations</module>
         <module>../exquery-restxq-api</module>
         <module>../exquery-restxq</module>
-        <module>../expath-file-module</module>
+        <!-- module>../expath-file-module</module -->
     </modules>
     
 </project>
