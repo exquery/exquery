@@ -43,7 +43,7 @@ import org.exquery.restxq.impl.RestXqServicesMap.RestXqServiceMapVisitor;
 /**
  * Simple Implementation of a Registry of RESTXQ Services
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
 

@@ -41,7 +41,7 @@ import org.exquery.xquery3.FunctionSignature;
 /**
  * Default implementation of Resource Function
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ResourceFunctionImpl implements ResourceFunction {
 

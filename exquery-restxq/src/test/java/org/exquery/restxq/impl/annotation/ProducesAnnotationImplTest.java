@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ProducesAnnotationImplTest {
     

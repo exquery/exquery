@@ -31,7 +31,7 @@ package org.exquery.http;
 /**
  * Enumeration of Common HTTP Header Names
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum HttpHeader {
     CONTENT_TYPE("Content-Type"),

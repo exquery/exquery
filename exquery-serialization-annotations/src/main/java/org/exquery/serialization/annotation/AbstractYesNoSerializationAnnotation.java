@@ -35,7 +35,7 @@ import org.exquery.xquery.Literal;
  * Base class for EXQuery Serialization Annotation Implementations
  * whoose value is either "yes" or "no"
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractYesNoSerializationAnnotation extends AbstractSerializationAnnotation {
     

@@ -45,7 +45,7 @@ import org.exquery.xquery.Type;
  * Implementation of RESTXQ Path Annotation
  * i.e. %rest:path
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
@@ -81,19 +81,13 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         super.initialise();
         this.pathRegularExpression = parsePath();
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#matchesPath(java.lang.String)
-     */
+
     @Override
     public boolean matchesPath(final String path) {
         final Matcher m = getPathInformation().getPathMatcher(path);
         return m.matches();
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#extractPathParameters(java.lang.String) 
-     */
+
     @Override
     public Map<String, String> extractPathParameters(final String uriPath) {
         
@@ -267,37 +261,23 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
             }
         }
     }*/
-    
-    
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         return Cardinality.ONE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         return RestXqErrorCodes.RQST0005;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
     @Override
     protected Type getRequiredFunctionParameterType() {
         //return Type.ITEM;
         return Type.ANY_ATOMIC_TYPE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         return RestXqErrorCodes.RQST0006;

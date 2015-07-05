@@ -31,7 +31,7 @@ import org.exquery.annotation.AbstractAnnotation;
 /**
  * Base class for EXQuery Serialization Annotation Implementations
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractSerializationAnnotation extends AbstractAnnotation<SerializationAnnotationException> implements SerializationAnnotation {
     

@@ -34,7 +34,7 @@ import java.util.NoSuchElementException;
  * 
  * @see <a href="http://www.w3.org/TR/xpath-datamodel/#types">XDM Types</a>
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Sequence<T> extends Iterable<TypedValue<T>> {
     

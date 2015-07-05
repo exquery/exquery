@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 /**
  * EXQuery Error Codes
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ErrorCodes {
     

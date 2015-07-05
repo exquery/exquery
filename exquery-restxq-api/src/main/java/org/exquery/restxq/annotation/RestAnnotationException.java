@@ -32,7 +32,7 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 /**
  * Exception for RESTXQAnnotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestAnnotationException extends AnnotationException {
     

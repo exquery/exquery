@@ -33,7 +33,7 @@ import org.exquery.Namespace;
  * Error Codes caused by Static of Dynamic errors
  * when compiling or evaluating an XQuery 1.0
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ErrorCodes {
 

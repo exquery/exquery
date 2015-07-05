@@ -32,7 +32,7 @@ import org.exquery.ExQueryException;
 /**
  * Exception for EXQuery Annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AnnotationException extends ExQueryException {
     private final ErrorCode code;

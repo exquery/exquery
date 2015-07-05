@@ -33,7 +33,7 @@ import org.exquery.xquery.Literal;
  * Base class for EXQuery Serialization Annotation Implementations
  * which have a single string literal value
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractSingleValueSerializationAnnotation extends AbstractSerializationAnnotation {
 

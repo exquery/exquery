@@ -33,7 +33,7 @@ import org.exquery.http.HttpMethod;
  * 
  * Base Interface for representing the XQuery RESTXQ Annotations for HTTP Methods
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface HttpMethodAnnotation extends ConstraintAnnotation {
     

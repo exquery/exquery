@@ -32,7 +32,7 @@ import org.exquery.serialization.annotation.SerializationAnnotationErrorCodes.Se
  * Serialization Omit XML Declaration Annotation
  * i.e. %output:omit-xml-declaration
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class OmitXmlDeclarationAnnotation extends AbstractYesNoSerializationAnnotation {
 

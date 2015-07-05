@@ -33,7 +33,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  * Implementation of RESTXQ POST Annotation
  * i.e. %rest:POST
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class PostMethodAnnotation extends AbstractHttpMethodWithBodyAnnotation {
 

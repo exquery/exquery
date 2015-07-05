@@ -31,7 +31,7 @@ package org.exquery.xquery;
  * 
  * @see <a href="http://www.w3.org/TR/xpath-datamodel/#types">XDM Types</a>
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum Type {
 

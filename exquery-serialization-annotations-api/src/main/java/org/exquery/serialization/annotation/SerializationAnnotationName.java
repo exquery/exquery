@@ -32,7 +32,7 @@ import org.exquery.serialization.Namespace;
 /**
  * Names for the Serialization Annotations
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum SerializationAnnotationName {
     

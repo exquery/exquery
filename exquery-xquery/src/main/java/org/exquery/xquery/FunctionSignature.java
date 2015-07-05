@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 /**
  * Representation of the signature of a Function in XQuery 1.0
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface FunctionSignature {
     

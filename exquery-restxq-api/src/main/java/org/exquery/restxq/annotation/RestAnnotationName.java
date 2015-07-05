@@ -32,7 +32,7 @@ import org.exquery.restxq.Namespace;
 /**
  * Names for the RESTXQ Annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum RestAnnotationName {
         

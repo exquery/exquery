@@ -43,7 +43,7 @@ import org.exquery.xquery3.Annotation;
 /**
  * Factory for Creating Resource Functions
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ResourceFunctionFactory {
     

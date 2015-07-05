@@ -32,7 +32,7 @@ import org.exquery.xquery.Type;
 /**
  * Simple String Literal implementation for testing annotations
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class StringLiteral implements Literal {
     private final String str;

@@ -32,7 +32,7 @@ import static org.exquery.InternetMediaType.Type.TEXT;
 /**
  * Some common Internet Media Types
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum InternetMediaType {
     

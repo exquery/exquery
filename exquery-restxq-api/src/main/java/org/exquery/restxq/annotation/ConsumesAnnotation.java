@@ -31,7 +31,7 @@ package org.exquery.restxq.annotation;
  * 
  * Represents the XQuery RESTXQ Annotation %rest:consumes
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ConsumesAnnotation extends MediaTypeAnnotation {
 

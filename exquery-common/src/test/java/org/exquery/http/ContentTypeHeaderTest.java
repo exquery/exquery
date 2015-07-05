@@ -35,7 +35,7 @@ import static org.exquery.InternetMediaType.APPLICATION_XML;
 /**
  * Tests for HTTP Content-Type header representation
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ContentTypeHeaderTest {
     

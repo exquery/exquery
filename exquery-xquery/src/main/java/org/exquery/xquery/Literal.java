@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Representation of a Literal in the XQuery 1.0 grammar
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Literal {
     

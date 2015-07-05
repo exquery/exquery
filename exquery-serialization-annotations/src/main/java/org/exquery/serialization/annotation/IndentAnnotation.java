@@ -32,7 +32,7 @@ import org.exquery.serialization.annotation.SerializationAnnotationErrorCodes.Se
  * Serialization Indent Annotation
  * i.e. %output:indent
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class IndentAnnotation extends AbstractYesNoSerializationAnnotation {
 

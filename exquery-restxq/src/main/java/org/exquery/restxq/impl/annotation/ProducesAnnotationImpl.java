@@ -46,7 +46,7 @@ import org.exquery.xquery.Type;
  * Implementation of RESTXQ Produces Annotation
  * i.e. %rest:produces
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implements ProducesAnnotation {
     

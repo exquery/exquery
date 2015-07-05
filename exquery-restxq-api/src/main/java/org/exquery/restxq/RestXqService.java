@@ -38,7 +38,7 @@ import org.exquery.http.HttpResponse;
  * Really just an intermediary for invoking a ResourceFunction
  * on a request and returning the response
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface RestXqService extends Comparable<RestXqService> {    
     
@@ -64,8 +64,6 @@ public interface RestXqService extends Comparable<RestXqService> {
      * @param httpRequest The http request. This method must not consume the request body.
      * 
      * @return true if this Service can service the incoming request
-     * 
-     * @throws RestXqServiceException
      */
     public boolean canService(final HttpRequest httpRequest);
     

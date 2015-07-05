@@ -33,7 +33,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * Parameter Annotations optionally inject a parameter
  * from the REST Request into the Resource Function
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ParameterAnnotation extends RestAnnotation {
     

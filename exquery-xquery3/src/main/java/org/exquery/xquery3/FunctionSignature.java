@@ -31,7 +31,7 @@ package org.exquery.xquery3;
  * 
  * Basically an XQuery 1.0 function extended with Annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface FunctionSignature extends org.exquery.xquery.FunctionSignature {
     

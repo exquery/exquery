@@ -32,7 +32,7 @@ import org.exquery.ErrorCodes;
 /**
  * Error Codes and descriptions for RESTXQ errors
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestXqErrorCodes extends ErrorCodes {
     

@@ -33,7 +33,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class CardinalityTest {
 

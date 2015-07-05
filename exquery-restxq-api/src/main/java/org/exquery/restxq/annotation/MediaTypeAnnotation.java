@@ -35,7 +35,7 @@ import org.exquery.http.HttpRequest;
  * 
  * Base interface for the XQuery RESTXQ Annotations %rest:consumes and %rest:produces
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface MediaTypeAnnotation extends ConstraintAnnotation {
     

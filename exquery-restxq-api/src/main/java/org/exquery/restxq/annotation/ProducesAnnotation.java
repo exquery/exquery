@@ -31,7 +31,7 @@ package org.exquery.restxq.annotation;
  * 
  * Represents the XQuery RESTXQ Annotation %rest:produces
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ProducesAnnotation extends MediaTypeAnnotation {
     

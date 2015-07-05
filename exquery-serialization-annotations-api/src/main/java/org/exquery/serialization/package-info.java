@@ -33,6 +33,6 @@
  * 
  * @see <a href="http://www.w3.org/TR/xslt-xquery-serialization-30/">XSLT and XQuery Serialization 3.0</a>
  * 
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 package org.exquery.serialization;

@@ -39,7 +39,7 @@ import org.exquery.xquery.Type;
  * Base class for RESTXQ Method Annotation Implementations
  * which have an optional body component, e.g. POST and PUT
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpMethodAnnotation implements HttpMethodWithBodyAnnotation {
 
@@ -118,33 +118,21 @@ public abstract class AbstractHttpMethodWithBodyAnnotation extends AbstractHttpM
         return bodyContentParamName;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         return Cardinality.ONE; //TODO consider changing this for multi-part request bodies!
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         return RestXqErrorCodes.RQST0005;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
     @Override
     protected Type getRequiredFunctionParameterType() {
         return Type.ITEM; //could be an xml document() or an atomic value
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         return RestXqErrorCodes.RQST0033;

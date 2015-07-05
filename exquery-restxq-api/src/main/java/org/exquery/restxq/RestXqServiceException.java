@@ -33,7 +33,7 @@ import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
 /**
  * Exception for RESTXQ Services
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestXqServiceException extends ExQueryException {
 

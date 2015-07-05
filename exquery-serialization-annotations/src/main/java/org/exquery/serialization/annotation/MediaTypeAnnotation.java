@@ -34,7 +34,7 @@ import org.exquery.http.InternetMediaType;
  * Serialization Media Type Annotation
  * i.e. %output:media-type
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class MediaTypeAnnotation extends AbstractSingleValueSerializationAnnotation {
     

@@ -29,7 +29,7 @@ package org.exquery.serialization;
 /**
  * Namespace for EXQuery XSLT and XQuery 3.0 Serialization annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Namespace extends org.exquery.Namespace {
     

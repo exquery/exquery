@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * Class to process a rest:response Element which
  * can be returned from a Resource Function
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestResponseHandler {
     

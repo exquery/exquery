@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * Serialization Encoding Annotation
  * i.e. %output:encoding
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class EncodingAnnotation extends AbstractSingleValueSerializationAnnotation {
 

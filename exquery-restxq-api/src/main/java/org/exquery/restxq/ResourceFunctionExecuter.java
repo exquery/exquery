@@ -33,7 +33,7 @@ import org.exquery.xquery.TypedArgumentValue;
 /**
  * Executes a Resource Function
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ResourceFunctionExecuter {
     

@@ -42,7 +42,7 @@ import org.exquery.xquery.Type;
  * Implementation of RESTXQ Consumes Annotation
  * i.e. %rest:consumes
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ConsumesAnnotationImpl extends AbstractMediaTypeAnnotation implements ConsumesAnnotation {
     

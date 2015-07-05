@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Interface for a HTTP Request
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface HttpRequest {
     

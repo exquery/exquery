@@ -42,7 +42,7 @@ import org.exquery.xquery3.Annotation;
  *  the REST Request into the Resource Function.
  *  @see org.exquery.restxq.annotation.ParameterAnnotation
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface RestAnnotation extends Annotation {
     

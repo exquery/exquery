@@ -48,9 +48,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Serializes the result of a RESTXQ Service invokation
+ * Serializes the result of a RESTXQ Service invocation
  *
- * @author Adam Retter <adam.retter@googelmail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSerializer {
     

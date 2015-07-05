@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Representation of the Cardinality of a type in XQuery 1.0
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum Cardinality {
     

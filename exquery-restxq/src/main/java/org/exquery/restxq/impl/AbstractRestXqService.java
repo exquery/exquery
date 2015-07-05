@@ -53,7 +53,7 @@ import org.exquery.xquery.TypedArgumentValue;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractRestXqService implements RestXqService {
 

@@ -32,7 +32,7 @@ import org.exquery.serialization.annotation.SerializationAnnotationErrorCodes.Se
 /**
  * Exception for RESTXQAnnotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class SerializationAnnotationException extends AnnotationException {
     

@@ -39,7 +39,7 @@ import org.exquery.xquery.Type;
  * Base class for RESTXQ Parameter Annotation Implementations
  * which can have an optional default value(s) specified
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractParameterWithDefaultAnnotation extends AbstractParameterAnnotation {
     

@@ -34,7 +34,7 @@ import org.exquery.xquery.TypedValue;
  * 
  * @param <T> The Type class of the Java object that backs the value
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class AbstractTypedValue<T> implements TypedValue<T> {
     private final Type type;
