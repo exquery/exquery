@@ -16,9 +16,9 @@
     <description>EXQuery XQuery 3.0 Annotations for XSLT and XQuery Serialization 3.0 API</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection>
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-        <url>${project.parent.scm.url}</url>
+        <connection>scm:git:https://github.com/exquery/exquery.git</connection>
+        <developerConnection>scm:git:https://github.com/exquery/exquery.git</developerConnection>
+        <url>scm:git:https://github.com/exquery/exquery.git</url>
     </scm>
     
     <dependencies>

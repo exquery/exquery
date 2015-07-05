@@ -16,9 +16,9 @@
     <description>Module for building an EXQuery distribution</description>
     
     <scm>
-        <connection>${project.parent.scm.connection}</connection>
-        <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-        <url>${project.parent.scm.url}</url>
+        <connection>scm:git:https://github.com/exquery/exquery.git</connection>
+        <developerConnection>scm:git:https://github.com/exquery/exquery.git</developerConnection>
+        <url>scm:git:https://github.com/exquery/exquery.git</url>
     </scm>
     
     
@@ -26,11 +26,11 @@
         <module>../exquery-common</module>
         <module>../exquery-xquery</module>
         <module>../exquery-xquery3</module>
-	<module>../exquery-annotations-common-api</module>        
-	<module>../exquery-annotations-common</module> 
-	<module>../exquery-serialization-annotations-api</module>
+        <module>../exquery-annotations-common-api</module>        
+        <module>../exquery-annotations-common</module> 
+        <module>../exquery-serialization-annotations-api</module>
         <module>../exquery-serialization-annotations</module>
-	<module>../exquery-restxq-api</module>
+        <module>../exquery-restxq-api</module>
         <module>../exquery-restxq</module>
         <module>../expath-file-module</module>
     </modules>

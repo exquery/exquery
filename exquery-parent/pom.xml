@@ -46,7 +46,7 @@
     <scm>
         <connection>scm:git:https://github.com/exquery/exquery.git</connection>
         <developerConnection>scm:git:https://github.com/exquery/exquery.git</developerConnection>
-        <url>http://github.com/exquery/exquery</url>
+        <url>scm:git:https://github.com/exquery/exquery.git</url>
     </scm>
     
     <mailingLists>
