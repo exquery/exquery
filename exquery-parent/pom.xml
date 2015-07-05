@@ -211,6 +211,9 @@
                     <source>${project.build.source}</source>
                     <target>${project.build.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                    	<compilerArg>-Xlint:all</compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
