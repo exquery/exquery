@@ -233,11 +233,11 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
     /**
      * Serialize to the body of the HTTP Response
      *
-     * @param result
-     * @param response
-     * @param serializationProperties
+     * @param result The result to serialize
+     * @param response The response to serialize the result to
+     * @param serializationProperties Any properties that affect serialization
      *
-     * @throws RestXqServiceException  
+     * @throws RestXqServiceException If a problem occurs during serialization
      */
     protected void serializeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
         

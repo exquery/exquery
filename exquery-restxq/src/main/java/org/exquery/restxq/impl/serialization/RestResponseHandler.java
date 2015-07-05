@@ -65,9 +65,11 @@ public class RestResponseHandler {
     /**
      * Processes a rest:response element and sets the appropriate headers and fields in the http response
      * 
-     * @param restResponse
-     * @param response
-     * @param serializationProperties  
+     * @param restResponse The rest:response element
+     * @param serializationProperties Any properties that affect serialization
+     * @param response The response to serialize the result to
+     *
+     * @throws RestXqServiceException If a problem occurs during serialization
      */
     public void process(final Element restResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) throws RestXqServiceException {
         

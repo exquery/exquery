@@ -330,6 +330,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
          * @param pathLiteral The original path literal provided as the parameter to the Path Annotation
          * @param ptnPath The Regular Expression that matches a path against the pathLiteral
          * @param groupParamNames A mapping of group indexes in the regular expression to parameter names
+         * @param pathSpecificityMetric The specificity metric of the path
          */
         public PathInformation(final String pathLiteral, final Pattern ptnPath, final Map<Integer, String> groupParamNames, final long pathSpecificityMetric) {
             this.pathLiteral = pathLiteral;

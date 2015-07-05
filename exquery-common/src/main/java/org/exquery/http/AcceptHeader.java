@@ -36,7 +36,7 @@ import org.exquery.InternetMediaType;
 /**
  * Representation of a HTTP Accept header
  * 
- * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+ * {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html}
  *
  * @author Adam Retter <adam.retter@googlemail.com>
  */
