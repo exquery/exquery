@@ -37,7 +37,11 @@ import org.exquery.xquery.Type;
 import org.exquery.xquery3.Annotation;
 import org.exquery.xquery3.FunctionSignature;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  *
@@ -314,6 +318,158 @@ public class PathAnnotationImplTest {
         }
         
         assertEquals(RestXqErrorCodes.RQST0006, code);
+    }
+
+    @Test
+    public void parse_path_oneParam_partFilename() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/{$arg1}.json")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/something.json";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(1, requestPathParams.size());
+        assertEquals("something", requestPathParams.get("arg1"));
+    }
+
+    @Test
+    public void parse_path_oneParam_containingTemplate() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/pre{$arg1}post")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/pre-main-post";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(1, requestPathParams.size());
+        assertEquals("-main-", requestPathParams.get("arg1"));
+    }
+
+    @Test
+    public void parse_path_oneParam_mixed2() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/seg1/{$arg1}")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/seg1/seg2";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(1, requestPathParams.size());
+        assertEquals("seg2", requestPathParams.get("arg1"));
+    }
+
+    @Test
+    public void parse_path_oneParam_mixed1() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/{$arg1}/seg2")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/seg1/seg2";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(1, requestPathParams.size());
+        assertEquals("seg1", requestPathParams.get("arg1"));
+    }
+
+    @Test
+    public void parse_path_twoParams() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1"),
+                new StrFnArg("arg2")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/{$arg1}/{$arg2}")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/seg1/seg2";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(2, requestPathParams.size());
+        assertEquals("seg1", requestPathParams.get("arg1"));
+        assertEquals("seg2", requestPathParams.get("arg2"));
+    }
+
+    @Test
+    public void parse_path_oneParam() throws RestAnnotationException {
+        final FunctionArgument[] args = {
+                new StrFnArg("arg1")
+        };
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new ArgsFunctionSignature(args));
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/{$arg1}")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/seg1";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(1, requestPathParams.size());
+        assertEquals("seg1", requestPathParams.get("arg1"));
+    }
+
+    @Test
+    public void parse_path_zeroParams() throws RestAnnotationException {
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new NoArgsFunctionSignature());
+        pa.setLiterals(new Literal[]{
+            new StringLiteral("/path1")
+        });
+
+        pa.initialise();
+
+        final String requestPath = "/path1";
+
+        assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(0, requestPathParams.size());
     }
     
     public class NodeFnArg implements FunctionArgument {

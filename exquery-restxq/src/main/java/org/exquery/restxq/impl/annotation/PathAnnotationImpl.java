@@ -173,11 +173,20 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         long pathSpecificityMetric = 0;
         
         while(mchPathSegment.find()) {
-            final String pathSegment = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
+            final String pathSegmentOrPart = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
 
-            final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegment);
+            final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegmentOrPart);
 
-            thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+            //only prepend `URI.PATH_SEGMENT_DELIMITER` if this is the start or the path, of a segment and not part of a segment
+            final int idxPrePathSegment = mchPathSegment.start() -1;
+            if(idxPrePathSegment > -1) {
+                if(pathStr.charAt(idxPrePathSegment) == URI.PATH_SEGMENT_DELIMITER) {
+                    thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+                }
+            } else {
+                //this is the start of a path
+                thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+            }
 
             /*
              * if this is the first iteration, increase
@@ -212,7 +221,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
             } else {
                 //is just a string path segment
                 thisPathExprRegExp.append("(?:");
-                thisPathExprRegExp.append(Pattern.quote(pathSegment));
+                thisPathExprRegExp.append(Pattern.quote(pathSegmentOrPart));
                 thisPathExprRegExp.append(")");
                 
                 //record the specifity of this path segment
