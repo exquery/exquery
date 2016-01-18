@@ -177,7 +177,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
             final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegmentOrPart);
 
-            //only prepend `URI.PATH_SEGMENT_DELIMITER` if this is the start or the path, of a segment and not part of a segment
+            //only prepend `URI.PATH_SEGMENT_DELIMITER` if this is the start of the path, or a segment and not part of a segment
             final int idxPrePathSegment = mchPathSegment.start() -1;
             if(idxPrePathSegment > -1) {
                 if(pathStr.charAt(idxPrePathSegment) == URI.PATH_SEGMENT_DELIMITER) {
