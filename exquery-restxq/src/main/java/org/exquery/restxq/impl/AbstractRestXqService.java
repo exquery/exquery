@@ -53,7 +53,7 @@ import org.exquery.xquery.TypedArgumentValue;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractRestXqService implements RestXqService {
 
@@ -156,7 +156,7 @@ public abstract class AbstractRestXqService implements RestXqService {
     }
     
     /**
-     * @see org.exquery.restxq.RestXqService#maxProducesQualityFactory(org.exquery.http.AcceptHeader)
+     * @see org.exquery.restxq.RestXqService#maxProducesQualityFactor(org.exquery.http.AcceptHeader)
      */
     @Override
     public float maxProducesQualityFactor(final AcceptHeader acceptHeader) {

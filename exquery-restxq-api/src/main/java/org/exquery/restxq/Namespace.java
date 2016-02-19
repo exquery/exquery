@@ -29,7 +29,7 @@ package org.exquery.restxq;
 /**
  * Namespaces for EXQuery RESTXQ
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Namespace extends org.exquery.Namespace {
     

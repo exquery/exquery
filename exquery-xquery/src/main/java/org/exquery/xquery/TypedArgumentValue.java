@@ -31,7 +31,7 @@ package org.exquery.xquery;
  * 
  * @param <T> The Underlying Java type class of the typed value
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface TypedArgumentValue<T> {
     

@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Representation of an Argument to a Function in XQuery 1.0
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface FunctionArgument {
 

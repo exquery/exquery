@@ -27,6 +27,6 @@
 /**
  * EXQuery Common
  *
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Reter
  */
 package org.exquery;

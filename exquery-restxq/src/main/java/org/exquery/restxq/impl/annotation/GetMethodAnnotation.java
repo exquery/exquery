@@ -33,7 +33,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  * Implementation of RESTXQ GET Annotation
  * i.e. %rest:GET
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class GetMethodAnnotation extends AbstractHttpMethodAnnotation {
 

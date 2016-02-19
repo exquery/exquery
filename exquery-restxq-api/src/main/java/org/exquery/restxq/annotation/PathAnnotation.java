@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * Represents the XQuery RESTXQ Annotation %rest:path
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface PathAnnotation extends ConstraintAnnotation {
     

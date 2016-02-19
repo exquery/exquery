@@ -43,7 +43,7 @@ import org.exquery.restxq.impl.RestXqServicesMap.RestXqServiceMapVisitor;
 /**
  * Simple Implementation of a Registry of RESTXQ Services
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
 
@@ -125,6 +125,8 @@ public class RestXqServiceRegistryImpl implements RestXqServiceRegistry {
      * 
      * @param listener The Registry Listener which should no longer receive
      * notifications from this registry
+     *
+     * @return true if the listener was removed
      */
     public boolean removeListener(final RestXqServiceRegistryListener listener) {
         return listeners.remove(listener);

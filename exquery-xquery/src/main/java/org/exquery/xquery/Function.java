@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Represents an XQuery 1.0 Function
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Function {
     

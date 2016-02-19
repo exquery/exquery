@@ -31,7 +31,7 @@ package org.exquery.http;
  * 
  * @see <a href="http://tools.ietf.org/html/rfc2616">RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1</a>
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum HttpStatus {
     

@@ -33,7 +33,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  * Implementation of RESTXQ HEAD Annotation
  * i.e. %rest:HEAD
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class HeadMethodAnnotation extends AbstractHttpMethodAnnotation {
 

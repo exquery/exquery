@@ -29,7 +29,7 @@ package org.exquery.http;
 /**
  * Enumeration of HTTP 1.1 Methods
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum HttpMethod {
     GET,

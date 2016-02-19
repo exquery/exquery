@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * Class to process a rest:response Element which
  * can be returned from a Resource Function
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestResponseHandler {
     
@@ -65,9 +65,11 @@ public class RestResponseHandler {
     /**
      * Processes a rest:response element and sets the appropriate headers and fields in the http response
      * 
-     * @param restResponse
-     * @param response
-     * @param serializationProperties  
+     * @param restResponse The rest:response element
+     * @param serializationProperties Any properties that affect serialization
+     * @param response The response to serialize the result to
+     *
+     * @throws RestXqServiceException If a problem occurs during serialization
      */
     public void process(final Element restResponse, final Map<SerializationProperty, String> serializationProperties, final HttpResponse response) throws RestXqServiceException {
         
@@ -116,10 +118,12 @@ public class RestResponseHandler {
         final String reason = httpResponse.getAttribute(REASON_ATTR_NAME);
         
         //set the status and reason
-        if(httpStatus != null && (reason != null && !reason.isEmpty())) {
-            response.setStatus(httpStatus, reason);
-        } else {
-            response.setStatus(httpStatus);
+        if(httpStatus != null) {
+            if(reason != null && !reason.isEmpty()) {
+                response.setStatus(httpStatus, reason);
+            } else {
+                response.setStatus(httpStatus);
+            }
         }
         
         //process the http headers

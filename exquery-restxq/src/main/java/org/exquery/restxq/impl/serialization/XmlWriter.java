@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 /**
  * Simple XML Writer
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface XmlWriter {
 

@@ -42,7 +42,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * Implementation of RESTXQ Form Parameter Annotation
  * i.e. %rest:form-param
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class FormParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
     

@@ -32,7 +32,7 @@ import org.exquery.xquery.Literal;
 /**
  * Representation of an XQuery 3.0 Annotation
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Annotation {
     

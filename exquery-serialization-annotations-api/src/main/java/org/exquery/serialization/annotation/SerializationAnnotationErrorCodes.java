@@ -33,7 +33,7 @@ import org.exquery.serialization.Namespace;
 /**
  * Error Codes and descriptions for Serialization Annotation Errors
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class SerializationAnnotationErrorCodes extends ErrorCodes {
 

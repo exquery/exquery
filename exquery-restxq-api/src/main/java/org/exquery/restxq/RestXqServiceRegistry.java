@@ -33,7 +33,7 @@ import org.exquery.http.HttpRequest;
 /**
  * Registry of RESTXQ Services
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface RestXqServiceRegistry extends Iterable<RestXqService> {
     

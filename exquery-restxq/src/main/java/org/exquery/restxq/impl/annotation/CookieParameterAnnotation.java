@@ -39,7 +39,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * Implementation of RESTXQ Cookie Parameter Annotation
  * i.e. %rest:cookie-param
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class CookieParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
 

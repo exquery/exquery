@@ -42,7 +42,7 @@ import org.exquery.xquery.Type;
 /**
  * Base class for RESTXQ Parameter Annotation Implementations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation implements ParameterAnnotation {
     
@@ -136,11 +136,7 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         }
         return sequence;
     }
-    
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         
@@ -148,25 +144,16 @@ public abstract class AbstractParameterAnnotation extends AbstractRestAnnotation
         return Cardinality.ZERO_OR_MORE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         return RestXqErrorCodes.RQST0034;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
     @Override
     protected Type getRequiredFunctionParameterType() {
         return Type.ANY_ATOMIC_TYPE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         return RestXqErrorCodes.RQST0006;

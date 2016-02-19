@@ -1,5 +1,12 @@
 *.class
 
+# Intelli-J IDEA project files
+*.iml
+.idea
+
+# Mac OS X specific metadata files
+.DS_Store
+
 # Package Files #
 *.jar
 *.war

@@ -27,6 +27,6 @@
 /**
  * XQuery 1.0 Abstractions for EXQuery
  *
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 package org.exquery.xquery;

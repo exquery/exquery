@@ -36,7 +36,7 @@ import org.exquery.xquery3.FunctionSignature;
  *
  * @param <E> The Class to use for Exceptions
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractAnnotation<E extends AnnotationException> implements Annotation {
     private FunctionSignature functionSignature;

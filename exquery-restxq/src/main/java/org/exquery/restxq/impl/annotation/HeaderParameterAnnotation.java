@@ -40,7 +40,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * Implementation of RESTXQ Header Parameter Annotation
  * i.e. %rest:header-param
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class HeaderParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
 

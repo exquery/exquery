@@ -40,7 +40,7 @@ import org.exquery.restxq.RestXqServiceRegistryListener;
  * Simple Thread-Safe Map that maintains the association between HttpMethods
  * and RestXqServices
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestXqServicesMap {
         

@@ -40,7 +40,7 @@ import org.exquery.xquery.TypedArgumentValue;
  * Implementation of RESTXQ Query Parameter Annotation
  * i.e. %rest:query-param
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class QueryParameterAnnotation extends AbstractParameterWithDefaultAnnotation {
     

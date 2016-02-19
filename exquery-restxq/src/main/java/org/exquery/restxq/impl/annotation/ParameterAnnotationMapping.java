@@ -34,7 +34,7 @@ import org.exquery.xquery.Literal;
  * parameter and the function argument to which
  * it injects a value
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ParameterAnnotationMapping {
     public final String parameterName;

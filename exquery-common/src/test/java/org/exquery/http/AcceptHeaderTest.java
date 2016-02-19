@@ -39,7 +39,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * Tests for HTTP Accept header representation
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class AcceptHeaderTest {
 

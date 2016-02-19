@@ -27,6 +27,6 @@
 /**
  * EXQuery default implementation of XDM types
  *
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 package org.exquery.xdm.type;

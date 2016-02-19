@@ -32,7 +32,7 @@ import org.exquery.http.HttpMethod;
  * Implementation of RESTXQ OPTIONS Annotation
  * i.e. %rest:OPTIONS
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class OptionsMethodAnnotation extends AbstractHttpMethodAnnotation {
 

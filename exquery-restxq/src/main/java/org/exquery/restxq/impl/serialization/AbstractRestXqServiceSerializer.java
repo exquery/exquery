@@ -48,9 +48,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Serializes the result of a RESTXQ Service invokation
+ * Serializes the result of a RESTXQ Service invocation
  *
- * @author Adam Retter <adam.retter@googelmail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSerializer {
     
@@ -233,11 +233,11 @@ public abstract class AbstractRestXqServiceSerializer implements RestXqServiceSe
     /**
      * Serialize to the body of the HTTP Response
      *
-     * @param result
-     * @param response
-     * @param serializationProperties
+     * @param result The result to serialize
+     * @param response The response to serialize the result to
+     * @param serializationProperties Any properties that affect serialization
      *
-     * @throws RestXqServiceException  
+     * @throws RestXqServiceException If a problem occurs during serialization
      */
     protected void serializeBody(final Sequence result, final HttpResponse response, final Map<SerializationProperty, String> serializationProperties) throws RestXqServiceException {
         

@@ -27,6 +27,6 @@
 /**
  * RESTXQ default/base implementation of Annotations
  *
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 package org.exquery.restxq.impl.annotation;

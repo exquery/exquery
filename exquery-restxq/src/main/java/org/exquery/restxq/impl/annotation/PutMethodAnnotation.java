@@ -33,7 +33,7 @@ import org.exquery.restxq.annotation.HttpMethodAnnotation;
  * Implementation of RESTXQ PUT Annotation
  * i.e. %rest:PUT
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class PutMethodAnnotation extends AbstractHttpMethodWithBodyAnnotation {
 

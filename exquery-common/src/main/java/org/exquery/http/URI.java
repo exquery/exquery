@@ -35,7 +35,7 @@ package org.exquery.http;
  *
  * @see <a href="http://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource Identifier (URI): Generic Syntax</a>
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface URI {
     

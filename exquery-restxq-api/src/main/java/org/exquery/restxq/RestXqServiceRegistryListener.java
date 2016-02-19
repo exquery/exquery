@@ -29,7 +29,7 @@ package org.exquery.restxq;
 /**
  * Listeners for RESTXQ Registry events
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface RestXqServiceRegistryListener {
 

@@ -46,7 +46,7 @@ import org.exquery.xquery3.FunctionSignature;
  * Resource Functions may also have Serialization
  * Annotations in addition to RESTXQ Annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ResourceFunction extends Function {
     

@@ -29,7 +29,7 @@ package org.exquery;
 /**
  * EXQuery base Exception
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ExQueryException extends Exception {
 

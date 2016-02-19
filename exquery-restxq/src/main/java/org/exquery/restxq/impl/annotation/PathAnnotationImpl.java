@@ -45,7 +45,7 @@ import org.exquery.xquery.Type;
  * Implementation of RESTXQ Path Annotation
  * i.e. %rest:path
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAnnotation {
     
@@ -81,19 +81,13 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         super.initialise();
         this.pathRegularExpression = parsePath();
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#matchesPath(java.lang.String)
-     */
+
     @Override
     public boolean matchesPath(final String path) {
         final Matcher m = getPathInformation().getPathMatcher(path);
         return m.matches();
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.PathAnnotation#extractPathParameters(java.lang.String) 
-     */
+
     @Override
     public Map<String, String> extractPathParameters(final String uriPath) {
         
@@ -179,11 +173,20 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
         long pathSpecificityMetric = 0;
         
         while(mchPathSegment.find()) {
-            final String pathSegment = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
+            final String pathSegmentOrPart = pathStr.substring(mchPathSegment.start(), mchPathSegment.end());
 
-            final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegment);
+            final Matcher mtcFnParameter = functionArgumentPattern.matcher(pathSegmentOrPart);
 
-            thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+            //only prepend `URI.PATH_SEGMENT_DELIMITER` if this is the start of the path, or a segment and not part of a segment
+            final int idxPrePathSegment = mchPathSegment.start() -1;
+            if(idxPrePathSegment > -1) {
+                if(pathStr.charAt(idxPrePathSegment) == URI.PATH_SEGMENT_DELIMITER) {
+                    thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+                }
+            } else {
+                //this is the start of a path
+                thisPathExprRegExp.append(URI.PATH_SEGMENT_DELIMITER);
+            }
 
             /*
              * if this is the first iteration, increase
@@ -218,7 +221,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
             } else {
                 //is just a string path segment
                 thisPathExprRegExp.append("(?:");
-                thisPathExprRegExp.append(Pattern.quote(pathSegment));
+                thisPathExprRegExp.append(Pattern.quote(pathSegmentOrPart));
                 thisPathExprRegExp.append(")");
                 
                 //record the specifity of this path segment
@@ -267,37 +270,23 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
             }
         }
     }*/
-    
-    
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         return Cardinality.ONE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         return RestXqErrorCodes.RQST0005;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
     @Override
     protected Type getRequiredFunctionParameterType() {
         //return Type.ITEM;
         return Type.ANY_ATOMIC_TYPE;
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         return RestXqErrorCodes.RQST0006;
@@ -330,6 +319,7 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
          * @param pathLiteral The original path literal provided as the parameter to the Path Annotation
          * @param ptnPath The Regular Expression that matches a path against the pathLiteral
          * @param groupParamNames A mapping of group indexes in the regular expression to parameter names
+         * @param pathSpecificityMetric The specificity metric of the path
          */
         public PathInformation(final String pathLiteral, final Pattern ptnPath, final Map<Integer, String> groupParamNames, final long pathSpecificityMetric) {
             this.pathLiteral = pathLiteral;

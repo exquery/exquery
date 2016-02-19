@@ -35,7 +35,7 @@ import org.exquery.xquery.Type;
 /**
  * Base class for RESTXQ Method Annotation Implementations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotation implements HttpMethodAnnotation {
     
@@ -50,33 +50,21 @@ public abstract class AbstractHttpMethodAnnotation extends AbstractRestAnnotatio
         super.initialise();
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         throw new UnsupportedOperationException("Not required.");
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         throw new UnsupportedOperationException("Not required.");
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
+
     @Override
     protected Type getRequiredFunctionParameterType() {
         throw new UnsupportedOperationException("Not required.");
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         throw new UnsupportedOperationException("Not required.");

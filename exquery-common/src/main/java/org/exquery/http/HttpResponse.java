@@ -32,7 +32,7 @@ import java.io.OutputStream;
 /**
  * Interface of a HTTP Response
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface HttpResponse {
     

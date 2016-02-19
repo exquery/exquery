@@ -32,7 +32,7 @@ package org.exquery.restxq.annotation;
  * Base Interface for representing the XQuery RESTXQ Annotations for HTTP Methods
  * which have optional body content, i.e. PUT and POST
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface HttpMethodWithBodyAnnotation extends HttpMethodAnnotation {
     

@@ -30,7 +30,7 @@ package org.exquery.restxq.annotation;
  * Constraint Annotations restrict the scope of REST Requests
  * to which a Resource Function can be applied
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface ConstraintAnnotation extends RestAnnotation {
     

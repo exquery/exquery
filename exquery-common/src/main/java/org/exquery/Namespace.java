@@ -29,7 +29,7 @@ package org.exquery;
 /**
  * Namespaces for EXQuery
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface Namespace {
     

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 /**
  * Representation of a HTTP Content-Type header
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ContentTypeHeader {
     

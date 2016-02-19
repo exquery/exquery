@@ -37,7 +37,7 @@ import org.exquery.xquery.TypedValue;
  *
  * @param <T> The Type of the items in the Sequence, if they are all of the same type
  * 
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class SequenceImpl<T> implements Sequence<T> {
 

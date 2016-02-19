@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class EncodingAnnotationTest {
     

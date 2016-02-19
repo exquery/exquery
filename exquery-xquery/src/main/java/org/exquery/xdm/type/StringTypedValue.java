@@ -31,7 +31,7 @@ import org.exquery.xquery.Type;
 /**
  * Default String Value Type for xs:string
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class StringTypedValue extends AbstractTypedValue<String> {
 

@@ -29,7 +29,7 @@ package org.exquery.restxq.impl.serialization;
 /**
  * Enumeration of Serialization Property Names
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum SerializationProperty {
     

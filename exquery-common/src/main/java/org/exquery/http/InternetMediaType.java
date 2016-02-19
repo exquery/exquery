@@ -29,15 +29,17 @@ package org.exquery.http;
 /**
  * Internet Media Type concepts from RFC 4288
  * 
- * @see <a href="http://tools.ietf.org/html/rfc4288">RFC 4288: Media Type Specifications and Registration Procedures</a>
+ * <a href="http://tools.ietf.org/html/rfc4288">RFC 4288: Media Type Specifications and Registration Procedures</a>
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface InternetMediaType {
             
     /**
      * Internet Media Type valid characters from RFC 4288
-     * 
+     *
+     * <pre>
+     * {@code
      * type-name = reg-name
      * subtype-name = reg-name
      * 
@@ -45,8 +47,10 @@ public interface InternetMediaType {
      * reg-name-chars = ALPHA / DIGIT / "!" /
      *                  "#" / "$" / "&" / "." /
      *                  "+" / "-" / "^" / "_"
-     * 
-     * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: 4.2 Naming Requirements</a>
+     * }
+     * </pre>
+     *
+     * <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288: 4.2 Naming Requirements</a>
      */
     
     public final static String regNameChars_regExp = "[a-z0-9!#\\$&\\.\\+\\-\\^_]";

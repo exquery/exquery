@@ -46,7 +46,7 @@ import org.exquery.xquery.Type;
  * Implementation of RESTXQ Produces Annotation
  * i.e. %rest:produces
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implements ProducesAnnotation {
     
@@ -128,7 +128,11 @@ public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     
     @Override
     public boolean matchesMediaType(final HttpRequest request) {
-        final String acceptHeaderValue = request.getHeader(HttpHeaderName.Accept.toString());
+        String acceptHeaderValue = request.getHeader(HttpHeaderName.Accept.toString());
+
+        if (acceptHeaderValue == null)
+            acceptHeaderValue = "*/*";
+
         return matchesMediaType(acceptHeaderValue);
     }
     

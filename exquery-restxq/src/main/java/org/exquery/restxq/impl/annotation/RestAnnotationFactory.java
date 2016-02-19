@@ -39,7 +39,7 @@ import org.exquery.xquery3.Annotation;
 /**
  * Factory for instantiating and configuring RESTXQ Annotations
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class RestAnnotationFactory {
     

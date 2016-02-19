@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ProducesAnnotationImplTest {
     
@@ -144,6 +144,19 @@ public class ProducesAnnotationImplTest {
         final HttpRequest httpRequest = mock(HttpRequest.class);
         when(httpRequest.getHeader(HttpHeaderName.Accept.toString())).thenReturn(APPLICATION_ANY.getMediaType());
         
+        assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
+    }
+
+    @Test
+    public void matchesMediaType_no_accept_header() throws RestAnnotationException {
+        final ProducesAnnotationImpl mediaTypeAnnotation = new ProducesAnnotationImpl();
+        mediaTypeAnnotation.setLiterals(new Literal[] {
+                new StringLiteral(APPLICATION_XML.getMediaType())
+        });
+        mediaTypeAnnotation.initialise();
+
+        final HttpRequest httpRequest = mock(HttpRequest.class);
+
         assertTrue(mediaTypeAnnotation.matchesMediaType(httpRequest));
     }
 }

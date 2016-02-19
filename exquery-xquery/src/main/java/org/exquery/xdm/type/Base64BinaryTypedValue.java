@@ -32,7 +32,7 @@ import org.exquery.xquery.Type;
 /**
  * Default Binary Value Type for xs:base64Binary
  * 
- * @author Adam Reter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class Base64BinaryTypedValue extends AbstractTypedValue<InputStream> {
 

@@ -29,7 +29,7 @@ package org.exquery.xquery;
 /**
  * Representation of the Cardinality of a type in XQuery 1.0
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public enum Cardinality {
     
@@ -67,6 +67,8 @@ public enum Cardinality {
      * Checks if this Cardinality satisfies the required Cardinality
      * 
      * @param requiredCardinality The cardinality that is required
+     *
+     * @return true if the required cardinality is met
      */
     public boolean hasRequiredCardinality(final Cardinality requiredCardinality) {
         return ((requiredCardinality.value & value) == requiredCardinality.value);
@@ -75,6 +77,8 @@ public enum Cardinality {
     /**
      * Gets the numeric value of the cardinality.
      * Perhaps useful for calculations by external functions
+     *
+     * @return The internal numeric value of the cardinality
      */
     public int getNumericValue() {
         return value;

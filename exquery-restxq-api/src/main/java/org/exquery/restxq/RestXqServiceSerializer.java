@@ -33,7 +33,7 @@ import org.exquery.xquery.Sequence;
 
 /**
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public interface RestXqServiceSerializer {
     public void serialize(final Sequence result, final Set<SerializationAnnotation> serializationAnnotations, final HttpResponse response) throws RestXqServiceException;

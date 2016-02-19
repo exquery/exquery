@@ -35,7 +35,7 @@ import org.exquery.xquery.Type;
 /**
  * Base class for RESTXQ Media Type Annotation Implementations
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractMediaTypeAnnotation extends AbstractRestAnnotation implements MediaTypeAnnotation {
     
@@ -54,34 +54,22 @@ public abstract class AbstractMediaTypeAnnotation extends AbstractRestAnnotation
         
         return mediaType;
     }
-    
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterCardinality()
-     */
+
     @Override
     protected Cardinality getRequiredFunctionParameterCardinality() {
         throw new UnsupportedOperationException("Not required.");
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterCardinalityErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterCardinalityErr() {
         throw new UnsupportedOperationException("Not required.");
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getRequiredFunctionParameterType()
-     */
     @Override
     protected Type getRequiredFunctionParameterType() {
         throw new UnsupportedOperationException("Not required.");
     }
 
-    /**
-     * @see org.exquery.restxq.annotation.AbstractRestAnnotation#getInvalidFunctionParameterTypeErr()
-     */
     @Override
     protected RestXqErrorCode getInvalidFunctionParameterTypeErr() {
         throw new UnsupportedOperationException("Not required.");

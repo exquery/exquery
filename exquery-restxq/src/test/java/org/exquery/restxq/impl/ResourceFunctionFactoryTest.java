@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for ResourceFunctionFactory
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class ResourceFunctionFactoryTest {
  

@@ -35,7 +35,7 @@ import org.exquery.xquery.Literal;
  * Serialization Method Annotation
  * i.e. %output:method
  *
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public class MethodAnnotation extends AbstractSerializationAnnotation {
     

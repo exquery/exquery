@@ -42,7 +42,7 @@ import org.exquery.xquery3.FunctionSignature;
 /**
  * Base class for RESTXQ Annotation Implementations
  * 
- * @author Adam Retter <adam.retter@googlemail.com>
+ * @author Adam Retter
  */
 public abstract class AbstractRestAnnotation extends AbstractAnnotation<RestAnnotationException> implements RestAnnotation {
     
