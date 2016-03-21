@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,7 +9,7 @@
       var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
           specStatus:           "unofficial",
-          
+
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "restxq",
 
@@ -42,7 +43,7 @@
                 company: "Evolved Binary", companyURL: "http://adamretter.org.uk/" }
           ],
 
-          // authors, add as many as you like. 
+          // authors, add as many as you like.
           // This is optional, uncomment if you have authors as well as editors.
           // only "name" is required. Same format as editors.
 
@@ -52,27 +53,35 @@
               { name: "Christian Grün", url: "http://christian-gruen.de/",
                 company: "BaseX GmbH", companyURL: "http://basex.org/" }
           ],
-          
+
           // name of the WG
           wg:           "EXQuery RESTXQ WG",
-          
+
           // URI of the public WG page
           wgURI:        "http://exquery.org/restxq-wg",
-          
+
           // name (without the @w3c.org) of the public mailing to which comments are due
           wgPublicList: "exquery-restxq",
-          
+
           // URI of the patent status for this WG, for Rec-track documents
           // !!!! IMPORTANT !!!!
           // This is important for Rec-track documents, do not copy a patent URI from a random
           // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
           // Team Contact.
           wgPatentURI:  "",
-          
+
           // If specified, defines an array of alternate formats in which document is available (e.g., XML, Postscript). The format of the array is:
           // alternateFormats:
-          
+
           doRDFa: "1.1",
+
+          localBiblio:  {
+            "IANA-MEDIA-TYPES" : {
+              "href": "http://www.iana.org/assignments/media-types/",
+              "title": "Media Types",
+              "publisher": "IANA"
+            }
+          },
       };
     </script>
     <style>
@@ -88,19 +97,19 @@
           padding: 4px;
           margin: 0em;
         }
-        
+
         code.function {
           font-weight: bold;
         }
-        
+
         code.return-type {
           font-style: italic;
         }
-        
+
         code.type {
           font-style: italic;
         }
-        
+
         span.explain {
           font-family: sans-serif;
           font-style: italic;
@@ -120,7 +129,7 @@
       describes a set of XQuery Annotations [[!XQUERY-30]] and a small set of functions to enable XQuery
       to provide RESTful services, thus enabling Web Application development in XQuery.
     </section>
-    
+
     <section id="introduction">
       <h2>Introduction</h2>
       <p>
@@ -193,26 +202,19 @@
       <section>
         <h3>Namespaces and Prefixes</h3>
         <p>
-          The annotations and functions discussed in this document are contained in one of
-          two namespaces (see [[!XML-NAMES]]) and referenced using an xs:QName.
-          The namespace prefix used in this document for annotations and functions that are
-          solely related to RESTXQ is <code>rest</code>.
-          <!-- TODO are these in this doc? -->Serialization annotations and functions are named with the prefix <code>output</code>.
-        </p>
-        <p>
-          This document uses the prefix <code>rerr</code> to represent the namespace URI <code>http://exquery.org/ns/restxq/error</code>, which is the namespace for all RESTXQ error codes and messages. This namespace prefix is not predeclared and its use in this document is not normative.
-        </p>
-        <p>
-          The namespace prefix used for the functions, datatypes and errors can vary, as long as the prefix is bound to the correct URI.
-        </p>
-        <p>
-          The URIs of the namespaces and the default prefixes associated with them are:
+          The annotations and functions discussed in this document are contained in
+          namespaces (see [[!XML-NAMES]]) and referenced using an xs:QName:
         </p>
         <ul>
-          <li><code>http://exquery.org/ns/restxq</code> for annotations and functions -- associated with <code>rest</code>.</li>
-          <li><code>http://www.w3.org/2010/xslt-xquery-serialization</code> for annotations and functions -- associated with <code>output</code>.</li>
-          <li><code>http://exquery.org/ns/restxq/error</code> for annotations and functions -- associated with <code>rerr</code>.</li>
+          <li><code>http://exquery.org/ns/restxq</code>, associated with <code>rest</code>.</li>
+          <li><code>http://www.w3.org/2010/xslt-xquery-serialization</code>, associated with <code>output</code>.</li>
+          <li><code>http://expath.org/ns/http-client</code>, associated with <code>http</code>.</li>
+          <li><code>http://exquery.org/ns/restxq/error</code>, associated with <code>rerr</code>.</li>
         </ul>
+        <p>
+          The namespace prefix used for the functions, datatypes and errors can vary, as
+          long as the prefix is bound to the correct URI.
+        </p>
         <div class="note">
           The namespace URI associated with the <code>rerr</code> prefix is not expected to change from one version of this document to another. The contents of this namespace may be extended to allow additional errors to be returned.
         </div>
@@ -224,7 +226,7 @@
       <section id="annotations-background">
         <h3>Background</h3>
         <p>
-          RESTXQ is heavily influenced by JAX-RS [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
+          RESTXQ is heavily influenced by [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
           predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
           and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
           to XQuery invocation, our unit of granularity is the XQuery function.
@@ -271,12 +273,12 @@
         <p>The Template appears inside a string literal within the annotation, but the meaning is that the
           value of the templated substitution MUST be used as the parameter to the named argument of the
           annotated function.</p>
-        <pre class="example" title="Template">
+        <pre class="example highlight" title="Template">
           {$number-of-cats}
         </pre>
         <p>
           In the example above, a parameter given from the template substitution MUST be
-          set for the function argument called <code>number-of-cats</code> on the annotated function.
+          set for the function argument called 'number-of-cats' on the annotated function.
         </p>
       </section>
 
@@ -286,23 +288,23 @@
         <section id="path-annotation">
           <h5>Path Annotation</h5>
           <p>
-            A Path Annotation maps the URI of a RESTful web service to a Resource Function and
-            provides for path templates.
+            A Path Annotation maps the URI of a RESTful web service to a Resource Function
+            and provides for path templates.
           </p>
           <p> <!-- TODO also consider allowing zero or more path annotations -->
             A Resource Function MUST contain a single path annotation. Additional annotations
             MAY be used to constrain or parameterize the Resource Function.
           </p>
           <p>
-            The path annotation is named <code>%rest:path</code> and takes a single mandatory
-            literal string, which describes the URI path for this service. The URI path is
-            considered relative to a base URI (<a href="#base-uri" class="sectionRef"></a>),
-            which is implementation-defined.
+            The path annotation is named <code>%rest:path</code> and takes a single
+            mandatory literal string, which describes the URI path for this service.
+            The URI path is considered relative to an implementation-defined base URI
+            (<a href="#base-uri" class="sectionRef"></a>).
           </p>
           <p>
-            The URI path itself MAY contain zero or more URI templates which denote path segments
-            that MUST map to named function parameters. Parameters addressed by templates in the
-            URI path MUST meet the following constraints:
+            The path string MAY contain zero or more URI templates which denote path
+            segments that MUST map to named function parameters. Parameters addressed by
+            templates in the URI path must meet the following constraints:
           </p>
           <ol>
             <li>
@@ -316,26 +318,24 @@
           </ol>
           <p>
             <!-- TODO describe type conversion -->
-            Conversion from the URI segment string to the required type should be performed
-            at run-time, and an error should be raised if conversion is impossible.
+            Conversion from the URI segment string to the required type is performed
+            at run-time, and an error MUST be raised if conversion is impossible.
           </p>
-          <pre class="example" title="Path Annotation">
+          <pre class="example highlight" title="Path Annotation">
             declare
               %rest:path("/stock/widget/{$id}")
             function local:widget($id as xs:int) {
-          
-              (: get the widget :)
-              fn:collection("/db/widgets")/widget[@id eq $id]
+              fn:collection("/db/widgets")//widget[@id = $id]
             };
           </pre>
           <p>
-            In the above example, a HTTP GET on the following URI would cause the widget
-            with the <code>id</code> of '1981' to be retrieved:<br/>
+            In the above example, an HTTP GET on the following URI would cause the widget
+            with the <code>id</code> of '1981' to be retrieved:
             <code>http://www.widget-factory.com/stock/widget/{$id}</code>.
           </p>
           <div class="note">
-            When many Resource Functions are defined, there can be many Path Annotations,
-            as such conflicts may occur, the resolution of such conflicts MUST be processed
+            When many Resource Functions are defined, there can be many Path Annotations.
+            As such, conflicts may occur, the resolution of such conflicts MUST be processed
             as described in <a href="#path-preference"></a>.
           </div>
         </section>
@@ -352,47 +352,52 @@
             All methods MAY return resources except for HEAD, which must only return a
             <code>rest:response</code> element.
           </p>
-          <pre class="example" title="Method Annotation">
+          <pre class="example highlight" title="Method Annotation">
             declare
               %rest:DELETE
               %rest:path("/widget/{$id}")
             function local:widget($id as xs:int) {
-              (: deletes a widget :)
-              delete node fn:collection("/db/widgets")/widget[@id eq $id]
+              delete node fn:collection("/db/widgets")//widget[@id = $id]
             };
           </pre>
           <p>
-            Method annotations <code>POST</code> and <code>PUT</code> may take an optional string literal which maps
-            the HTTP request body to a named function parameter. The same syntax as that
-            used for URI templates is applied, for example 
+            The method annotations <code>POST</code> and <code>PUT</code> may take an
+            optional string literal which maps the HTTP request body to a named function
+            parameter. The same syntax as that used for URI templates is applied.
+            For example
             <code>%rest:POST("{$request-body")</code> would inject the request body into
             the function through the function parameter named 'request-body'. The
             function parameter for the request body must meet the following constraints:
             <ol>
               <li>
-                Cardinality that allows for one or more of the typed item(s).
+                The cardinality MUST allow for one or more of the typed item(s).
               </li>
               <li>
-                Typing that is compatible with the request body. The type of the request
-                body is determined by the HTTP Content Type header and may be constrained
-                by means of the <code>%rest:consumes</code> annotation. The interpretation
-                of the request body is similar to that of the
+                The type MUST be compatible with the request body. The type of the request
+                body is determined by the HTTP <code>Content-Type</code> header and may be
+                constrained by means of the <code>%rest:consumes</code> annotation. The
+                interpretation of the request body is similar to that of the
                 <a href="http://expath.org/spec/http-client">EXPath HTTP Client</a>:
                 <ol>
                   <li>
-                    If the <code>media-type</code> is textual, the function parameter type will be
-                    <code>xs:string</code>.
+                    If the Media Type ([[IANA-MEDIA-TYPES]]) indicated by the <code>Content-Type</code> header
+                    matches <code>text/*</code> (excluding <code>text/xml</code>),
+                    the function parameter type will be <code>xs:string</code>.
                   </li>
                   <li>
-                    If the <code>media-type</code> is an XML media-type, the request body is parsed
-                    as XML and the function parameter type will be <code>document-node()</code>.
+                    If the Media Type indicated by the <code>Content-Type</code> header
+                    is of an XML type, the request body is parsed as XML and
+                    the function parameter type will be <code>document-node()</code>.
+                    At least the Media Types <code>application/xml</code> and
+                    <code>text/xml</code> MUST be interpreted as XML types, although
+                    implementations MAY support additional XML types.
                   </li>
                   <li>
                     Otherwise, a binary media type is assumed, and the function
                     parameter type will be <code>xs:base64Binary</code>.
                   </li>
                   <li>
-                    An implementation MAY provide support for other input types
+                    An implementation MAY provide support for other input type mappings
                     such as HTML or JSON.
                   </li>
                 </ol>
@@ -404,10 +409,10 @@
         <section id="consumes-annotation">
           <h5>Consumes Annotation</h5>
           <p>
-            Resource Functions MAY be constrained to certain media-types by means of
-            a <code>%rest:consumes</code> annotation. A function will only be invoked
+            Resource Functions MAY be constrained to certain Media Type by means
+            of a <code>%rest:consumes</code> annotation. A function will only be invoked
             if the HTTP <code>Content-Type</code> header of the request matches one
-            of the given types.
+            of the given Media Types.
           </p>
         </section>
 
@@ -418,14 +423,14 @@
             only be invoked if the HTTP <code>Accept</code> header of the request
             matches one of the given types.
           </p>
-          <pre class="example" title="Consumes and Produces Annotation">
-            (: Will only be invoked if a user supplies the specified content types :)
+          <pre class="example highlight" title="Consumes and Produces Annotation">
+            (: Will only be invoked if a user supplies the specified media types :)
             declare
               %rest:path("/widgets")
               %rest:consumes("application/xml", "application/atom+xml")
               %rest:produces("application/xml")
             function local:widgets() {
-              fn:collection('/db/widgets')/widgets
+              fn:collection("/db/widgets")/widgets
             };
           </pre>
         </section>
@@ -436,25 +441,40 @@
         <p>
           Parameters to Resource Functions are extracted from the RESTful Web Service
           request and passed in as additional function parameters. Unlike constraints,
-          parameters are always optional. Resource Function Parameters use the same
-          also make use of the <a href="#templates">template</a> syntax to map the parameter onto a function
-          parameter. They may also provide a default value should the parameter not be
-          present in the request. Resource Function Parameters always place the
-          following constraints on the function parameters that they map to:
+          parameters are always optional. Resource Function Parameters use the
+          <a href="#templates">template</a> syntax to map the request parameter onto
+          a function parameter. They may also provide a default value should the
+          parameter not be present in the request. Resource Function Parameters always
+          place the following constraints on the function parameters that they map to:
           <ol>
             <li>
-              Cardinality that allows for zero or many atomic values in the case of
-              <a href="#query-param-annotation">Query</a>, <a href="#form-param-annotation">Form</a> or <a href="#header-param-annotation">Header</a> parameters, or zero or one atomic value in the
-              case of <a href="#cookie-param-annotation">Cookie</a> parameters, otherwise an error should be raised by the
-              implementation.
+              The cardinality MUST allow for zero or many atomic values in the case of
+              <a href="#query-param-annotation">Query</a>,
+              <a href="#form-param-annotation">Form</a> or
+              <a href="#header-param-annotation">Header</a> parameters, or zero or one
+              atomic value in the case of <a href="#cookie-param-annotation">Cookie</a>
+              parameters, otherwise an error MUST be raised by the implementation.
             </li>
             <li>
-              Type that inherits from <code>xs:anyAtomicType</code>, otherwise, an error should
-              be raised by the implementation. In addition, conversion from the
-              parameter string to the required type should be performed at run-time,
-              and an error raised if conversion is impossible.
+              The type MUST inherit from xs:anyAtomicType, otherwise, an error MUST
+              be raised by the implementation.
             </li>
           </ol>
+          <p>
+            <!-- TODO describe type conversion -->
+            Conversion from the request field to the required function parameter
+            type is performed at run-time, and an error is raised if conversion
+            is impossible.
+          </p>
+          <p>
+          The annotations in this section MUST have two or more arguments:
+          <ol>
+            <li>The first argument represents the name of a parameter expected in the request.</li>
+            <li>The second argument contains a reference to the Resource Function Parameter.</li>
+            <li>The remaining arguments form the default value, which is assigned
+                if the expected parameter is not present in the request.</li>
+          </ol>
+          </p>
         </p>
 
         <section id="query-param-annotation">
@@ -464,14 +484,13 @@
             parameters in the Query String of the URL used for the RESTful Web Service
             request.
           </p>
-          <pre class="example" title="Query Parameter Annotation with a default value">
+          <pre class="example highlight" title="Query Parameter Annotation with a default value">
             declare
               %rest:GET
               %rest:path("/widget/{$id}")
               %rest:query-param("client", "{$client}", "unknown")
             function local:widget($id as xs:int, $client as xs:string*) {
-              (: get the widget :)
-              fn:collection("/db/widgets")/widget[@id eq $id][@client = $client]
+              fn:collection("/db/widgets")//widget[@id = $id][@client = $client]
             };
           </pre>
         </section>
@@ -480,18 +499,16 @@
           <h5>Form Parameters</h5>
           <p>
             The annotation <code>%rest:form-param</code> is provided for accessing
-            parameters from an HTML form submitted in the request body of the RESTful
-            Web Service request with the Internet media-type
-            <code>application/x-www-form-urlencoded</code>.
+            parameters from an HTML form submitted where the HTTP <code>Content-Type</code>
+            header matches the <code>application/x-www-form-urlencoded</code> Media Type.
           </p>
-          <pre class="example" title="Form Parameter Annotation with a default value">
+          <pre class="example highlight" title="Form Parameter Annotation with a default value">
             declare
               %rest:GET
               %rest:path("/widget/{$id}")
               %rest:form-param("client", "{$client}", "unknown")
             function local:widget($id as xs:int, $client as xs:string*) {
-              (: get the widget :)
-              fn:collection("/db/widgets")/widget[@id eq $id][@client = $client]
+              fn:collection("/db/widgets")//widget[@id = $id][@client = $client]
             };
           </pre>
         </section>
@@ -500,19 +517,17 @@
           <h5>HTTP Header Parameters</h5>
           <p>
             The annotation <code>%rest:header-param</code> is provided for accessing
-            HTTP Request headers from the RESTful Web Service request. If a single
-            Header field value contains comma separated values, an implementation must
-            extract each value from the comma separated list into an item in the sequence
-            provided to the function parameter.
+            HTTP Request headers. If a single header field value contains comma separated
+            values, an implementation MUST extract each value from the comma separated
+            list into an item in the sequence provided to the function parameter.
           </p>
-          <pre class="example" title="Header Parameter Annotation">
+          <pre class="example highlight" title="Header Parameter Annotation">
             declare
               %rest:GET
               %rest:path("/widget/{$id}")
               %rest:header-param("X-Client-Type", "{$client-type}")
             function local:widget($id as xs:int, $client-type as xs:string*) {
-              (: get the widget :)
-              fn:collection("/db/widgets")/widget[@id eq $id][@client-type = $client-type]
+              fn:collection("/db/widgets")//widget[@id = $id][@client-type = $client-type]
             };
           </pre>
         </section>
@@ -523,14 +538,13 @@
             The annotation <code>%rest:cookie-param</code> is provided for accessing
             HTTP Cookies from the RESTful Web Service request.
           </p>
-          <pre class="example" title="Cookie Parameter Annotation">
+          <pre class="example highlight" title="Cookie Parameter Annotation">
             declare
               %rest:GET
               %rest:path("/widget/{$id}")
               %rest:header-param("X-Client-Type", "{$client-type}")
             function local:widget($id as xs:int, $client-type as xs:string*) {
-              (: get the widget :)
-              fn:collection("/db/widgets")/widget[@id eq $id][@client-type = $client-type]
+              fn:collection("/db/widgets")//widget[@id = $id][@client-type = $client-type]
             };
           </pre>
         </section>
@@ -553,22 +567,22 @@
                  code or additional information.</li>
             <li> Both HTTP Headers and a Resource</li>
           </ol>
-          
+
           The XQuery Specification states in
           <a href="http://www.w3.org/TR/xquery-30/#id-serialization">Section 2.2.4</a>
           how the result of a query is serialized. Serialization may be controlled by
           the use of Output Declarations. In RESTXQ, the following rules are applied:
-          
+
           <ol>
             <li>
               If the function is from within a Main Module, and if an output declaration
-              exists, then we use this as the default serialization settings for each
-              Resource Function in that module.
+              exists, then we use this as the <dfn>default serialization</dfn> settings
+              for each Resource Function in that module.
             </li>
             <li>
               Output Declarations may be re-written as annotations on any Resource
               Function, e.g. <code>%output:method("xml")</code>. These annotation output
-              declarations override any defaults from (1).
+              declarations override any defaults from <a href="#dfn-default-serialization">1</a>.
             </li>
             <li>
               If no Output Declaration, annotated or otherwise, is provided, then the
@@ -580,7 +594,7 @@
           handled in a different manner by an implementation, and as such we provide
           appropriate function signature restrictions, and detail how annotations
           interact with these:
-          
+
           <ol>
             <li>
               For a function that returns just a resource, either:
@@ -590,7 +604,8 @@
                   <code>document-node(element())</code> or just <code>element()</code>,
                   and XML Serialization should be applied to the result of the function.
                   The annotation <code>%output:method</code>, if present,
-                  must be set to <code>xml</code>.
+                  MUST be set to <code>xml</code>. This is known as the
+                  <dfn>Default Resource Response rule</dfn>.
                 </li>
                 <li>
                   If the result type is present, it MUST be a type which is compatible with
@@ -598,52 +613,67 @@
                   declaration or overridden by the <code>%output:method</code> annotation on
                   the Resource Function. The default serialization method is XML.
                   If the result type is not compatible with the serialization,
-                  an implementation MUST throw an error. 
+                  an implementation MUST throw an error. This is known as the
+                  <dfn>Typed Resource Response rule</dfn>.
                 </li>
               </ol>
             </li>
             <li>
               For a function that returns just HTTP headers, the result type of the function
-              must be defined as <code>document-node(element(rest:response))</code>.
+              MUST be defined as <code>document-node(element(rest:response))</code>.
               Any other annotations that effect the serialization of the result are ignored.
             </li>
             <li>
               For a function that returns both HTTP headers and a resource, the result type
-              of the function must be defined as <code>item()+</code>. The first item in the
+              of the function MUST be defined as <code>item()+</code>. The first item in the
               result sequence is the HTTP headers i.e.
               <code>document-node(element(rest:response)</code>, the second item in the
-              result sequence is the resource itself. The rules of both (1) and (2) must be
-              applied to the result sequence.
+              result sequence is the resource itself; Subsequently both the
+              <a>Default Resource Response rule</a> and the
+              <a>Typed Resource Response rule</a> MUST be applied to the result sequence.
             </li>
           </ol>
         </p>
       </section>
 
-      <section id="rest-response">
-        <h3>REST Response Format</h3>
+      <section id="response-format">
+        <h3>Response Format</h3>
         <p>
           A REST Response document may be returned from a function either with or without
           a Resource. The purpose of this document is to control the REST (in this case HTTP)
           response sent back to the client of the RESTful web service.
         </p>
 
-        <pre class="example" title="REST Response Format">
-          &lt;rest:response&gt;
-            (http:response?)
-          &lt;/rest:response&gt;
-          &lt;http:response status?="integer" reason?="string"&gt;
-            (http:header*)
-          &lt;/http:response&gt;
-          &lt;http:header name="string" value="string"/&gt;
-        </pre>
-        
+        <pre class="highlight note" title="Syntax of Response Format">
+&lt;rest:response&gt;
+  (http:response?)
+&lt;/rest:response&gt;
+
+&lt;http:response status?="integer" message?="string"&gt;
+  (http:header*)
+&lt;/http:response&gt;
+
+&lt;http:header name="string" value="string"/&gt;</pre>
+
         <p>
-          Should the status be omitted for the response, or a REST Response document not
-          returned from a Resource Function, then the status defaults to 200 OK.
-          It is expected that implementations will make use of sane defaults for HTTP
-          headers as part of their HTTP responses, however any default headers must be
-          overridable by those values set in the REST Response document.
+          Should the status be omitted for the response, or should a REST Response
+          document not be returned from a Resource Function, then the status defaults to
+          200 OK. It is expected that implementations will make use of sane defaults for
+          HTTP headers as part of their HTTP responses, however any default headers MUST
+          be overridable by the values set in the REST Response document.
         </p>
+
+        <p>
+          As an example, the following response can be returned to trigger a
+          client-side redirection:
+        </p>
+
+        <pre class="example highlight" title="Client-Side Redirection">
+&lt;rest:response&gt;
+  &lt;http:response status="302" message="Temporary Redirect"&gt;
+    &lt;http:header name="location" value="/new/location"/&gt;
+  &lt;/http:response&gt;
+&lt;/rest:response&gt;</pre>
       </section>
     </section>
 
@@ -653,40 +683,33 @@
       <section id="base-uri">
         <h3>Base URI</h3>
         <p>
-          The base URI of a Resource Function is implementation-defined. That is to say that an implementation
-          is free to define either statically or dynamically the URI part that appears before the
-          relative URI of any Path Annotation.(<a href="#path-annotation" class="sectionRef"></a>)
+          The base URI of a Resource Function is implementation-defined. That is to say
+          that an implementation is free to define either statically or dynamically the
+          URI part that appears before the relative URI of any Path Annotation
+          (<a href="#path-annotation" class="sectionRef"></a>).
           <!-- TODO if a path annotation is not specified then the remaining URIs apply to the base uri -->
         </p>
-        <section>
-          <h4>EXPath Package Considerations</h4>
-          <p><!-- TODO --></p>
-        </section>
       </section>
 
       <section>
         <h3>HTTP Request Matching</h3>
         <p>
-          It is often the case that there is one or more Resource Functions that could service an
-          incoming HTTP Request. To avoid conflicts, the most specific Resource Function
-          MUST be applied to an incoming request. This chapter defines the specificity of Resource
-          Functions against HTTP requests.
+          In many cases, there is more than one Resource Function that could service an
+          incoming HTTP Request. This chapter defines how the best matching Resource
+          Function is selected.
+          The specificity of a Resource Function is governed by the following rules,
+          which MUST be applied in order.
         </p>
-        <p>The specificity of a Resource Function is governed by three rules which MUST be applied in order:</p>
-        <ol>
-          <li><a href="#constraint-preference"></a></li>
-          <li><a href="#path-preference"></a></li>
-        </ol>
         <section id="constraint-preference">
-          <h4>Resource Function Constraint Preference</h4>
+          <h4>Constraint Preference</h4>
           <p>
-            Resource Functions that impose the most specific constraints MUST first be selected
-            as candidates to process the HTTP Request.
+            Resource Functions that impose the most specific constraints MUST first be
+            selected as candidates to process the HTTP Request.
           </p>
           <p>Most specific constraints first:</p>
           <ol>
-            <!-- TODO break Media-Type into Consumes and Produces? -->
-            <li>Path, Method, Media-Type</li>
+            <!-- TODO break Media Type into Consumes and Produces? -->
+            <li>Path, Method, Media Type</li>
             <li>Path, Method</li>
             <li>Path, Media Type</li>
             <li>Path</li>
@@ -694,15 +717,15 @@
             <li>Method</li>
             <li>Media Type</li>
           </ol>
-          <pre class="example" title="Constraint Specificity">
-<span class="explain">The following Resource Function:</span>            
-            
+          <pre class="example highlight" title="Constraint Specificity">
+<span class="explain">The following Resource Function:</span>
+
 declare function
   %rest:GET
   %rest:path("/a/b/c")
   %rest:consumes("application/xml")
 local:function-1() {
-  <fn>1</fn>
+  &lt;fn&gt;1&lt;/fn&gt;
 };
 
 <span class="explain">is more specific than:</span>
@@ -711,7 +734,7 @@ declare function
   %rest:GET
   %rest:path("/a/b/c")
 local:function-2() {
-  <fn>2</fn>
+  &lt;fn&gt;2&lt;/fn&gt;
 };
           </pre>
         </section>
@@ -719,9 +742,10 @@ local:function-2() {
         <section id="path-preference">
           <h4>Path Preference</h4>
           <p>
-            More than one Path from a Resource Function Path Annotations MAY appear to satisfy a request,
-            however often these can be disambiguated by specificity of application to the HTTP Request URI.
-            The most specific paths MUST be selected as candidates to process the HTTP Request.
+            More than one Path from a Resource Function Path Annotations MAY appear to
+            satisfy a request. Often, these can be disambiguated by specificity of
+            application to the HTTP Request URI. The most specific paths are selected
+            as candidates to process the HTTP Request.
           </p>
           <p>The rules determining Path specifity to a request are:</p>
           <ol>
@@ -730,8 +754,7 @@ local:function-2() {
               Path X is more specific than path Y if it has more segments.
             </p>
             <pre class="example" title="Path Length Specificity">
-              <code>/a/b</code> <span class="explain">is more specific than</span> <code>/a</code>.
-            </pre>
+<code>/a/b</code> <span class="explain">is more specific than</span> <code>/a</code>.</pre>
             <li>Path Selection</li>
             <p>
               If more than one Path has the same number of segments, the segments of the paths are
@@ -742,35 +765,34 @@ local:function-2() {
               is a template, while the respective segment of X is not.
             </p>
             <pre class="example" title="Path Selection Specificity">
-              <code>/a/b</code> <span class="explain">is more specific than</span> <code>/a/{$x}</code>.
-              
-              <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.
-            </pre>
+<code>/a/b</code> <span class="explain">is more specific than</span> <code>/a/{$x}</code>.
+<code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.</pre>
           </ol>
           <p>
             The following example contains six paths sorted by their specifity:
           </p>
-          <pre class="example" title="Path Specificity">              
-              <code>/person/elisabeth</code>
-              <code>/person/{$name}</code>
-              <code>/{$type}/elisabeth</code>
-              <code>/{$type}/{$name}</code>
-              <code>/person</code>
-              <code>/{$type}</code>
-          </pre>
+          <pre class="example" title="Path Specificity">
+/person/elisabeth
+/person/{$name}
+/{$type}/elisabeth
+/{$type}/{$name}
+/person
+/{$type}</pre>
         </section>
         <section id="media-type-preference">
           <h4>Media Type Preference</h4>
           <p>
-            More than one Media Type from Resource Function Consumes or Produces Annotations MAY appear to satisfy a request,
-            however often these can be disambiguated by specificity.
-            The most specific media types MUST be selected as candidates to process the HTTP Request.
+            More than one Media Type from Resource Function Consumes or Produces
+            Annotations MAY appear to satisfy a request. Often, these can be
+            disambiguated by specificity. The most specific media types MUST be
+            selected as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining Media Type specifity are:</p>
+          <p>The rules determining media type specifity are:</p>
           <ol>
             <li>Absolute before Wildcard</li>
-            <p>Absolute Media Types are considered more specific than Media Types with wildcard subtypes</p>
-            <pre class="example" title="Media Type Specificity">
+            <p>Absolute Media Types are considered more specific than Media Ranges (Media Types
+            with wildcard subtypes)</p>
+            <pre class="example highlight" title="Media Type Specificity">
               <code>application/xml</code> <span class="explain">is more specific than</span> <code>application/*</code>.
             </pre>
           </ol>
@@ -830,8 +852,8 @@ local:function-2() {
             <pre><code class="function">rest:uri</code>() as <code class="type">xs:anyURI</code></pre>
           </div>
           <p>
-            Summary: This function is returns the complete URI that addresses the Resource Function. Typically
-            this is the <code>rest:base-uri()</code> appended with the path from the Path Annotation (if present) of the Resource Function.  
+            Summary: This function returns the complete URI that addresses the Resource Function. Typically
+            this is the <code>rest:base-uri()</code> appended with the path from the Path Annotation (if present) of the Resource Function.
           </p>
         </section>
       </section>
@@ -846,7 +868,7 @@ local:function-2() {
         <a href="http://www.github.com/exquery/exquery" title="EXQuery GitHub">EXQuery GitHub page</a>.
       </p>
     </section>
-    
+
     <section class="appendix" id="template-grammar">
       <h2>Annotation Template Grammar</h2>
       <p>The grammar used for RESTXQ Templates is expressed in EBNF and re-uses the <a href="http://www.w3.org/TR/xquery-30/#prod-xquery30-EQName" title="EQName">EQName</a> from the XQuery grammar</p>
@@ -859,7 +881,7 @@ local:function-2() {
           </tr>
       </table>
     </section>
-    
+
     <section class='appendix'>
       <h2>Acknowledgements</h2>
       <p>
