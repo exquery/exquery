@@ -74,6 +74,14 @@
           // alternateFormats:
 
           doRDFa: "1.1",
+
+          localBiblio:  {
+            "IANA-MEDIA-TYPES" : {
+              "href": "http://www.iana.org/assignments/media-types/",
+              "title": "Media Types",
+              "publisher": "IANA"
+            }
+          },
       };
     </script>
     <style>
@@ -372,19 +380,24 @@
                 <a href="http://expath.org/spec/http-client">EXPath HTTP Client</a>:
                 <ol>
                   <li>
-                    If the content type is textual, the function parameter type will be
-                    <code>xs:string</code>.
+                    If the Media Type ([[IANA-MEDIA-TYPES]]) indicated by the <code>Content-Type</code> header
+                    matches <code>text/*</code> (excluding <code>text/xml</code>),
+                    the function parameter type will be <code>xs:string</code>.
                   </li>
                   <li>
-                    If the content type is XML, the request body is parsed as XML and
+                    If the Media Type indicated by the <code>Content-Type</code> header
+                    is of an XML type, the request body is parsed as XML and
                     the function parameter type will be <code>document-node()</code>.
+                    At least the Media Types <code>application/xml</code> and
+                    <code>text/xml</code> MUST be interpreted as XML types, although
+                    implementations MAY support additional XML types.
                   </li>
                   <li>
-                    Otherwise, a binary content type is assumed, and the function
+                    Otherwise, a binary media type is assumed, and the function
                     parameter type will be <code>xs:base64Binary</code>.
                   </li>
                   <li>
-                    An implementation MAY provide support for other input types
+                    An implementation MAY provide support for other input type mappings
                     such as HTML or JSON.
                   </li>
                 </ol>
@@ -396,10 +409,10 @@
         <section id="consumes-annotation">
           <h5>Consumes Annotation</h5>
           <p>
-            Resource Functions MAY be constrained to certain content type by means of
-            a <code>%rest:consumes</code> annotation. A function will only be invoked
+            Resource Functions MAY be constrained to certain Media Type by means
+            of a <code>%rest:consumes</code> annotation. A function will only be invoked
             if the HTTP <code>Content-Type</code> header of the request matches one
-            of the given types.
+            of the given Media Types.
           </p>
         </section>
 
@@ -411,7 +424,7 @@
             matches one of the given types.
           </p>
           <pre class="example highlight" title="Consumes and Produces Annotation">
-            (: Will only be invoked if a user supplies the specified content types :)
+            (: Will only be invoked if a user supplies the specified media types :)
             declare
               %rest:path("/widgets")
               %rest:consumes("application/xml", "application/atom+xml")
@@ -486,8 +499,8 @@
           <h5>Form Parameters</h5>
           <p>
             The annotation <code>%rest:form-param</code> is provided for accessing
-            parameters from an HTML form submitted with the content type
-            <code>application/x-www-form-urlencoded</code>.
+            parameters from an HTML form submitted where the HTTP <code>Content-Type</code>
+            header matches the <code>application/x-www-form-urlencoded</code> Media Type.
           </p>
           <pre class="example highlight" title="Form Parameter Annotation with a default value">
             declare
@@ -695,14 +708,14 @@
           </p>
           <p>Most specific constraints first:</p>
           <ol>
-            <!-- TODO break Content Type into Consumes and Produces? -->
-            <li>Path, Method, Content Type</li>
+            <!-- TODO break Media Type into Consumes and Produces? -->
+            <li>Path, Method, Media Type</li>
             <li>Path, Method</li>
-            <li>Path, Content Type</li>
+            <li>Path, Media Type</li>
             <li>Path</li>
-            <li>Method, Content Type</li>
+            <li>Method, Media Type</li>
             <li>Method</li>
-            <li>Content Type</li>
+            <li>Media Type</li>
           </ol>
           <pre class="example highlight" title="Constraint Specificity">
 <span class="explain">The following Resource Function:</span>
@@ -767,19 +780,19 @@ local:function-2() {
 /{$type}</pre>
         </section>
         <section id="media-type-preference">
-          <h4>Content Type Preference</h4>
+          <h4>Media Type Preference</h4>
           <p>
-            More than one Content Type from Resource Function Consumes or Produces
+            More than one Media Type from Resource Function Consumes or Produces
             Annotations MAY appear to satisfy a request. Often, these can be
-            disambiguated by specificity. The most specific content types MUST be
+            disambiguated by specificity. The most specific media types MUST be
             selected as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining content type specifity are:</p>
+          <p>The rules determining media type specifity are:</p>
           <ol>
             <li>Absolute before Wildcard</li>
-            <p>Absolute Content Types are considered more specific than Content Types
-            with wildcard subtypes</p>
-            <pre class="example highlight" title="Content Type Specificity">
+            <p>Absolute Media Types are considered more specific than Media Ranges (Media Types
+            with wildcard subtypes)</p>
+            <pre class="example highlight" title="Media Type Specificity">
               <code>application/xml</code> <span class="explain">is more specific than</span> <code>application/*</code>.
             </pre>
           </ol>
