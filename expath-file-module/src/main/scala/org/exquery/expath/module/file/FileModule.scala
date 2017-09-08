@@ -26,19 +26,18 @@
  */
 package org.exquery.expath.module.file
 
-import java.io.{FileInputStream, BufferedInputStream, InputStream, RandomAccessFile, IOException, File}
-import java.nio.charset.{UnsupportedCharsetException, IllegalCharsetNameException, Charset}
+import java.io._
+import java.net.URI
+import java.nio.file._
+import java.nio.charset.{Charset, IllegalCharsetNameException, StandardCharsets, UnsupportedCharsetException}
+import java.util.Comparator
 
-import scodec.bits.ByteVector
+import cats.effect.{IO, Sync}
+import fs2.io.file.{FileHandle, pulls}
+import fs2.text.utf8DecodeC
+import fs2.{Chunk, Pipe, Pull, Sink, Stream, io}
 
-import scala.io.Codec
-import scalax.file.{FileSystem, Path}
-import scalaz._
-import Scalaz._
-import Maybe._
-import scalaz.stream._
-import scalaz.concurrent.Task
-
+import scala.util.Try
 
 
 object FileModule {
@@ -47,8 +46,6 @@ object FileModule {
 
   val DEFAULT_BUF_SIZE = 4096  // 4KB
   val DEFAULT_CHAR_ENCODING = "UTF-8"
-
-  type AppendStreamFn[T] = (Process[Task, T]) => \/[FileModuleError, Unit]
 }
 
 /**
@@ -60,91 +57,184 @@ trait FileModule {
   import FileModule._
 
   /**
-   * Determine if the path on the filesystem exists
-   *
-   * @param path
-   */
-  def exists(path: String) : Boolean = existingPath(path).isRight
+    * Determine if the path on the filesystem exists
+    *
+    * @param path
+    */
+  def exists[F[_]](path: String)(implicit F: Sync[F]): F[Boolean] = F.map(existingPath(path))(_ => true)
 
   /**
-   * Determine if the path points to a directory on the filesystem
-   *
-   * @param path
-   */
-  def isDir(path: String) : Boolean = asPath(path).isDirectory
+    * Determine if the path points to a directory on the filesystem
+    *
+    * @param path
+    */
+  def isDir[F[_]](path: String)(implicit F: Sync[F]): F[Boolean] = F.map(asPath(path))(p => Files.isDirectory(p))
 
   /**
-   * Determine if the path points to a file on the filesystem
-   *
-   * @param path
-   */
-  def isFile(path: String) : Boolean = asPath(path).isFile
+    * Determine if the path points to a file on the filesystem
+    *
+    * @param path
+    */
+  def isFile[F[_]](path: String)(implicit F: Sync[F]): F[Boolean] = F.map(asPath(path))(p => Files.isRegularFile(p))
 
   /**
-   * Retrieve the last modified time of the file/directory
-   * indicated by the path
-   *
-   * @param path
-   */
-  def lastModified(path: String) : \/[FileModuleError, Long] = existingPath(path).map(_.lastModified)
+    * Retrieve the last modified time of the file/directory
+    * indicated by the path
+    *
+    * @param path
+    */
+  def lastModified[F[_]](path: String)(implicit F: Sync[F]): F[Long] = F.map(existingPath(path))(p => Files.getLastModifiedTime(p).toMillis)
 
   /**
-   * Determine the size of the file on the filesystem
-   * if the path points to a directory then 0 is returned
-   *
-   * @param path
-   */
-  def fileSize(file: String) : \/[FileModuleError, Long] = {
-    existingPath(file).map {
-      p =>
-        if(p.isDirectory) {
-          Some(0l)
-        } else {
-          p.size
-        }
-    }.flatMap(_.getOrElse(0l).right)
-  }
-
-  /**
-   * Write binary data to a file
-   *
-   * @param file
-   * @param append determines whether to append to an existing file or overwrite a file
-   */
-  def write(file : String, append: Boolean) : \/[FileModuleError, AppendStreamFn[ByteVector]] = {
-    val path = Path.fromString(file)
-    val ep : \/[FileModuleError, Path] =
-      if(!path.parent.map(_.exists).getOrElse(false)) {
-        FileModuleErrors.NoDir.left
-      } else if(path.isDirectory) {
-        FileModuleErrors.IsDir.left
+    * Determine the size of the file on the filesystem
+    * if the path points to a directory then 0 is returned
+    *
+    * @param file
+    */
+  def fileSize[F[_]](file: String)(implicit F: Sync[F]): F[Long] = {
+    F.map(existingPath(file)) { path =>
+      if (Files.isDirectory(path)) {
+        0l
       } else {
-        path.right
+        Try(Files.size(path)).getOrElse(0l)
       }
-
-    ep.map {
-      path =>
-        source: Process[Task, ByteVector] =>
-          import Process._
-          source.to(io.fileChunkW(path.toAbsolute.path, append = append)).run.attemptRun.leftMap(FileModuleErrors.IoError)
     }
   }
 
   /**
-   * Write text data to a file
-   *
-   * @param file
-   * @param append determines whether to append to an existing file or overwrite a file
-   * @param encoding
+    * Write binary data to a file
+    *
+    * @param file
+    * @param append determines whether to append to an existing file or overwrite a file
+    */
+  def writeBinary[F[_]](file: String, append: Boolean)(implicit F: Sync[F]): F[Sink[F, Byte]] = {
+    F.map(asPath(file))(path =>
+      if (!Option(path.getParent).map(Files.exists(_)).getOrElse(false)) {
+        throw new IOException("NoDir")
+      } else if (Files.isDirectory(path)) {
+        throw new IOException("IsDir")
+      } else {
+        if (append) {
+          io.file.writeAll(path, Seq(StandardOpenOption.APPEND))
+        } else {
+          io.file.writeAll(path)
+        }
+      }
+    )
+  }
+
+  /**
+    * Write text data to a file
+    *
+    * @param file
+    * @param append determines whether to append to an existing file or overwrite a file
+    * @param encoding
+    */
+  def writeText[F[_]](file: String, append: Boolean, encoding: String = DEFAULT_CHAR_ENCODING)(implicit F: Sync[F]): F[Sink[F, String]] = {
+    F.map(F.product(charset(encoding), writeBinary(file, append))) { case (charset, writer) =>
+      encoder(charset) andThen writer
+    }
+  }
+
+  /**
+    * Writes binary data to a file
+    *
+    * @param file
+    * @param offset If the file exists, then start writing the data at offset. Starts from 0 otherwise.
+    */
+  def writeBinary[F[_]](file: String, offset: Int = 0)(implicit F: Sync[F]): F[Sink[F, Byte]] = {
+    F.map(asPath(file))(path =>
+      if (!Option(path.getParent).map(Files.exists(_)).getOrElse(false)) {
+        throw new FileModuleException(FileModuleErrors.NoDir)
+      } else if (Files.isDirectory(path)) {
+        throw new FileModuleException(FileModuleErrors.IsDir)
+      } else if (offset < 0 || offset > Files.size(path)) {
+        throw new FileModuleException(FileModuleErrors.OutOfRange)
+      } else {
+        writeAll(path, offset)
+      }
+    )
+  }
+
+  /**
+   * Similar to fs2.io.file#writeAll(Path, Seq) but
+   * starts writing to the file at {@code offset}
    */
-  def write(file : String, append: Boolean, encoding: String = DEFAULT_CHAR_ENCODING) : \/[FileModuleError, AppendStreamFn[String]] = {
+  private[file] def writeAll[F[_]](path: Path, offset: Int, flags: Seq[StandardOpenOption] = List(StandardOpenOption.CREATE))(implicit F: Sync[F]): Sink[F, Byte] = {
 
-    def encodeString(charset: Charset)(string: String) : ByteVector = ByteVector.view(string.getBytes(charset))
+    def _writeAllToFileHandle1[F[_]](in: Stream[F, Byte], out: FileHandle[F], offset: Long): Pull[F, Nothing, Unit] =
+      in.pull.unconsChunk.flatMap {
+        case None => Pull.done
+        case Some((hd,tl)) =>
+          _writeAllToFileHandle2(hd, out, offset) >> _writeAllToFileHandle1(tl, out, offset + hd.size)
+      }
 
-    charset(encoding).map {
-      cs =>
-        source: Process[Task, String] =>
-          write(file, append = append).map(_(source.pipe(process1.lift(encodeString(cs)))))
+    def _writeAllToFileHandle2[F[_]](buf: Chunk[Byte], out: FileHandle[F], offset: Long): Pull[F, Nothing, Unit] =
+      Pull.eval(out.write(buf, offset)) flatMap { (written: Int) =>
+        if (written >= buf.size)
+          Pull.pure(())
+        else
+          _writeAllToFileHandle2(buf.drop(written).toOption.get.toChunk, out, offset + written)
+      }
+
+    in => (for {
+      out <- pulls.fromPath(path, StandardOpenOption.WRITE :: flags.toList)
+      _ <- _writeAllToFileHandle1(in, out.resource, offset)
+    } yield ()).stream
+  }
+
+  /**
+    * Reads binary data from a file
+    *
+    * @param file
+    * @param offset Optionally the offset to start reading from. Starts from 0 otherwise.
+    * @param length Optionally the length of data to read. If unspecified then all data is read.
+    */
+  def readBinary[F[_]](file: String, offset: Int = 0, length: Option[Int] = None)(implicit F: Sync[F]) : F[Stream[IO, Byte]] = {
+    F.map(existingPath(file)) { path =>
+      if(Files.isDirectory(path)) {
+        throw new FileModuleException(FileModuleErrors.IsDir)
+      } else if(offset < 0 || length.getOrElse(0) < 0) {
+        throw new FileModuleException(FileModuleErrors.OutOfRange)
+      } else {
+
+        val is: InputStream = Files.newInputStream(path)
+        val stream : Stream[IO, Byte] = io.readInputStream(IO(is), DEFAULT_BUF_SIZE, true)
+
+        // move to the offset
+        val offsetStream = stream.drop(offset)
+
+        // restrict to length
+        length match {
+          case Some(len) =>
+            offsetStream.take(len)
+          case None =>
+            offsetStream
+        }
+      }
+    }
+  }
+
+  /**
+    * Read text line by line from a file
+    *
+    * @param file
+    * @param encoding Optionally the character encoding to use, otherwise UTF-8 will be used.
+    */
+  def readText[F[_]](file: String, encoding: String = DEFAULT_CHAR_ENCODING)(implicit F: Sync[F]) : F[Stream[IO, String]] = {
+    F.map(F.product(charset(encoding), readBinary(file, 0, None))) { case (charset, reader) =>
+      reader through decoder(charset)
+    }
+  }
+
+  private def encoder[F[_]](charset: Charset): Pipe[F, String, Byte] = _.flatMap(s => Stream.chunk(Chunk.bytes(s.getBytes(charset))))
+
+  private def decoder[F[_]](charset: Charset): Pipe[F, Byte, String] = {
+    if(charset == StandardCharsets.UTF_8) {
+      _.chunks.through(utf8DecodeC)
+    } else {
+      //TODO(AR) we need to add support for charsets other than UTF-8
+      throw new FileModuleException(FileModuleErrors.UnknownEncoding)
     }
   }
 
@@ -154,24 +244,23 @@ trait FileModule {
    * @param source the source to copy
    * @param target the destination for the copy
    */
-  def copy(source: String, target: String): Maybe[FileModuleError] = {
-    existingPath(source).flatMap {
-      src =>
-        val trg = Path.fromString(target)
-        if (src.isDirectory && trg.exists && trg.isFile) {
-          FileModuleErrors.Exists.left
-        } else if (src.isFile && trg.exists && trg.isDirectory && (trg / src.name).isDirectory) {
-          FileModuleErrors.IsDir.left
-        } else {
-          try {
-            src.copyTo(trg, createParents = true, replaceExisting = true)
-            Unit.right
-          } catch {
-            case e: Exception =>
-              FileModuleErrors.IoError(e).left
-          }
+  def copy[F[_]](source: String, target: String)(implicit F: Sync[F]): F[String] = {
+    F.map(F.product(existingPath(source), asPath(target))) { case (src, trg) =>
+
+      if (Files.isDirectory(src) && Files.exists(trg) && Files.isRegularFile(trg)) {
+        throw new FileModuleException(FileModuleErrors.Exists)
+      } else if (Files.isRegularFile(src) && Files.exists(trg) && Files.isDirectory(trg) && Files.isDirectory(trg.resolve(src.getFileName))) {
+        throw new FileModuleException(FileModuleErrors.IsDir)
+      } else {
+        try {
+          val dest = Files.copy(src, trg, StandardCopyOption.REPLACE_EXISTING)
+          dest.toAbsolutePath.toString
+        } catch {
+          case e: Exception =>
+            throw new FileModuleException(FileModuleErrors.IoError, e)
         }
-    }.swap.toMaybe
+      }
+    }
   }
 
   /**
@@ -179,17 +268,17 @@ trait FileModule {
    *
    * @param dir
    */
-  def createDir(dir: String) : Maybe[FileModuleError] = {
-    val path = Path.fromString(dir)
-    if (path.exists) {
-      if (path.isFile) {
-        just(FileModuleErrors.Exists)
+  def createDir[F[_]](dir: String)(implicit F: Sync[F]) : F[String] = {
+    F.map(asPath(dir)) { path =>
+      if (Files.exists(path)) {
+        if (Files.isRegularFile(path)) {
+          throw new FileModuleException(FileModuleErrors.Exists)
+        }
+        path.toAbsolutePath.toString
       } else {
-        empty
+        val newDir = Files.createDirectories(path)
+        newDir.toAbsolutePath.toString
       }
-    } else {
-      path.createDirectory(createParents = true)
-      empty
     }
   }
 
@@ -204,16 +293,14 @@ trait FileModule {
    *
    * @return Either an error or the full path to the created directory
    */
-  def createTempDir(prefix: String, suffix: String, dir: Maybe[String]) : \/[FileModuleError, String] = {
-    val mkdirF = targetDir(dir).map(_.map {
-      p => (prefix: String, suffix: String) => Path.createTempDirectory(prefix, suffix, p.path)
-    }) | ((prefix: String, suffix: String) => Path.createTempDirectory(prefix, suffix)).right
-
-    try {
-      mkdirF.map(_(prefix, suffix).path + dirSeparator)
-    } catch {
-      case e: Exception =>
-        FileModuleErrors.IoError(e).left
+  def createTempDir[F[_]](prefix: String, suffix: String, dir: Option[String])(implicit F: Sync[F]) : F[String] = {
+    targetDir(dir) match {
+      case Some(fDir) =>
+        F.map(fDir)(trg => pathResult(Files.createTempDirectory(trg, prefix)))  //TODO(AR) what about the suffix?
+      case None =>
+        F.delay {
+          pathResult(Files.createTempDirectory(prefix)) //TODO(AR) what about the suffix?
+        }
     }
   }
 
@@ -226,16 +313,14 @@ trait FileModule {
    *            new temporary file. If not specified then the JVM
    *            default temporary directory is used
    */
-  def createTempFile(prefix: String, suffix: String, dir: Maybe[String]) = {
-    val createTempFileF = targetDir(dir).map(_.map {
-      p => (prefix: String, suffix: String) => Path.createTempFile(prefix, suffix, p.path)
-    }) | ((prefix: String, suffix: String) => Path.createTempFile(prefix, suffix)).right
-
-    try {
-      createTempFileF.map(_(prefix, suffix).path)
-    } catch {
-      case e: Exception =>
-        FileModuleErrors.IoError(e).left
+  def createTempFile[F[_]](prefix: String, suffix: String, dir: Option[String])(implicit F: Sync[F]) : F[String] = {
+    targetDir(dir) match {
+      case Some(fDir) =>
+        F.map(fDir)(trg => pathResult(Files.createTempFile(trg, prefix, suffix)))
+      case None =>
+        F.delay {
+          pathResult(Files.createTempFile(prefix, suffix))
+        }
     }
   }
 
@@ -245,21 +330,27 @@ trait FileModule {
    * @param path
    * @param recursive required when deleting a non-empty directory
    */
-  def delete(path: String, recursive: Boolean = false): Maybe[FileModuleError] = {
-    existingPath(path).flatMap {
-      p =>
-        try {
-          if (recursive) {
-            p.deleteRecursively(true)
-          } else {
-            p.delete(true)
-          }
-          Unit.right
-        } catch {
-          case e: Exception =>
-            FileModuleErrors.IoError(e).left
-        }
-    }.swap.toMaybe
+  def delete[F[_]](path: String, recursive: Boolean = false)(implicit F: Sync[F]): F[Unit] = {
+    F.flatMap(existingPath(path)) { path =>
+      if (recursive) {
+        deleteRecursively(path)
+      } else {
+        F.delay { Files.delete(path) }
+      }
+    }
+  }
+
+  private def deleteRecursively[F[_]](p: Path)(implicit F: Sync[F]) : F[Unit] = {
+    F.delay {
+      val stream = Files.walk(p)
+      try {
+        stream
+          .sorted(Comparator.reverseOrder())
+          .forEach(Files.delete(_))
+      } finally {
+        stream.close()
+      }
+    }
   }
 
   /**
@@ -271,30 +362,45 @@ trait FileModule {
    *
    * @return A process that produces relative paths
    */
-  def list(dir: String, recursive: Boolean = false, pattern: Maybe[String]) : \/[FileModuleError, Process[Task, String]] = ls(dir, recursive, pattern, relative = true)
+  def list[F[_]](dir: String, recursive: Boolean = false, pattern: Option[String])(implicit F: Sync[F]) : F[Seq[String]] = ls(dir, recursive, pattern, relative = true)
 
-  private def ls(dir: String, recursive: Boolean = false, pattern: Maybe[String], relative : Boolean = false) : \/[FileModuleError, Process[Task, String]]  = {
-    existingPath(dir).leftMap(_ => FileModuleErrors.NoDir).map {
-      p =>
-        (p,
-        if(recursive) {
-          pattern.map(p.children(_)) | p.children()
-        } else {
-          pattern.map(p.descendants(_)) | p.descendants()
-        })
-    }.map {
-      case(p, ps) =>
-        io.resource(Task.delay(ps))(ps => Task.delay()) {
-          ps =>
-            lazy val it = ps.iterator
-            Task.delay {
-              if(it.hasNext) {
-                pathResult(it.next.relativize(p))
-              } else {
-                throw Cause.Terminated(Cause.End)
-              }
-            }
-        }
+  private def ls[F[_]](dir: String, recursive: Boolean = false, pattern: Option[String], relative : Boolean = false)(implicit F: Sync[F]) : F[Seq[String]]  = {
+
+    //TODO(AR) do we need the relative flag?
+
+    def descendants(path: Path, pattern: Option[String]): Seq[String] = {
+      //TODO(AR) implement pattern support
+      import scala.compat.java8.StreamConverters._
+      val stream = Files.walk(path)
+      try {
+        return stream.toScala[Seq].map(pathResult)
+      } finally {
+        stream.close()
+      }
+    }
+
+    def children(path: Path, pattern: Option[String]): Seq[String] = {
+      //TODO(AR) implement pattern support
+      import scala.compat.java8.StreamConverters._
+      val stream = Files.list(path)
+      try {
+        return stream.toScala[Seq].map(pathResult)
+      } finally {
+        stream.close()
+      }
+    }
+
+    F.map(
+      F.adaptError(existingPath(dir)) {
+      case t: FileModuleException =>
+        new FileModuleException(FileModuleErrors.NoDir, t)
+      }
+    ) { path =>
+      if(recursive) {
+        descendants(path, pattern)
+      } else {
+        children(path, pattern)
+      }
     }
   }
 
@@ -304,90 +410,22 @@ trait FileModule {
    * @param source the source to move
    * @param target the destination for the move
    */
-  def move(source: String, target: String): Maybe[FileModuleError] = {
-    existingPath(source).flatMap {
-      src =>
-        val trg = Path.fromString(target)
-        if (src.isDirectory && trg.exists && trg.isFile) {
-          FileModuleErrors.Exists.left
-        } else if (trg.exists && trg.isDirectory && (trg / src.name).isDirectory) {
-          FileModuleErrors.IsDir.left
-        } else {
-          try {
-            src.moveTo(trg, replace = true, atomicMove = true)
-            Unit.right
-          } catch {
-            case e: Exception =>
-              FileModuleErrors.IoError(e).left
-          }
-        }
-    }.swap.toMaybe
-  }
+  def move[F[_]](source: String, target: String)(implicit F: Sync[F]): F[String] = {
+    F.map(F.product(existingPath(source), asPath(target))) { case (src, trg) =>
 
-  /**
-   * Reads binary data from a file
-   *
-   * @param file
-   * @param offset Optionally the offset to start reading from. Starts from 0 otherwise.
-   * @param length Optionally the length of data to read. If unspecified then all data is read.
-   */
-  def readBinary(file: String, offset: Int = 0, length: Maybe[Int] = empty) : \/[FileModuleError, Channel[Task, Int, ByteVector]] = {
-    existingPath(file).flatMap {
-      p =>
-        if(p.isDirectory) {
-          FileModuleErrors.IsDir.left
-        } else if(offset < 0 || length.getOrElse(0) < 0) {
-          FileModuleErrors.OutOfRange.left
-        } else {
-          fileChunkRRange(p.toAbsolute.path).right
-        }
-    }
-  }
-
-  /**
-   * Read text line by line from a file
-   *
-   * @param file
-   * @param encoding Optionally the character encoding to use, otherwise UTF-8 will be used.
-   */
-  def readText(file: String, encoding: String = DEFAULT_CHAR_ENCODING) : \/[FileModuleError, Process[Task, String]] = {
-    existingPath(file).flatMap {
-      p =>
-        if(p.isDirectory) {
-          FileModuleErrors.IsDir.left
-        } else {
-          charset(encoding).map {
-            cs =>
-              io.linesR(p.toAbsolute.path)(Codec(cs))
-          }
-        }
-    }
-  }
-
-  /**
-   * Writes binary data to a file
-   *
-   * @param file
-   * @param offset If the file exists, then start writing the data at offset. Starts from 0 otherwise.
-   */
-  def writeBinary(file: String, offset: Int = 0) : \/[FileModuleError, AppendStreamFn[ByteVector]] = {
-    val path = Path.fromString(file)
-    val ep : \/[FileModuleError, Path] =
-      if(!path.parent.map(_.exists).getOrElse(false)) {
-        FileModuleErrors.NoDir.left
-      } else if(path.isDirectory) {
-        FileModuleErrors.IsDir.left
-      } else if(offset < 0 || path.size.map(sz => offset > sz).getOrElse(false)) {
-        FileModuleErrors.OutOfRange.left
+      if (Files.isDirectory(src) && Files.exists(trg) && Files.isRegularFile(trg)) {
+        throw new FileModuleException(FileModuleErrors.Exists)
+      } else if (Files.exists(trg) && Files.isDirectory(trg) && Files.isDirectory(trg.resolve(src.getFileName))) {
+        throw new FileModuleException(FileModuleErrors.IsDir)
       } else {
-        path.right
+        try {
+          val dest = Files.move(src, trg, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+          dest.toAbsolutePath.toString
+        } catch {
+          case e: Exception =>
+            throw new FileModuleException(FileModuleErrors.IoError, e)
+        }
       }
-
-    ep.map {
-      path =>
-        source: Process[Task, ByteVector] =>
-          import Process._
-          source.to(fileChunkWOff(path.toAbsolute.path, offset)).run.attemptRun.leftMap(FileModuleErrors.IoError)
     }
   }
 
@@ -396,14 +434,14 @@ trait FileModule {
    *
    * @param path
    */
-  def name(path: String) = asPath(path).name
+  def name[F[_]](path: String)(implicit F: Sync[F]): F[String] = F.map(asPath(path))(_.getFileName.toString)
 
   /**
    * Get the parent path of a file/directory indicated by the path
    *
    * @param path
    */
-  def parent(path: String) = asPath(path).parent.toMaybe.map(_.toAbsolute.path + dirSeparator)
+  def parent[F[_]](path: String)(implicit F: Sync[F]): F[Option[String]] = F.map(asPath(path))(p => Option(p.getParent).map(_.toAbsolutePath + dirSeparator))
 
   // /**
   //  * Get the immediate children of a directory indicated by the path
@@ -420,31 +458,26 @@ trait FileModule {
    *
    * @param path
    */
-  def pathToNative(path: String): \/[FileModuleError, String] = try {
-    pathResult(asPath(path).toAbsolute).right
-  } catch {
-    case e: IOException =>
-      FileModuleErrors.IoError(e).left
-  }
+  def pathToNative[F[_]](path: String)(implicit F: Sync[F]): F[String] = F.map(asPath(path))(_.toAbsolutePath.toString)
 
   /**
    * Creates a URI representation of the path
    *
    * @param path
    */
-  def pathToUri(path: String) = asPath(path).toURI
+  def pathToUri[F[_]](path: String)(implicit F: Sync[F]): F[URI] = F.map(asPath(path))(_.toUri)
 
   /**
    * Resolves a path relative to the current working directory
    *
    * @param path
    */
-  def resolvePath(path: String) = pathResult(asPath(path).toAbsolute)
+  def resolvePath[F[_]](path: String)(implicit F: Sync[F]): F[String] = F.map(asPath(path))(p => pathResult(p.toAbsolutePath))
 
   /**
    * The directory separator used by the operating system.
    */
-  lazy val dirSeparator : String = FileSystem.default.separator
+  lazy val dirSeparator : String = FileSystems.getDefault.getSeparator
 
   /**
    * The line separator used by the operating system.
@@ -474,122 +507,15 @@ trait FileModule {
    *
    * @return Either UnknownEncoding error or a Charset object
    */
-  private def charset(name: String) : \/[FileModuleError, Charset] = try {
-    Charset.forName(name).right
-  } catch {
-    case e @ (_: IllegalCharsetNameException | _: UnsupportedCharsetException | _: IllegalArgumentException) =>
-      FileModuleErrors.UnknownEncoding(e).left
-  }
-
-  /**
-   * Creates a process sink for writing to a file
-   * at an offset in chunks
-   *
-   * @param f The path to the file
-   * @param offset The offset to start writing at, defaults to 0
-   *
-   * @return A sink for writing to the file
-   */
-  private def fileChunkWOff(f: String, offset: Int = 0) : Sink[Task, ByteVector] = {
-    io.resource(Task.delay {
-      val raf = new RandomAccessFile(f, "rwd")
-      if(offset > 0) {
-        try {
-          raf.seek(offset)
-        } catch {
-          case ioe: IOException =>
-            throw Cause.Terminated(Cause.Error(ioe))
-        }
+  private def charset[F[_]](name: String)(implicit F: Sync[F]) : F[Charset] = {
+    F.delay {
+      try {
+        Charset.forName(name)
+      } catch {
+        case e@(_: IllegalCharsetNameException | _: UnsupportedCharsetException | _: IllegalArgumentException) =>
+          throw new FileModuleException(FileModuleErrors.UnknownEncoding, e)
       }
-      raf
-    })(raf => Task.delay(raf.close)) {
-      raf =>
-        Task.now((bytes: ByteVector) => Task.delay(raf.write(bytes.toArray)))
     }
-  }
-
-  /**
-   * Returns a Channel that can read the bytes in the range `offset -> offset+length`
-   * from a file in chunks
-   *
-   * @param f The path to the file
-   * @param bufferSize The size of the chunks to read. Note the last chunk read may be smaller than the buffer size
-   * @param offset The offset to start reading from, defaults to 0
-   * @param length Optionally the length to read, if the length is not specified we assume EOF
-   *
-   * @return A channel for reading the range from the file
-   */
-  private def fileChunkRRange(f: String, bufferSize: Int = DEFAULT_BUF_SIZE, offset: Int = 0, length: Maybe[Int] = empty) : Channel[Task, Int, ByteVector] = chunkRRange(new FileInputStream(f), bufferSize, offset, length)
-
-  /**
-   * Returns a Channel that can read the bytes in the range `offset -> offset+length`
-   * from an InputStream in chunks
-   *
-   * @param is The InputStream
-   * @param bufferSize The size of the chunks to read. Note the last chunk read may be smaller than the buffer size
-   * @param offset The offset to start reading from, defaults to 0
-   * @param length Optionally the length to read, if the length is not specified we assume EOF
-   *
-   * @return A channel for reading the range from the InputStream
-   */
-  private[file] def chunkRRange(is: InputStream, bufferSize: Int = DEFAULT_BUF_SIZE, offset: Int = 0, length: Maybe[Int] = empty) : Channel[Task, Int, ByteVector] = {
-    unsafeChunkRRange(new BufferedInputStream(is, bufferSize), offset, length).map(f => (n: Int) => {
-      val buf = new Array[Byte](n)
-      f(buf).map(ByteVector.view)
-    })
-  }
-
-  /**
-   * Returns a function that can read the bytes in the range `offset -> offset+length`
-   * from an InputStream in chunks
-   *
-   * @param is A function which realises an InputStream
-   * @param offset The offset to start reading from, defaults to 0
-   * @param length Optionally the length to read, if the length is not specified we assume EOF
-   *
-   * @return A function which given a buffer can produce a Channel for reading the InputStream
-   */
-  private def unsafeChunkRRange(is: => InputStream, offset: Int = 0, length: Maybe[Int] = empty): Channel[Task,Array[Byte],Array[Byte]] = io.resource(Task.delay {
-    if(offset > 0) {
-      scala.util.Try(is.skip(offset)) match {
-        case scala.util.Success(n) if (n < offset) =>
-          throw Cause.Terminated(Cause.Error(new IndexOutOfBoundsException()))
-        case scala.util.Failure(e) =>
-          throw Cause.Terminated(Cause.Error(e))
-        case _ =>
-          is
-      }
-    } else {
-      is
-    }
-  })(src => Task.delay(src.close)) {
-    src =>
-      var consumed = 0
-      Task.now { (buf: Array[Byte]) => Task.delay {
-        if(length.map(l => consumed >= l).getOrElse(false)) {
-          throw Cause.Terminated(Cause.End)
-        } else {
-          val m = src.read(buf)
-          if (m == -1) {
-            throw Cause.Terminated(Cause.End)
-          } else {
-            val chunk = length match {
-              case Just(l) if(consumed + m > l) =>
-                val remaining = l - consumed;
-                buf.take(remaining)
-
-              case _ if(m == buf.length) =>
-                buf
-
-              case _ =>
-                buf.take(m)
-
-            }
-            consumed += m
-            chunk
-          }
-        }
-      }}
   }
 
   /**
@@ -602,15 +528,21 @@ trait FileModule {
    *
    * @return NoDir error or a Path object
    */
-  private def targetDir(dir: Maybe[String]) : Maybe[\/[FileModuleError, Path]] =
-    dir.map(Path.fromString).map {
-      case p if !p.exists =>
-        FileModuleErrors.NoDir.left
-      case p if(p.isFile) =>
-        FileModuleErrors.NoDir.left
-      case p =>
-        p.right
+  private def targetDir[F[_]](dir: Option[String])(implicit F: Sync[F]) : Option[F[Path]] = {
+    dir.map(asPath(_)).map { path =>
+      F.flatMap(path){ p =>
+        F.delay {
+          if (!Files.exists(p)) {
+            throw new FileModuleException(FileModuleErrors.NoDir)
+          } else if (Files.isRegularFile(p)) {
+            throw new FileModuleException(FileModuleErrors.NoDir)
+          } else {
+            p
+          }
+        }
+      }
     }
+  }
 
   /**
    * Constructs a Path object from a `path`
@@ -623,11 +555,9 @@ trait FileModule {
    *
    * @return A Path object
    */
-  private def asPath(path: String) : Path = {
-    if(path.startsWith("file:")) {
-      Path(new java.io.File(new java.net.URI(path)))
-    } else {
-      Path.fromString(path)
+  private def asPath[F[_]](path: String)(implicit F: Sync[F]) : F[Path] = {
+    F.delay {
+      Paths.get(path)
     }
   }
 
@@ -638,12 +568,15 @@ trait FileModule {
    *
    * @return Either NotFound error or a Path object
    */
-  private def existingPath(path: String) : \/[FileModuleError, Path] = {
-    val p = asPath(path)
-    if(!p.exists) {
-      FileModuleErrors.NotFound.left
-    } else {
-      p.right
+  private def existingPath[F[_]](path: String)(implicit F: Sync[F]) : F[Path] = {
+    F.flatMap(asPath(path)) { p =>
+      F.delay {
+        if (!Files.exists(p)) {
+          throw new FileModuleException(FileModuleErrors.NotFound)
+        } else {
+          p
+        }
+      }
     }
   }
 
@@ -658,11 +591,20 @@ trait FileModule {
    *   File Module spec
    */
   private def pathResult(p: Path) : String = {
-    if(p.isDirectory) {
-      p.path + dirSeparator
+    if(Files.isDirectory(p)) {
+      p.toString + dirSeparator
     } else {
-      p.path
+      p.toString
     }
+  }
+}
+
+/**
+ * Exception class for signaling errors from functions that return {@code F}
+ */
+case class FileModuleException(fileModuleError: FileModuleError, cause: Throwable) extends Exception(fileModuleError.description, cause) {
+  def this(fileModuleError: FileModuleError) {
+    this(fileModuleError, null)
   }
 }
 
@@ -670,7 +612,7 @@ trait FileModule {
  * Represents an Error caused by a process in the
  * EXPath File Module
  */
-case class FileModuleError(name: String, description : String, exception: Maybe[Throwable] = empty)
+case class FileModuleError(name: String, description : String)
 
 /**
  * Errors that may be expressed by the EXPath File Module
@@ -680,11 +622,7 @@ object FileModuleErrors {
   val Exists = FileModuleError("exists", "The specified path already exists")
   val NoDir = FileModuleError("no-dir", "The specified path does not point to a directory")
   val IsDir = FileModuleError("is-dir", "The specified path points to a directory")
-  private def UnknownEncoding(exception: Maybe[Throwable]) = FileModuleError("unknown-encoding", "The specified encoding is not supported", exception)
-  val UnknownEncoding : FileModuleError = UnknownEncoding(empty[Throwable])
-  def UnknownEncoding(exception: Throwable) : FileModuleError = UnknownEncoding(just(exception))
+  val UnknownEncoding = FileModuleError("unknown-encoding", "The specified encoding is not supported")
   val OutOfRange = FileModuleError("out-of-range", "The specified offset or length is negative, or the chosen values would exceed the file bounds")
-  private def IoError(exception: Maybe[Throwable]) = FileModuleError("A generic file system error occurred", "A generic file system error occurred", exception)
-  val IoError : FileModuleError = IoError(empty[Throwable])
-  def IoError(exception: Throwable) : FileModuleError = IoError(just(exception))
+  val IoError = FileModuleError("A generic file system error occurred", "A generic file system error occurred")
 }
