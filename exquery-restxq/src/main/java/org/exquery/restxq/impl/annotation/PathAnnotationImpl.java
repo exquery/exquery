@@ -26,12 +26,6 @@
  */
 package org.exquery.restxq.impl.annotation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.exquery.http.URI;
 import org.exquery.restxq.RestXqErrorCodes;
 import org.exquery.restxq.RestXqErrorCodes.RestXqErrorCode;
@@ -40,6 +34,13 @@ import org.exquery.restxq.annotation.RestAnnotationException;
 import org.exquery.xquery.Cardinality;
 import org.exquery.xquery.Literal;
 import org.exquery.xquery.Type;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Implementation of RESTXQ Path Annotation
@@ -84,6 +85,11 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
 
     @Override
     public boolean matchesPath(final String path) {
+
+        if (path == null) {
+            return false;
+        }
+
         final Matcher m = getPathInformation().getPathMatcher(path);
         return m.matches();
     }
@@ -91,7 +97,12 @@ public class PathAnnotationImpl extends AbstractRestAnnotation implements PathAn
     @Override
     public Map<String, String> extractPathParameters(final String uriPath) {
         
-        final Map<String, String> pathParamNameAndValues = new HashMap<String, String>();        
+        final Map<String, String> pathParamNameAndValues = new HashMap<String, String>();
+
+        if (uriPath == null) {
+            return pathParamNameAndValues;
+        }
+
         final Matcher m = getPathInformation().getPathMatcher(uriPath);        
 
         if(m.matches()) {

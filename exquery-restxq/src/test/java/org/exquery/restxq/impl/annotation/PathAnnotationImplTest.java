@@ -38,6 +38,7 @@ import org.exquery.xquery3.Annotation;
 import org.exquery.xquery3.FunctionSignature;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -468,6 +469,24 @@ public class PathAnnotationImplTest {
         final String requestPath = "/path1";
 
         assertTrue(pa.matchesPath(requestPath));
+        final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
+        assertEquals(0, requestPathParams.size());
+    }
+
+    @Test
+    public void parse_nopath_zeroParams() throws RestAnnotationException {
+
+        final PathAnnotationImpl pa = new PathAnnotationImpl();
+        pa.setFunctionSignature(new NoArgsFunctionSignature());
+        pa.setLiterals(new Literal[]{
+                new StringLiteral("/path1")
+        });
+
+        pa.initialise();
+
+        final String requestPath = null;
+
+        assertFalse(pa.matchesPath(requestPath));
         final Map<String, String> requestPathParams = pa.extractPathParameters(requestPath);
         assertEquals(0, requestPathParams.size());
     }
