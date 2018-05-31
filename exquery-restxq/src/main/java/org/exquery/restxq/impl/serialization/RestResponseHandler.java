@@ -26,10 +26,6 @@
  */
 package org.exquery.restxq.impl.serialization;
 
-import java.util.EnumMap;
-import java.util.Map;
-import javax.xml.namespace.QName;
-
 import org.exquery.http.ContentTypeHeader;
 import org.exquery.http.HttpHeader;
 import org.exquery.http.HttpResponse;
@@ -38,6 +34,10 @@ import org.exquery.restxq.Namespace;
 import org.exquery.restxq.RestXqServiceException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.QName;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Class to process a rest:response Element which
@@ -51,16 +51,17 @@ public class RestResponseHandler {
     private final static String EXPATH_HTTP_CLIENT_NS_PREFIX = "http";
     
     public static QName REST_RESPONSE_ELEMENT_NAME = new QName(Namespace.ANNOTATION_NS, "response");
-    private static QName HTTP_RESPONSE_ELEMENT_NAME = new QName(EXPATH_HTTP_CLIENT_NS_URI, "response");
-    private static QName HTTP_HEADER_ELEMENT_NAME = new QName(EXPATH_HTTP_CLIENT_NS_URI, "header");
+    private static final QName HTTP_RESPONSE_ELEMENT_NAME = new QName(EXPATH_HTTP_CLIENT_NS_URI, "response");
+    private static final QName HTTP_HEADER_ELEMENT_NAME = new QName(EXPATH_HTTP_CLIENT_NS_URI, "header");
     
-    private static QName SERIALIZATION_PARAMETERS_ELEMENT_NAME = new QName(org.exquery.serialization.Namespace.XSLT_XQUERY_SERIALIZATION_NS, "serialization-parameters");
-    private static QName METHOD_ELEMENT_NAME = new QName(org.exquery.serialization.Namespace.XSLT_XQUERY_SERIALIZATION_NS, "method");
+    private static final QName SERIALIZATION_PARAMETERS_ELEMENT_NAME = new QName(org.exquery.serialization.Namespace.XSLT_XQUERY_SERIALIZATION_NS, "serialization-parameters");
+    private static final QName METHOD_ELEMENT_NAME = new QName(org.exquery.serialization.Namespace.XSLT_XQUERY_SERIALIZATION_NS, "method");
     
-    private static String STATUS_ATTR_NAME = "status";
-    private static String REASON_ATTR_NAME = "reason";
-    private static String NAME_ATTR_NAME = "name";
-    private static String VALUE_ATTR_NAME = "value";
+    private static final String STATUS_ATTR_NAME = "status";
+    private static final String REASON_ATTR_NAME = "reason";
+    private static final String MESSAGE_ATTR_NAME = "message";
+    private static final String NAME_ATTR_NAME = "name";
+    private static final String VALUE_ATTR_NAME = "value";
 
     /**
      * Processes a rest:response element and sets the appropriate headers and fields in the http response
@@ -114,8 +115,11 @@ public class RestResponseHandler {
             }
         }
         
-        //get the reason (if present)
-        final String reason = httpResponse.getAttribute(REASON_ATTR_NAME);
+        //get the message (if present)
+        final String message = httpResponse.getAttribute(MESSAGE_ATTR_NAME);
+
+        //get the reason (if message is not present)
+        final String reason = (message == null || message.isEmpty()) ? httpResponse.getAttribute(REASON_ATTR_NAME) : message;
         
         //set the status and reason
         if(httpStatus != null) {
