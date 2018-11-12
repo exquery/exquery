@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
  *
  * @author Adam Retter
  */
-public interface Sequence<T> extends Iterable<TypedValue<T>> {
+public interface Sequence<T> extends Iterable<TypedValue<T>>, AutoCloseable {
     
     @Override
     public Iterator<TypedValue<T>> iterator();
@@ -55,12 +55,15 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
      * @return The Sequence without the first Item
      */
     public Sequence<T> tail();
-    
+
+    @Override
+    void close() throws SequenceException;
+
     /**
      * The Empty Sequence
      */
     public static Sequence EMPTY_SEQUENCE = new Sequence<Void>(){
-        
+
         private Iterator<TypedValue<Void>> EMPTY_ITERATOR = new Iterator<TypedValue<Void>>() {
             
             @Override
@@ -93,5 +96,23 @@ public interface Sequence<T> extends Iterable<TypedValue<T>> {
         public Sequence<Void> tail() {
             return EMPTY_SEQUENCE;
         }
+
+        @Override
+        public void close() {
+        }
     };
+
+    class SequenceException extends Exception {
+        public SequenceException(String message) {
+            super(message);
+        }
+
+        public SequenceException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public SequenceException(Throwable cause) {
+            super(cause);
+        }
+    }
 }

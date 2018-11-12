@@ -76,4 +76,8 @@ public class SequenceImpl<T> implements Sequence<T> {
         seq.sequence = sequence.subList(1, sequence.size());
         return seq;
     }
+
+    @Override
+    public void close() {
+    }
 }
