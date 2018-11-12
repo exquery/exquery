@@ -186,10 +186,20 @@ public abstract class AbstractRestXqService implements RestXqService {
     public void service(final HttpRequest request, final HttpResponse response, final ResourceFunctionExecuter resourceFunctionExecuter, final RestXqServiceSerializer restXqServiceSerializer) throws RestXqServiceException {
         
         final Set<TypedArgumentValue> typedArgumentValues = extractParameters(request);
-        
-        final Sequence result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues, request);
-        
-        restXqServiceSerializer.serialize(result, getResourceFunction().getSerializationAnnotations(), response);
+
+        Sequence result = null;
+        try {
+            result = resourceFunctionExecuter.execute(getResourceFunction(), typedArgumentValues, request);
+            restXqServiceSerializer.serialize(result, getResourceFunction().getSerializationAnnotations(), response);
+        } finally {
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (final Sequence.SequenceException e) {
+                    throw new RestXqServiceException(e.getMessage(), e);
+                }
+            }
+        }
     }
 
     /**
