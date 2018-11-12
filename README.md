@@ -12,8 +12,17 @@ It is planned that a C++ implementation will also follow eventually.
 
 ## Build
 1. Clone the Repository
-2. cd exquery-distribution
+```bash
+git clone https://github.com/exquery/exquery.git
+```
+
+2. Enter the cloned repo
+```bash
+cd exquery
+```
+
 3. mvn clean install
+
 4. Each Module will contain a .jar file in its target/ folder
 
 ## Modules
@@ -49,9 +58,6 @@ API for EXQuery Annotations based on the [W3C XSLT and XQuery Serialization 3.0 
 
 ### exquery-serialization-annotations
 Base Implementation of EXQuery Annotations based on [W3C XSLT and XQuery Serialization 3.0 specification](http://www.w3.org/TR/xslt-xquery-serialization-30/), builds on the [exquery-serialization-annotations-api](#exquery-serialization-annotations-api).
-
-### exquery-distribution
-Maven project for building all modules and creating an EXQuery distribution.
 
 ### exquery-parent
 Maven parent POM for common Maven settings for each module.

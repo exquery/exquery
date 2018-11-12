@@ -5,7 +5,7 @@
         <groupId>org.exquery</groupId>
         <artifactId>exquery-parent</artifactId>
         <version>0.1.32-SNAPSHOT</version>
-        <relativePath>../exquery-parent/pom.xml</relativePath>
+        <relativePath>exquery-parent/pom.xml</relativePath>
     </parent>
     
     <artifactId>exquery-distribution</artifactId>
@@ -23,17 +23,17 @@
     
     
     <modules>
-        <module>../exquery-parent</module>
-        <module>../exquery-common</module>
-        <module>../exquery-xquery</module>
-        <module>../exquery-xquery3</module>
-        <module>../exquery-annotations-common-api</module>        
-        <module>../exquery-annotations-common</module> 
-        <module>../exquery-serialization-annotations-api</module>
-        <module>../exquery-serialization-annotations</module>
-        <module>../exquery-restxq-api</module>
-        <module>../exquery-restxq</module>
-        <!-- module>../expath-file-module</module -->
+        <module>exquery-parent</module>
+        <module>exquery-common</module>
+        <module>exquery-xquery</module>
+        <module>exquery-xquery3</module>
+        <module>exquery-annotations-common-api</module>
+        <module>exquery-annotations-common</module>
+        <module>exquery-serialization-annotations-api</module>
+        <module>exquery-serialization-annotations</module>
+        <module>exquery-restxq-api</module>
+        <module>exquery-restxq</module>
+        <!-- module>expath-file-module</module -->
     </modules>
     
 </project>
