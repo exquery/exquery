@@ -69,6 +69,36 @@ public class ContentTypeHeaderTest {
         assertEquals("UTF-8", header.getCharset());
     }
     
+    @Test
+    public void extracts_internetMediaType_and_charset3() {
+        final String headerValue = APPLICATION_XML.getMediaType() + "; charset=\"UTF-8\"";
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertEquals("UTF-8", header.getCharset());
+    }
+    
+    @Test
+    public void extracts_internetMediaType_with_extendingParameter_and_nullCharset() {
+        final String headerValue = APPLICATION_XML.getMediaType() + "; parameter=some_value";
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertNull(header.getCharset());
+    }
+    
+    @Test
+    public void extracts_internetMediaType_with_additionalParameter_and_charset() {
+        final String headerValue = APPLICATION_XML.getMediaType() + "; parameter=some_value; charset=UTF-8";
+        
+        final ContentTypeHeader header = new ContentTypeHeader(headerValue);
+        
+        assertEquals(APPLICATION_XML.getMediaType(), header.getInternetMediaType());
+        assertEquals("UTF-8", header.getCharset());
+    }
+    
     @Test(expected = IllegalArgumentException.class)
     public void rejects_wildcard_internetMediaType() {
         final ContentTypeHeader header = new ContentTypeHeader(ANY.getMediaType());

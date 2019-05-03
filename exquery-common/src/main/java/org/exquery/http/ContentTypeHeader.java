@@ -41,8 +41,12 @@ public class ContentTypeHeader {
     private final static String CHARSET_SEPARATOR = ";";
     private final static String CHARSET_KEY = "charset";
     private final static String CHARSET_KEY_VALUE_SEPARATOR = "=";
-
-    public final static String contentType_regExp =  "(" + InternetMediaType.mediaType_regExp + ")" + "(" + CHARSET_SEPARATOR + "\\s*" + CHARSET_KEY + CHARSET_KEY_VALUE_SEPARATOR + "(.+))?";
+    
+    // @see <a herf="https://tools.ietf.org/html/rfc2978#section-2.3">Section 2.3 of [RFC2978]</a>
+    public final static String charset_regExp = "[a-zA-Z0-9!#\\$%&'\\+\\-\\^_`\\{\\}~]+";
+    public final static String charsetParam_regExp = CHARSET_KEY + CHARSET_KEY_VALUE_SEPARATOR + "\"?" + "(" + charset_regExp + ")" + "\"?";
+    
+    public final static String contentType_regExp = "^(" + InternetMediaType.mediaType_regExp + ")" + "(.*" + CHARSET_SEPARATOR + "\\s*" + charsetParam_regExp + ")?.*";
     public final static Pattern ptnContentType = Pattern.compile(contentType_regExp);
 
     private final static Pattern ptnInternetMediaType = Pattern.compile(InternetMediaType.mediaType_regExp);
