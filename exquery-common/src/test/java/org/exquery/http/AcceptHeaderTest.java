@@ -176,4 +176,13 @@ public class AcceptHeaderTest {
         
         assertEquals(appXmlStr + ";q=" + Float.toString(qualityFactor) + ";x=y", appXml.toString());
     }
+
+    /**
+     * Supplied to a RESTXQ Resource Function by Chrome Version 73.0.3683.103 on macOS 10.14.4
+     */
+    @Test
+    public void chromeAcceptHeader() {
+        final String acceptHeaderValue = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3";
+        new AcceptHeader(acceptHeaderValue);
+    }
 }

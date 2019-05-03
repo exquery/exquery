@@ -50,7 +50,7 @@ public class AcceptHeader {
     private final static String QUALITY_PARAM_REGEX = PARAMETER_SEPARATOR + "\\s?" + QUALITY_PARAMETER + PARAMETER_KEY_VALUE_SEPARATOR + QUALITY_FACTOR_REGEX;
     
     //accept-extension components
-    private final static String TOKEN_REGEX = "[a-z]+";
+    private final static String TOKEN_REGEX = "[!#$%&'*+\\-.^_`|~0-9a-zA-z]+";
     private final static String QUOTED_STRING = "\"[a-z0-9]+\"";
     private final static String EXTENSION_PARAM_REGEX = PARAMETER_SEPARATOR + "\\s?" + TOKEN_REGEX + PARAMETER_KEY_VALUE_SEPARATOR + TOKEN_REGEX + "|(?:" + QUOTED_STRING + ")";
     
