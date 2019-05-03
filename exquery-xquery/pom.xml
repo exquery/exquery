@@ -21,20 +21,6 @@
       <tag>HEAD</tag>
   </scm>
     
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <usedDependencies>
-                        <usedDependency>org.exquery:exquery-common</usedDependency>
-                    </usedDependencies>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
     <dependencies>
         <dependency>
             <groupId>org.exquery</groupId>
