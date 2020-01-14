@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import static org.exquery.InternetMediaType.*;
 import org.exquery.http.AcceptHeader.Accept;
-import org.exquery.http.AcceptHeader.Accept.Extension;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.is;
@@ -78,9 +77,9 @@ public class AcceptHeaderTest {
         final AcceptHeader acceptHeader = new AcceptHeader(appXml + "," + appXhtml + "," + appPdf);
         
         assertEquals(3, acceptHeader.getAccepts().size());
-        assertEquals(appXml, acceptHeader.getAccepts().get(0).getMediaRange());
+        assertEquals(appPdf, acceptHeader.getAccepts().get(0).getMediaRange());
         assertEquals(appXhtml, acceptHeader.getAccepts().get(1).getMediaRange());
-        assertEquals(appPdf, acceptHeader.getAccepts().get(2).getMediaRange());
+        assertEquals(appXml, acceptHeader.getAccepts().get(2).getMediaRange());
     }
     
     @Test
@@ -91,22 +90,49 @@ public class AcceptHeaderTest {
         final AcceptHeader acceptHeader = new AcceptHeader(appXml + ", " + appXhtml + ", " + appPdf);
         
         assertEquals(3, acceptHeader.getAccepts().size());
-        assertEquals(appXml, acceptHeader.getAccepts().get(0).getMediaRange());
+        assertEquals(appPdf, acceptHeader.getAccepts().get(0).getMediaRange());
         assertEquals(appXhtml, acceptHeader.getAccepts().get(1).getMediaRange());
-        assertEquals(appPdf, acceptHeader.getAccepts().get(2).getMediaRange());
+        assertEquals(appXml, acceptHeader.getAccepts().get(2).getMediaRange());
     }
-    
+
     @Test
     public void multipleMediaRangesWith_withQualityFactors() {
         final Accept appXml = new Accept(APPLICATION_XML);
         final Accept appXhtml = new Accept(APPLICATION_XHTML_XML, 0.9f);
         final Accept appPdf = new Accept(APPLICATION_PDF, 0.4f);
-        final AcceptHeader acceptHeader = new AcceptHeader(appXml.toString() + "," + appXhtml.toString() + "," + appPdf.toString());
-        
+        final String headerValue = appXml.toString() + "," + appXhtml.toString() + "," + appPdf.toString();
+        final AcceptHeader acceptHeader = new AcceptHeader(headerValue);
+
         assertEquals(3, acceptHeader.getAccepts().size());
         assertEquals(appXml, acceptHeader.getAccepts().get(0));
         assertEquals(appXhtml, acceptHeader.getAccepts().get(1));
         assertEquals(appPdf, acceptHeader.getAccepts().get(2));
+    }
+
+    @Test
+    public void mediaRangesWith_acceptExts() {
+        final Accept appXml = new Accept(APPLICATION_XML);
+        final Accept appXhtml = new Accept(APPLICATION_XHTML_XML, new Accept.Weight(0.9f, new Accept.AcceptExt[] { new Accept.AcceptExt("a"), new Accept.AcceptExt("x", "y")}));
+        final Accept appPdf = new Accept(APPLICATION_PDF, new Accept.Weight(0.4f, new Accept.AcceptExt[] { new Accept.AcceptExt("1", "2") }));
+        final String headerValue = appXml.toString() + "," + appXhtml.toString() + "," + appPdf.toString();
+        final AcceptHeader acceptHeader = new AcceptHeader(headerValue);
+
+        assertEquals(3, acceptHeader.getAccepts().size());
+        assertEquals(appXml, acceptHeader.getAccepts().get(0));
+        assertEquals(appXhtml, acceptHeader.getAccepts().get(1));
+        assertEquals(appPdf, acceptHeader.getAccepts().get(2));
+    }
+
+    @Test
+    public void mediaRangesWith_parameters() {
+        final Accept appXml = new Accept(APPLICATION_XML, new Accept.Parameter[] { new Accept.Parameter("x", "y"), new Accept.Parameter("a", "b") });
+        final Accept appXhtml = new Accept(APPLICATION_XHTML_XML, new Accept.Parameter[] { new Accept.Parameter("y", "x"), new Accept.Parameter("b", "a") }, new Accept.Weight(0.9f));
+        final String headerValue = appXml.toString() + "," + appXhtml.toString();
+        final AcceptHeader acceptHeader = new AcceptHeader(headerValue);
+
+        assertEquals(2, acceptHeader.getAccepts().size());
+        assertEquals(appXml, acceptHeader.getAccepts().get(0));
+        assertEquals(appXhtml, acceptHeader.getAccepts().get(1));
     }
     
     @Test
@@ -114,15 +140,15 @@ public class AcceptHeaderTest {
         
         final Accept txtHtml = new Accept(TEXT_HTML);
         final Accept appXhtml = new Accept(APPLICATION_XHTML_XML);
-        final Accept appXml = new Accept(APPLICATION_XML, 0.8f);
+        final Accept appXml = new Accept(APPLICATION_XML, 1);
         final Accept appPdf = new Accept(APPLICATION_PDF, 0.6f);
         final Accept any = new Accept(ANY, 0.1f);
         
         //expected result
         final List<Accept> expectedAccepts = new ArrayList<Accept>(){{
-            add(txtHtml);
             add(appXhtml);
             add(appXml);
+            add(txtHtml);
             add(appPdf);
             add(any);
         }};
@@ -153,16 +179,16 @@ public class AcceptHeaderTest {
     public void acceptToString_mediaRangeAndQualityFactor() {
         final String appXmlStr = APPLICATION_XML.getMediaType();
         final float qualityFactor = 0.6f;
-        final Accept appXml = new Accept(appXmlStr, qualityFactor);
+        final Accept appXml = new Accept(appXmlStr, new Accept.Weight(qualityFactor));
         
-        assertEquals(appXmlStr + ";q=" + Float.toString(qualityFactor), appXml.toString());
+        assertEquals(appXmlStr + ";q=" + qualityFactor, appXml.toString());
     }
     
     @Test
-    public void acceptToString_mediaRangeAndExtension() {
+    public void acceptToString_mediaRangeAndParameter() {
         final String appXmlStr = APPLICATION_XML.getMediaType();
-        final Extension extension = new Extension("x", "y");
-        final Accept appXml = new Accept(appXmlStr, extension);
+        final Accept.Parameter parameter = new Accept.Parameter("x", "y");
+        final Accept appXml = new Accept(appXmlStr, new Accept.Parameter[] { parameter });
         
         assertEquals(appXmlStr + ";x=y", appXml.toString());
     }
@@ -171,10 +197,20 @@ public class AcceptHeaderTest {
     public void acceptToString_mediaRangeQualityFactorAndExtension() {
         final String appXmlStr = APPLICATION_XML.getMediaType();
         final float qualityFactor = 0.6f;
-        final Extension extension = new Extension("x", "y");
-        final Accept appXml = new Accept(appXmlStr, qualityFactor, extension);
-        
-        assertEquals(appXmlStr + ";q=" + Float.toString(qualityFactor) + ";x=y", appXml.toString());
+        final Accept.AcceptExt extension = new Accept.AcceptExt("a", "b");
+        final Accept appXml = new Accept(appXmlStr, new Accept.Weight(qualityFactor, new Accept.AcceptExt[] { extension }));
+        assertEquals(appXmlStr + ";q=" + qualityFactor + ";a=b", appXml.toString());
+    }
+
+    @Test
+    public void acceptToString_mediaRangeParameterAndQualityFactorAndExtension() {
+        final String appXmlStr = APPLICATION_XML.getMediaType();
+        final Accept.Parameter parameter = new Accept.Parameter("x", "y");
+        final float qualityFactor = 0.6f;
+        final Accept.AcceptExt extension = new Accept.AcceptExt("a", "b");
+        final Accept appXml = new Accept(appXmlStr, new Accept.Parameter[] { parameter }, new Accept.Weight(qualityFactor, new Accept.AcceptExt[] { extension }));
+
+        assertEquals(appXmlStr + ";x=y;q=" + qualityFactor + ";a=b", appXml.toString());
     }
 
     /**
@@ -185,4 +221,15 @@ public class AcceptHeaderTest {
         final String acceptHeaderValue = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3";
         new AcceptHeader(acceptHeaderValue);
     }
+
+    /**
+     * Supplied to a RESTXQ Resource Function by Chrome Version 79.0.3945.88
+     */
+    @Test
+    public void chromeAcceptHeader2() {
+        final String acceptHeaderValue = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
+        new AcceptHeader(acceptHeaderValue);
+    }
+
+
 }

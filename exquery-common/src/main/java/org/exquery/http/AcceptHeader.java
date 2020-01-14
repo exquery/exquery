@@ -26,46 +26,22 @@
  */
 package org.exquery.http;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.exquery.InternetMediaType;
+import java.util.*;
 
 /**
  * Representation of a HTTP Accept header
  * 
- * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC 2616</a>
+ * <a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231</a>
  *
  * @author Adam Retter
  */
 public class AcceptHeader {
-    
-    //accept-params components
+
     private final static char PARAMETER_SEPARATOR = ';';
     private final static char QUALITY_PARAMETER = 'q';
     private final static char PARAMETER_KEY_VALUE_SEPARATOR = '=';
-    private final static String QUALITY_FACTOR_REGEX = "(?:0(?:\\.[0-9]{1,3})?)|(?:1(?:\\.[0]{1,3})?)";
-    private final static String QUALITY_PARAM_REGEX = PARAMETER_SEPARATOR + "\\s?" + QUALITY_PARAMETER + PARAMETER_KEY_VALUE_SEPARATOR + QUALITY_FACTOR_REGEX;
-    
-    //accept-extension components
-    private final static String TOKEN_REGEX = "[!#$%&'*+\\-.^_`|~0-9a-zA-z]+";
-    private final static String QUOTED_STRING = "\"[a-z0-9]+\"";
-    private final static String EXTENSION_PARAM_REGEX = PARAMETER_SEPARATOR + "\\s?" + TOKEN_REGEX + PARAMETER_KEY_VALUE_SEPARATOR + TOKEN_REGEX + "|(?:" + QUOTED_STRING + ")";
-    
-    private final static String acceptParams_regExp = "(?:" + QUALITY_PARAM_REGEX + ")?\\s?(?:" + EXTENSION_PARAM_REGEX + ")?";
-    
-    public final static String anyRange_regExp = "\\" + InternetMediaType.WILDCARD + "\\" + InternetMediaType.SUBTYPE_DELIMITER + "\\" + InternetMediaType.WILDCARD;
-    public final static String anySubtype_regExp = org.exquery.http.InternetMediaType.typeName_regExp + "\\" + InternetMediaType.SUBTYPE_DELIMITER + "\\" + InternetMediaType.WILDCARD;
-    
-    public final static String accept_regExp = "(?:(?:" + anyRange_regExp + ")|(?:" + anySubtype_regExp + ")|(?:" + org.exquery.http.InternetMediaType.mediaType_regExp + "))" + acceptParams_regExp;
-    public final static Pattern ptnAccept = Pattern.compile(accept_regExp);
-    
-    public final static String accepts_regExp = "(" + accept_regExp + ")(,\\s?" + accept_regExp + ")*";
-    public final static Pattern ptnAccepts = Pattern.compile(accepts_regExp);
-    
-    private final List<Accept> accepts = new ArrayList<Accept>();
+
+    private final List<Accept> accepts;
     
     /**
      * @param headerValue The value of the HTTP Accept header
@@ -73,47 +49,8 @@ public class AcceptHeader {
      * @throws IllegalArgumentException If the headerValue is not a valid value for an Accept header
      */
     public AcceptHeader(final String headerValue) {
-        final Matcher mtcAccepts = ptnAccepts.matcher(headerValue);
-        if(!mtcAccepts.matches()) {
-            throw new IllegalArgumentException("Invalid Accept Header Value: '" + headerValue + "' in respect to pattern: '" + ptnAccepts.pattern() + "'");
-        } else {
-            final Matcher mtcAccept = ptnAccept.matcher(headerValue);
-            while(mtcAccept.find()) {
-               final String acceptStr = mtcAccept.group();
-               if(acceptStr != null) {
-                    final Accept accept;
-                    if(acceptStr.indexOf(PARAMETER_SEPARATOR) == -1) {
-                        accept = new Accept(acceptStr.trim());
-                    } else {
-                        //break an accept group in the value of the accept header into parts
-                        final String parts[] = acceptStr.split(String.valueOf(PARAMETER_SEPARATOR));
-                        final String mediaRange = parts[0];
+        accepts = AcceptHeaderParser.parse(headerValue);
 
-                        //1st part will be the mediaRange
-                        //2nd part maybe the qualityFactor or extension
-                        if(parts[1].trim().startsWith(String.valueOf(QUALITY_PARAMETER) + PARAMETER_KEY_VALUE_SEPARATOR)) {
-                            //2nd part is qualityFactor
-                            final float qualityFactor = Float.parseFloat(parts[1].trim().substring(parts[1].trim().indexOf(PARAMETER_KEY_VALUE_SEPARATOR) + 1));
-
-                            //if 2nd part is qualityFactor, 3rd part maybe extension
-                            if(parts.length == 3) {
-                                final String extension[] = parts[2].trim().split(String.valueOf(PARAMETER_KEY_VALUE_SEPARATOR));
-                                accept = new Accept(mediaRange, qualityFactor, new Accept.Extension(extension[0], extension[1]));
-                            } else {
-                                accept = new Accept(mediaRange, qualityFactor);
-                            }
-
-                        } else {
-                            //2nd part is extension
-                            final String extension[] = parts[1].trim().split(String.valueOf(PARAMETER_KEY_VALUE_SEPARATOR));
-                            accept = new Accept(mediaRange, new Accept.Extension(extension[0], extension[1]));
-                        }
-                    }
-                    accepts.add(accept);
-               }
-           }
-        }
-        
         //sort accepts by qualityFactor
         Collections.sort(accepts);
     }
@@ -123,42 +60,65 @@ public class AcceptHeader {
     }
     
     public static class Accept implements Comparable<Accept> {
-        
+
         private final static float DEFAULT_QUALITY_FACTOR = 1;
         
         final String mediaRange;
-        final float qualityFactor;
-        final Accept.Extension extension;
+        /* @Nullable */ final Parameter[] parameters;
+        /* @Nullable */ final Weight weight;
 
         public Accept(final String mediaRange) {
-            this(mediaRange, DEFAULT_QUALITY_FACTOR);
+            this(mediaRange, (Weight)null);
         }
         
         public Accept(final org.exquery.InternetMediaType internetMediaType) {
             this(internetMediaType.getMediaType());
         }
+
+        public Accept(final org.exquery.InternetMediaType internetMediaType, final Weight weight) {
+            this(internetMediaType.getMediaType(), weight);
+        }
+
+        public Accept(final org.exquery.InternetMediaType internetMediaType, final Parameter[] parameters) {
+            this(internetMediaType.getMediaType(), parameters);
+        }
         
-        public Accept(final String mediaRange, final float qualityFactor) {
-            this(mediaRange, qualityFactor, null);
+        public Accept(final String mediaRange, final Weight weight) {
+            this(mediaRange, null, weight);
+        }
+
+        public Accept(final String mediaRange, final Parameter[] parameters) {
+            this(mediaRange, parameters, null);
         }
         
         public Accept(final org.exquery.InternetMediaType internetMediaType, final float qualityFactor) {
-            this(internetMediaType.getMediaType(), qualityFactor);
+            this(internetMediaType.getMediaType(), new Weight(qualityFactor));
         }
-        
-        public Accept(final String mediaRange, final Accept.Extension extension) {
-            this(mediaRange, DEFAULT_QUALITY_FACTOR, extension);
+
+        public Accept(final org.exquery.InternetMediaType internetMediaType, final int qualityFactor) {
+            this(internetMediaType.getMediaType(), new Weight(qualityFactor));
         }
-        
-        public Accept(final String mediaRange, final float qualityFactor, final Accept.Extension extension) {
+
+        public Accept(final org.exquery.InternetMediaType internetMediaType, final Parameter[] parameters, final Weight weight) {
+            this(internetMediaType.getMediaType(), parameters, weight);
+        }
+
+        public Accept(final String mediaRange, final Parameter[] parameters, final Weight weight) {
             this.mediaRange = mediaRange;
-            this.qualityFactor = qualityFactor;
-            this.extension = extension;
+            this.parameters = parameters;
+            this.weight = weight;
         }
         
         @Override
         public int compareTo(final Accept other) {
-            return Math.round(other.qualityFactor * 10) - Math.round(qualityFactor * 10);
+            final float thisQf = weight == null ? DEFAULT_QUALITY_FACTOR : weight.qvalue;
+            final float otherQf = other.weight == null ? DEFAULT_QUALITY_FACTOR : other.weight.qvalue;
+            int c = Float.compare(otherQf, thisQf);
+            if (c == 0) {
+                c = mediaRange.compareTo(other.mediaRange);
+            }
+            return c;
+//            return Math.round(otherQf * 10) - Math.round(thisQf * 10);
         }
 
         public String getMediaRange() {
@@ -166,62 +126,185 @@ public class AcceptHeader {
         }
 
         public float getQualityFactor() {
-            return qualityFactor;
+            return weight == null ? DEFAULT_QUALITY_FACTOR : weight.qvalue;
         }
 
-        public Accept.Extension getExtension() {
-            return extension;
+        public Accept.Parameter[] getParameters() {
+            return parameters;
+        }
+
+        public Accept.Weight getWeight() {
+            return weight;
         }
         
         @Override
         public String toString() {
             final StringBuilder builder = new StringBuilder(getMediaRange());
             
-            if(getQualityFactor() != DEFAULT_QUALITY_FACTOR) {
-                builder.append(PARAMETER_SEPARATOR);
-                builder.append(QUALITY_PARAMETER);
-                builder.append(PARAMETER_KEY_VALUE_SEPARATOR);
-                builder.append(getQualityFactor());
+            if (getParameters() != null) {
+                for (final Accept.Parameter parameter : parameters) {
+                    builder.append(PARAMETER_SEPARATOR);
+                    builder.append(parameter.toString());
+                }
             }
-            
-            if(getExtension() != null) {
+
+            if (getWeight() != null) {
                 builder.append(PARAMETER_SEPARATOR);
-                builder.append(getExtension().toString());
+                builder.append(weight.toString());
             }
             
             return builder.toString();
         }
-        
+
         @Override
         public boolean equals(final Object other) {
-            final boolean equals;
-            if(other != null && other instanceof Accept) {
-                final Accept otherAccept = (Accept)other;
-                equals = otherAccept.getMediaRange().equals(getMediaRange()) &&
-                        otherAccept.getQualityFactor() == getQualityFactor() &&
-                        otherAccept.getExtension() == getExtension();
-            } else {
-                equals = false;
+            if (this == other) {
+                return true;
             }
-            
-            return equals;
+            if (other == null || getClass() != other.getClass()) {
+                return false;
+            }
+            final Accept otherAccept = (Accept) other;
+            return mediaRange.equals(otherAccept.mediaRange) &&
+                    Arrays.equals(parameters, otherAccept.parameters) &&
+                    (weight == otherAccept.weight || (weight != null && weight.equals(otherAccept.weight)));
         }
 
         @Override
         public int hashCode() {
-            int hash = 3;
-            hash = 23 * hash + (this.mediaRange != null ? this.mediaRange.hashCode() : 0);
-            hash = 23 * hash + Float.floatToIntBits(this.qualityFactor);
-            hash = 23 * hash + (this.extension != null ? this.extension.hashCode() : 0);
-            return hash;
+            int result = 1;
+            result = 31 * result + this.mediaRange.hashCode();
+            result = 31 * result + Arrays.hashCode(parameters);
+            result = 31 * result + (weight != null ? weight.hashCode() : 0);
+            return result;
         }
-        
-        
-        public static class Extension {
+
+        public static class Parameter {
             final String name;
             final String value;
 
-            public Extension(final String name, final String value) {
+            public Parameter(final String name, final String value) {
+                this.name = name;
+                this.value = value;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public String toString() {
+                return name + PARAMETER_KEY_VALUE_SEPARATOR + value;
+            }
+
+            @Override
+            public boolean equals(final Object other) {
+                if (this == other) {
+                    return true;
+                }
+                if (other == null || getClass() != other.getClass()) {
+                    return false;
+                }
+                final Parameter otherParameter = (Parameter) other;
+                return name.equals(otherParameter.name) &&
+                        value.equals(otherParameter.value);
+            }
+
+            @Override
+            public int hashCode() {
+                int hash = 7;
+                hash = 61 * hash + this.name.hashCode();
+                hash = 61 * hash + this.value.hashCode();
+                return hash;
+            }
+        }
+
+        public static class Weight {
+            final float qvalue;
+            final boolean intQValue;
+            final AcceptExt[] acceptExts;
+
+            public Weight (final float qvalue) {
+                this(qvalue, null);
+            }
+
+            public Weight (final int qvalue) {
+                this(qvalue, null);
+            }
+
+            public Weight (final int qvalue, final AcceptExt[] acceptExts) {
+                this(qvalue, true, acceptExts);
+            }
+
+            public Weight (final float qvalue, final AcceptExt[] acceptExts) {
+                this(qvalue, false, acceptExts);
+            }
+
+            private Weight (final float qvalue, final boolean intQValue, final AcceptExt[] acceptExts) {
+                this.qvalue = qvalue;
+                this.intQValue = intQValue;
+                this.acceptExts = acceptExts;
+            }
+
+            @Override
+            public String toString() {
+               if (acceptExts == null) {
+                   if (intQValue) {
+                       return "q=" + (int)qvalue;
+                   } else {
+                       return "q=" + qvalue;
+                   }
+               } else {
+                   final StringBuilder builder = new StringBuilder();
+                   builder.append("q=");
+                   if (intQValue) {
+                       builder.append((int) qvalue);
+                   } else {
+                       builder.append(qvalue);
+                   }
+                   for (final AcceptExt acceptExt : acceptExts) {
+                       builder.append(PARAMETER_SEPARATOR);
+                       builder.append(acceptExt.toString());
+                   }
+                   return builder.toString();
+               }
+            }
+
+            @Override
+            public boolean equals(final Object other) {
+                if (this == other) {
+                    return true;
+                }
+                if (other == null || getClass() != other.getClass()) {
+                    return false;
+                }
+                final Weight otherWeight = (Weight) other;
+                return Float.compare(otherWeight.qvalue, qvalue) == 0 &&
+                        Arrays.equals(acceptExts, otherWeight.acceptExts);
+            }
+
+            @Override
+            public int hashCode() {
+                int result = 1;
+                result = 31 * result + Float.floatToIntBits(qvalue);
+                result = 31 * result + Arrays.hashCode(acceptExts);
+                return result;
+            }
+        }
+
+        public static class AcceptExt {
+            final String name;
+            /* @Nullable */ final String value;
+
+            public AcceptExt(final String name) {
+                this(name, null);
+            }
+
+            public AcceptExt(final String name, /* @Nullable */ final String value) {
                 this.name = name;
                 this.value = value;
             }
@@ -236,29 +319,519 @@ public class AcceptHeader {
             
             @Override
             public String toString() {
-                return name + PARAMETER_KEY_VALUE_SEPARATOR + value;
+                if (value == null) {
+                    return name;
+                } else {
+                    return name + PARAMETER_KEY_VALUE_SEPARATOR + value;
+                }
             }
-            
+
             @Override
             public boolean equals(final Object other) {
-                final boolean equals;
-                if(other != null && other instanceof Extension) {
-                    final Extension otherExtension = ((Extension)other);
-                    equals = otherExtension.getName().equals(getName()) &&
-                            otherExtension.getValue().equals(getValue());
-                } else {
-                    equals = false;
+                if (this == other) {
+                    return true;
                 }
-                return equals;
+                if (other == null || getClass() != other.getClass()) {
+                    return false;
+                }
+                final AcceptExt otherAcceptExt = (AcceptExt) other;
+                return name.equals(otherAcceptExt.name) &&
+                        (value == otherAcceptExt.value
+                                || (value != null && value.equals(otherAcceptExt.value)));
             }
 
             @Override
             public int hashCode() {
                 int hash = 7;
-                hash = 61 * hash + (this.name != null ? this.name.hashCode() : 0);
+                hash = 61 * hash + this.name.hashCode();
                 hash = 61 * hash + (this.value != null ? this.value.hashCode() : 0);
                 return hash;
             }
+        }
+    }
+
+    public static class AcceptHeaderParser {
+        private enum ParserState {
+            INIT,
+            TYPE,
+            SUBTYPE,
+            FINISHING_SUBTYPE,
+            STARTING_PARAMETER,
+            PARAMETER_NAME,
+            PARAMETER_VALUE,
+            FINISHING_PARAMETER_VALUE,
+            MAYBE_WEIGHT_PARAMETER_NAME,
+            WEIGHT_PARAMETER_VALUE_INT,
+            WEIGHT_PARAMETER_VALUE_MAYBE_DECIMAL,
+            WEIGHT_PARAMETER_VALUE_ZERO_DECIMAL,
+            WEIGHT_PARAMETER_VALUE_ONE_DECIMAL,
+
+            QUOTED_STRING,
+            QUOTED_PAIR_2,
+
+            NEXT
+        }
+
+        private final static char SYMBOL_ACCEPT_SEPARATOR = ',';
+        private final static char SYMBOL_TYPE_SUBTYPE_SEP = '/';
+        private final static char SYMBOL_PARAMETER_SEP = ';';
+        private final static char SYMBOL_WEIGHT_PARAM_NAME = 'q';
+        private final static char SYMBOL_PARAM_NAME_VALUE_SEP = '=';
+        private final static char SYMBOL_DQUOTE = '"';
+        private final static char SYMBOL_BACKSLASH = '\\';
+
+        /**
+         * Parses the value of a HTTP Accept header
+         *
+         * @param headerValue the value of the HTTP Accept header
+         *
+         * @return the list of things that are acceptable
+         */
+        public static List<Accept> parse(final String headerValue) throws IllegalArgumentException {
+            ParserState state = ParserState.INIT;
+            ParserState prevState = null;
+            String type = null;
+            String subType = null;
+            String parameterName = null;
+            String parameterValue = null;
+            final StringBuilder buf = new StringBuilder();
+            boolean isAcceptExt = false;
+            Accept.Parameter[] parameters = null;
+            Accept.Weight weight = null;
+            final List<Accept> accepts = new ArrayList<Accept>();
+
+            for (int idx = 0; idx < headerValue.length(); idx++) {
+                final char c = headerValue.charAt(idx);
+
+                switch (state) {
+                    case NEXT:
+                        if (isOWS(c)) {
+                            continue;
+                        }
+                        // NOTE: intentional fall-through
+                    case INIT:
+                        if (isTokenChar(c)) {
+                            buf.append(c);
+                            state = ParserState.TYPE;
+                        } else {
+                            throw new IllegalArgumentException("Non-Token character at index " + idx + " whilst looking for media-type at start of Accept Header: '" + c + "'");
+                        }
+                        break;
+
+                    case TYPE:
+                        if (c == SYMBOL_TYPE_SUBTYPE_SEP) {
+                            type = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.SUBTYPE;
+                        } else if (isTokenChar(c)) {
+                            buf.append(c);
+                        } else {
+                            throw new IllegalArgumentException("Non-Token character at index " + idx + " whilst parsing type component of media-type: '" + c + "'");
+                        }
+                        break;
+
+                    case FINISHING_SUBTYPE:
+                        if (isOWS(c)) {
+                            continue;
+                        } else if(isTokenChar(c)) {
+                            throw new IllegalArgumentException("Token character at index " + idx + " whilst parsing end of sub-type component of media-type: '" + c + "'");
+                        }
+                        // NOTE: intentional fall-through
+                    case SUBTYPE:
+                        if (c == SYMBOL_PARAMETER_SEP) {
+                            subType = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.STARTING_PARAMETER;
+                        } else if (c == SYMBOL_ACCEPT_SEPARATOR) {
+                            subType = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.NEXT;
+                            accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+                            type = null;
+                            subType = null;
+                            isAcceptExt = false;
+                            parameters = null;
+                            weight = null;
+                        } else if (isOWS(c)) {
+                            subType = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.FINISHING_SUBTYPE;
+                        } else if(isTokenChar(c)) {
+                            buf.appendCodePoint(c);
+                        } else {
+                            throw new IllegalArgumentException("Non-Token character at index " + idx + " whilst parsing sub-type component of media-type: '" + c + "'");
+                        }
+                        break;
+
+                    case STARTING_PARAMETER:
+                        if (isOWS(c)) {
+                            continue;
+                        } else {
+                            state = ParserState.PARAMETER_NAME;
+                        }
+                        // NOTE: intentional fall-through
+                    case PARAMETER_NAME:
+                        if (c == SYMBOL_WEIGHT_PARAM_NAME) {
+                            buf.append(c);
+                            state = ParserState.MAYBE_WEIGHT_PARAMETER_NAME;
+                        } else if (isTokenChar(c)) {
+                            buf.append(c);
+                        } else if (c == SYMBOL_PARAM_NAME_VALUE_SEP) {
+                            parameterName = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.PARAMETER_VALUE;
+                        } else if (isAcceptExt && (isOWS(c) || c == SYMBOL_PARAMETER_SEP)) {
+                            parameterName = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.STARTING_PARAMETER;
+                            weight = addAcceptExt(weight, parameterName, null);
+                            parameterName = null;
+                            parameterValue = null;
+                        } else {
+                            throw new IllegalArgumentException("Non-Token character at index " + idx + " whilst parsing parameter: '" + c + "'");
+                        }
+                        break;
+
+                    case MAYBE_WEIGHT_PARAMETER_NAME:
+                        if (c == SYMBOL_PARAM_NAME_VALUE_SEP) {
+                            parameterName = buf.toString();
+                            buf.setLength(0);
+                            state = ParserState.WEIGHT_PARAMETER_VALUE_INT;
+                        } else if (isTokenChar(c)) {
+                            buf.append(c);
+                            state = ParserState.PARAMETER_NAME;
+                        } else {
+                            throw new IllegalArgumentException("Non-Token character at index " + idx + " whilst parsing parameter: '" + c + "'");
+                        }
+                        break;
+
+                    case FINISHING_PARAMETER_VALUE:
+                        if (isOWS(c)) {
+                            continue;
+                        } else if(c == SYMBOL_DQUOTE) {
+                            throw new IllegalArgumentException("Double-quote character at index " + idx + " whilst parsing end of parameter value: '" + c + "'");
+                        } else if (isTokenChar(c)) {
+                            throw new IllegalArgumentException("Token character at index " + idx + " whilst parsing end of parameter value: '" + c + "'");
+                        }
+                        // NOTE: intentional fall-through
+                    case PARAMETER_VALUE:
+                        if (c == SYMBOL_DQUOTE) {
+                            prevState = state;  // save the state, so we can come back when we finish the quoted string
+                            state = ParserState.QUOTED_STRING;
+                        } else if (isTokenChar(c)) {
+                            buf.append(c);
+                        } else if (c == SYMBOL_PARAMETER_SEP) {
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            if (isAcceptExt) {
+                                weight = addAcceptExt(weight, parameterName, parameterValue);
+                            } else {
+                                parameters = addParameter(parameters, parameterName, parameterValue);
+                            }
+                            state = ParserState.STARTING_PARAMETER;
+                            parameterName = null;
+                            parameterValue = null;
+                        } else if (c == SYMBOL_ACCEPT_SEPARATOR) {
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            if (isAcceptExt) {
+                                weight = addAcceptExt(weight, parameterName, parameterValue);
+                            } else {
+                                parameters = addParameter(parameters, parameterName, parameterValue);
+                            }
+                            state = ParserState.NEXT;
+                            accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+                            type = null;
+                            subType = null;
+                            isAcceptExt = false;
+                            parameterName = null;
+                            parameterValue = null;
+                            parameters = null;
+                            weight = null;
+                        } else if (isOWS(c)) {
+                            parameterValue = buf.toString();
+                            buf.setLength(0);
+                            if (isAcceptExt) {
+                                weight = addAcceptExt(weight, parameterName, parameterValue);
+                            } else {
+                                parameters = addParameter(parameters, parameterName, parameterValue);
+                            }
+                            state = ParserState.FINISHING_PARAMETER_VALUE;
+                            parameterName = null;
+                            parameterValue = null;
+                        }
+                        break;
+
+                    case WEIGHT_PARAMETER_VALUE_INT:
+                        if (c == '0') {
+                            buf.append(c);
+                            prevState = ParserState.WEIGHT_PARAMETER_VALUE_ZERO_DECIMAL;  // actually the next state ;-)
+                            state = ParserState.WEIGHT_PARAMETER_VALUE_MAYBE_DECIMAL;
+                        } else if (c == '1') {
+                            buf.append(c);
+                            prevState = ParserState.WEIGHT_PARAMETER_VALUE_ONE_DECIMAL;   // actually the next state ;-)
+                            state = ParserState.WEIGHT_PARAMETER_VALUE_MAYBE_DECIMAL;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing weight accept-parameter value: '" + c + "'");
+                        }
+                        break;
+
+                    case WEIGHT_PARAMETER_VALUE_MAYBE_DECIMAL:
+                        if (c == '.') {
+                            buf.append(c);
+                            state = prevState;
+                        } else if (isOWS(c) || c == SYMBOL_PARAMETER_SEP) {
+                            // next must be an accept-ext
+                            isAcceptExt = true;
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Integer.parseInt(parameterValue));
+                            state = ParserState.PARAMETER_NAME;
+                            parameterName = null;
+                            parameterValue = null;
+                        } else if (c == SYMBOL_ACCEPT_SEPARATOR) {
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Integer.parseInt(parameterValue));
+                            state = ParserState.NEXT;
+                            accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+                            type = null;
+                            subType = null;
+                            isAcceptExt = false;
+                            parameterName = null;
+                            parameterValue = null;
+                            parameters = null;
+                            weight = null;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing weight accept-parameter value: '" + c + "'");
+                        }
+                        break;
+
+                    case WEIGHT_PARAMETER_VALUE_ZERO_DECIMAL:
+                        if (isDigit(c) && buf.length() < 6) {
+                            buf.append(c);
+                        } else if (isOWS(c) || c == SYMBOL_PARAMETER_SEP) {
+                            // next must be an accept-ext
+                            isAcceptExt = true;
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Float.parseFloat(parameterValue));
+                            state = ParserState.PARAMETER_NAME;
+                            parameterName = null;
+                            parameterValue = null;
+                        } else if (c == SYMBOL_ACCEPT_SEPARATOR) {
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Float.parseFloat(parameterValue));
+                            state = ParserState.NEXT;
+                            accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+                            type = null;
+                            subType = null;
+                            isAcceptExt = false;
+                            parameterName = null;
+                            parameterValue = null;
+                            parameters = null;
+                            weight = null;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing weight accept-parameter value: '" + c + "'");
+                        }
+                        break;
+
+                   case WEIGHT_PARAMETER_VALUE_ONE_DECIMAL:
+                        if (c == '0' && buf.length() < 6) {
+                            buf.append(c);
+                        } else if (isOWS(c) || c == SYMBOL_PARAMETER_SEP) {
+                            // next must be an accept-ext
+                            isAcceptExt = true;
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Float.parseFloat(parameterValue));
+                            state = ParserState.PARAMETER_NAME;
+                            parameterName = null;
+                            parameterValue = null;
+                        } else if (c == SYMBOL_ACCEPT_SEPARATOR) {
+                            if (buf.length() > 0) {
+                                parameterValue = buf.toString();
+                            }
+                            buf.setLength(0);
+                            weight = new Accept.Weight(Float.parseFloat(parameterValue));
+                            state = ParserState.NEXT;
+                            accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+                            type = null;
+                            subType = null;
+                            isAcceptExt = false;
+                            parameterName = null;
+                            parameterValue = null;
+                            parameters = null;
+                            weight = null;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing weight accept-parameter value: '" + c + "'");
+                        }
+                       break;
+
+                    case QUOTED_PAIR_2:
+                        if (isQuotedPair2(c)) {
+                            buf.append(c);
+                            state = ParserState.QUOTED_STRING;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing quoted pair: '" + c + "'");
+                        }
+                        // NOTE: intentional fall-through
+                    case QUOTED_STRING:
+                        if (c == SYMBOL_DQUOTE) {
+                            parameterValue = buf.toString();
+                            buf.setLength(0);
+                            if (isAcceptExt) {
+                                weight = addAcceptExt(weight, parameterName, parameterValue);
+                            } else {
+                                parameters = addParameter(parameters, parameterName, parameterValue);
+                            }
+                            state = prevState;
+                            parameterName = null;
+                            parameterValue = null;
+                        } else if (isQdText(c)) {
+                            buf.append(c);
+                        } else if (c == SYMBOL_BACKSLASH) {
+                            buf.append(c);
+                            state = ParserState.QUOTED_PAIR_2;
+                        } else {
+                            throw new IllegalArgumentException("Illegal character at index " + idx + " whilst parsing quoted string: '" + c + "'");
+                        }
+                        break;
+                }
+            }
+
+            if (type != null) {
+                if (subType == null) {
+                    subType = buf.toString();
+                } else if (parameterValue == null) {
+                    parameterValue = buf.toString();
+                    if (parameterName.equals("" + QUALITY_PARAMETER)) {
+                        if (weight == null) {
+                            if (parameterValue.indexOf('.') != -1) {
+                                weight = new Accept.Weight(Float.parseFloat(parameterValue));
+                            } else {
+                                weight = new Accept.Weight(Integer.parseInt(parameterValue));
+                            }
+                        }
+                    } else {
+                        if (isAcceptExt) {
+                            weight = addAcceptExt(weight, parameterName, parameterValue);
+                        } else {
+                            parameters = addParameter(parameters, parameterName, parameterValue);
+                        }
+                    }
+                }
+
+                accepts.add(new Accept(type + '/' + subType, copyOf(parameters), weight));
+
+                type = null;
+                subType = null;
+                isAcceptExt = false;
+                parameterName = null;
+                parameterValue = null;
+                parameters = null;
+                weight = null;
+            }
+
+            return accepts;
+        }
+
+        private static boolean isTokenChar(final char c) {
+            return
+                    isDigit(c)
+                    || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')  // ALPHA
+                    || c == '!'
+                    || c == '#'
+                    || c == '$'
+                    || c == '%'
+                    || c == '&'
+                    || c == '\''
+                    || c == '*'
+                    || c == '+'
+                    || c == '-'
+                    || c == '.'
+                    || c == '^'
+                    || c == '_'
+                    || c == '`'
+                    || c == '|'
+                    || c == '~';
+        }
+
+        private static boolean isDigit(final char c) {
+            return c >= '0' && c <= '9';  // DIGIT
+        }
+
+        private static boolean isOWS(final char c) {
+            return c == ' ' || c == '\t';
+        }
+
+        private static boolean isQdText(final char c) {
+            return
+                    c == '\t'
+                    || c == ' '
+                    || c == 0x21
+                    || (c >= 0x23 && c <= 0x5B)
+                    || (c >= 0x5D && c <= 0x7E)
+                    || isObsText(c);  // obs-text
+        }
+
+        private static boolean isObsText(final char c) {
+            return c >= 0x80 && c <= 0xFF;
+        }
+
+        private static boolean isQuotedPair2(final char c) {
+            return
+                    c == '\t'
+                    || c == ' '
+                    || (c >= 0x20 && c <= 0x7F)  // VCHAR
+                    || isObsText(c);  // obs-text
+        }
+
+        private static Accept.Parameter[] addParameter(/* @Nullable */ Accept.Parameter[] parameters,
+            final String parameterName, final String parameterValue) {
+            if (parameters == null) {
+                parameters = new Accept.Parameter[1];
+            } else {
+                parameters = Arrays.copyOf(parameters, parameters.length + 1);
+            }
+            parameters[parameters.length - 1] = new Accept.Parameter(parameterName, parameterValue);
+            return parameters;
+        }
+
+        private static Accept.Weight addAcceptExt(final Accept.Weight weight,
+                    final String name, /* @Nullable */ final String value) {
+            final Accept.AcceptExt[] acceptExts;
+            if (weight.acceptExts == null) {
+                acceptExts = new Accept.AcceptExt[1];
+            } else {
+                acceptExts = Arrays.copyOf(weight.acceptExts, weight.acceptExts.length + 1);
+            }
+
+            acceptExts[acceptExts.length - 1] = new Accept.AcceptExt(name, value);
+
+            return new Accept.Weight(weight.qvalue, weight.intQValue, acceptExts);
+        }
+
+        private static <T> /* @Nullable */ T[] copyOf(/* @Nullable */ final T[] array) {
+            if (array == null) {
+                return null;
+            }
+            return Arrays.copyOf(array, array.length);
         }
     }
 }
