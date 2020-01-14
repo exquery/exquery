@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.exquery.InternetMediaType.*;
 import org.exquery.http.AcceptHeader.Accept;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.is;
