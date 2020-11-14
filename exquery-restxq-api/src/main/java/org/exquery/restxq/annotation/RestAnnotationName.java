@@ -42,6 +42,7 @@ public enum RestAnnotationName {
     POST("POST"),
     PUT("PUT"),
     OPTIONS("OPTIONS"),
+    PATCH("PATCH"),
 
     path,
     produces,
