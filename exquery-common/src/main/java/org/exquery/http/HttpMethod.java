@@ -39,5 +39,7 @@ public enum HttpMethod {
     DELETE,
     TRACE,
     OPTIONS,
-    CONNECT;
+    CONNECT,
+
+    PATCH;
 }

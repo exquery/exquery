@@ -114,6 +114,10 @@ public class RestAnnotationFactory {
                 restAnnotation = new OptionsMethodAnnotation();
                 break;
 
+            case PATCH:
+                restAnnotation = new PatchMethodAnnotation();
+                break;
+
             case path:
                 restAnnotation = new PathAnnotationImpl();
                 break;
