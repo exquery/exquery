@@ -24,22 +24,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exquery.http;
+package org.exquery.restxq.impl.annotation;
+
+import org.exquery.http.HttpMethod;
+import org.exquery.restxq.annotation.HttpMethodAnnotation;
 
 /**
- * Enumeration of HTTP 1.1 Methods
- *
+ * Implementation of RESTXQ PATCH Annotation
+ * i.e. %rest:PATCH
+ * 
  * @author Adam Retter
  */
-public enum HttpMethod {
-    GET,
-    HEAD,
-    POST,
-    PUT,
-    DELETE,
-    TRACE,
-    OPTIONS,
-    CONNECT,
+public class PatchMethodAnnotation extends AbstractHttpMethodWithBodyAnnotation {
 
-    PATCH;
+    /**
+     * @see HttpMethodAnnotation#getHttpMethod()
+     * 
+     * @return HttpMethod.PATCH
+     */
+    @Override
+    public HttpMethod getHttpMethod() {
+        return HttpMethod.PATCH;
+    }
 }
