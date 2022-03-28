@@ -2,7 +2,7 @@
 
 *GitHub code repository for the EXQuery project - [http://www.exquery.org](http://www.exquery.org)*
 
-[![Build Status](https://secure.travis-ci.org/exquery/exquery.png)](http://travis-ci.org/exquery/exquery)
+[![Test](https://github.com/exquery/exquery/actions/workflows/ci.yml/badge.svg)](https://github.com/exquery/exquery/actions/workflows/ci.yml)
 
 The main thing here at the moment apart from simple abstractions for dealing with XQuery 1.0 and XQuery 3.0 concepts, is the [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html) Project.
 The original paper [RESTful XQuery: Standardised XQuery 3.0 Annotations for REST](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) is available, as is a simple [presentation on RESTXQ](http://www.adamretter.org.uk/presentations/restxq_mugl_20120308.pdf).

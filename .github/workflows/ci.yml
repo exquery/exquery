@@ -1,0 +1,27 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test:
+    name: (JDK ${{ matrix.jdk }} / ${{ matrix.os }}) Test
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        jdk: ['8']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: liberica
+          java-version: ${{ matrix.jdk }}
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Maven Test
+        timeout-minutes: 60
+        run: mvn -V -B -DtrimStackTrace=false clean verify
