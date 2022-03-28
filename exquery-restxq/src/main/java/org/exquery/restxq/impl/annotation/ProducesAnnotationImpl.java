@@ -138,8 +138,14 @@ public class ProducesAnnotationImpl extends AbstractMediaTypeAnnotation implemen
     
     @Override
     public boolean matchesMediaType(final String mediaType) {
-        
-        final AcceptHeader acceptHeader = new AcceptHeader(mediaType);
+        final AcceptHeader acceptHeader;
+        try {
+            acceptHeader = new AcceptHeader(mediaType);
+        } catch (final IllegalArgumentException e) {
+            // TODO(AR) signal that the incoming media-type header is invalid (i.e. not valid HTTP 1.1)?
+            return false;
+        }
+
         for(final Accept accept : acceptHeader.getAccepts()) {
         
             final Pattern pEncodedMediaType = Pattern.compile(encodeAsRegExp(accept.getMediaRange()));

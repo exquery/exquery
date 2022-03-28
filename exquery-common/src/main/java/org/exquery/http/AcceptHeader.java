@@ -29,7 +29,7 @@ package org.exquery.http;
 import java.util.*;
 
 /**
- * Representation of a HTTP Accept header
+ * Representation of an HTTP Accept header.
  * 
  * <a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231</a>
  *
@@ -46,7 +46,7 @@ public class AcceptHeader {
     /**
      * @param headerValue The value of the HTTP Accept header
      * 
-     * @throws IllegalArgumentException If the headerValue is not a valid value for an Accept header
+     * @throws IllegalArgumentException If the headerValue is not a valid value for an HTTP 1.1 Accept header
      */
     public AcceptHeader(final String headerValue) {
         accepts = AcceptHeaderParser.parse(headerValue);
@@ -386,6 +386,8 @@ public class AcceptHeader {
          * @param headerValue the value of the HTTP Accept header
          *
          * @return the list of things that are acceptable
+         *
+         * @throws IllegalArgumentException if the header value does not meet the HTTP 1.1 (<a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231</a>) standard
          */
         public static List<Accept> parse(final String headerValue) throws IllegalArgumentException {
             ParserState state = ParserState.INIT;
