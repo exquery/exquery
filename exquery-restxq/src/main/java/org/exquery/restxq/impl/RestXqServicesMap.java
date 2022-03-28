@@ -167,7 +167,17 @@ public class RestXqServicesMap {
             if(services != null) {
                 
                 final String acceptHeaderValue = request.getHeader(HttpHeader.ACCEPT.getHeaderName());
-                final AcceptHeader acceptHeader = acceptHeaderValue != null ? new AcceptHeader(acceptHeaderValue) : null;
+                AcceptHeader acceptHeader;
+                if (acceptHeaderValue != null) {
+                    try {
+                        acceptHeader = new AcceptHeader(acceptHeaderValue);
+                    } catch (final IllegalArgumentException e) {
+                        // TODO(AR) signal that the incoming request's accept header is invalid (i.e. not valid HTTP 1.1)?
+                        acceptHeader = null;
+                    }
+                } else {
+                    acceptHeader = null;
+                }
                 
                 for(final RestXqService service : services) {
                     if(service.canService(request)) {

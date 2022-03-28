@@ -232,5 +232,14 @@ public class AcceptHeaderTest {
         new AcceptHeader(acceptHeaderValue);
     }
 
+    /**
+     * Supplied to a RESTXQ Resource Function by fn:doc in eXist-db 5.3.0, see: issue <a href="https://github.com/eXist-db/exist/issues/4286">#4286</a>.
+     * A bug in JDK 8, 9, and 11, see: <a href="https://bugs.openjdk.java.net/browse/JDK-8163921">JDK-8163921</a>.
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void exist5FnDocAcceptHeader() {
+        final String acceptHeaderValue = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
+        new AcceptHeader(acceptHeaderValue);
+    }
 
 }
