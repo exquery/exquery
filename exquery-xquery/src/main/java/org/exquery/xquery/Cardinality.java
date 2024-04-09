@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2012, Adam Retter / EXQuery
  * All rights reserved.
  *
