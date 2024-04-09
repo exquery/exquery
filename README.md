@@ -11,17 +11,20 @@ The language is Java 6 (also tested against Oracle JDK 7 and OpenJDK 7) and the 
 It is planned that a C++ implementation will also follow eventually.
 
 ## Build
-1. Clone the Repository
+1. Clone the Repository:
 ```bash
 git clone https://github.com/exquery/exquery.git
 ```
 
-2. Enter the cloned repo
+2. Enter the cloned repo:
 ```bash
 cd exquery
 ```
 
-3. mvn clean install
+3. Build the code with Maven:
+```bash
+mvn clean install
+```
 
 4. Each Module will contain a .jar file in its target/ folder
 
