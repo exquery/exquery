@@ -37,12 +37,26 @@ import org.exquery.serialization.Namespace;
 public enum SerializationAnnotationName {
     
     method,
+    version,
+    htmlversion("html-version"),
     encoding,
-    //doctypepublic("doctype-public"),
-    //doctypesystem("doctype-system"),
-    mediatype("media-type"),
     indent,
-    omitxmldeclaration("omit-xml-declaration");
+    supressindentation("suppress-indentation"),
+    cdatasectionelements("cdata-section-elements"),
+    omitxmldeclaration("omit-xml-declaration"),
+    doctypesystem("doctype-system"),
+    doctypepublic("doctype-public"),
+    undeclareprefixes("undeclare-prefixes"),
+    nomalizationform("nomalization-form"),
+    mediatype("media-type"),
+    usecharactermaps("use-character-maps"),
+    byteordermark("byte-order-mark"),
+    escapeuriattributes("escape-uri-attributes"),
+    includecontenttype("include-content-type"),
+    itemseparator("item-separator"),
+    allowduplicatenames("allow-duplicate-names"),
+    jsonnodeoutputmethod("json-node-output-method"),
+    standalone;
     
 
     final QName name;
