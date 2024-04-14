@@ -161,7 +161,7 @@
     <section id="introduction">
       <h2>Introduction</h2>
       <p>
-        XQuery [[!XQUERY]] processors are now frequently provided as part of complete data application
+        XQuery [[?XQUERY]] processors are now frequently provided as part of complete data application
         processing platforms, which typically incorporate amongst others, XML Data storage
         and Web serving capabilities.
       </p>
@@ -172,7 +172,7 @@
         as a server-side scripting language and processing Web requests.
       </p>
       <p>
-        As of XQuery 3.0 [[!XQUERY-30]], there is still no standard way to create Web Applications in XQuery.
+        As of XQuery 3.0 [[?XQUERY-30]], there is still no standard way to create Web Applications in XQuery.
         Many vendors provide extensions to their XQuery implementations which allow users
         to serve web requests using XQuery processing.
         Whilst vendors have borrowed ideas from each other, there is no standard for Web capabilities
@@ -231,7 +231,7 @@
         <h3>Namespaces and Prefixes</h3>
         <p>
           The annotations and functions discussed in this document are contained in
-          namespaces (see [[!XML-NAMES]]) and referenced using an xs:QName:
+          namespaces (see [[?XML-NAMES]]) and referenced using an xs:QName:
         </p>
         <ul>
           <li><code>http://exquery.org/ns/restxq</code>, associated with <code>rest</code>.</li>
@@ -254,7 +254,7 @@
       <section id="annotations-background">
         <h3>Background</h3>
         <p>
-          RESTXQ is heavily influenced by [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
+          RESTXQ is heavily influenced by [[?JAX-RS]]. However, we simplify and deviate from JAX-RS
           predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
           and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
           to XQuery invocation, our unit of granularity is the XQuery function.
