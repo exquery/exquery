@@ -356,11 +356,7 @@
               fn:collection("/db/widgets")//widget[@id = $id]
             };
           </pre>
-          <p>
-            In the above example, an HTTP GET on the following URI would cause the widget
-            with the <code>id</code> of '1981' to be retrieved:
-            <code>http://www.widget-factory.com/stock/widget/{$id}</code>.
-          </p>
+          <p> In the above example, an HTTP GET on the following URI would cause the widget with the <code>id</code> of '1981' to be retrieved: <code>http://www.widget-factory.com/stock/widget/1981</code>. </p>
           <div class="note">
             When many Resource Functions are defined, there can be many Path Annotations.
             As such, conflicts may occur, the resolution of such conflicts MUST be processed
