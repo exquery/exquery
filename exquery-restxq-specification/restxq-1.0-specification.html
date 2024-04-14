@@ -479,8 +479,8 @@
               The cardinality MUST allow for zero or many atomic values in the case of
               <a href="#query-param-annotation">Query</a>,
               <a href="#form-param-annotation">Form</a> or
-              <a href="#form-header-annotation">Header</a> parameters, or zero or one
-              atomic value in the case of <a href="#form-cookie-annotation">Cookie</a>
+              <a href="#header-param-annotation">Header</a> parameters, or zero or one
+              atomic value in the case of <a href="#cookie-param-annotation">Cookie</a>
               parameters, otherwise an error MUST be raised by the implementation.
             </li>
             <li>
@@ -541,7 +541,7 @@
           </pre>
         </section>
 
-        <section id="form-header-annotation">
+        <section id="header-param-annotation">
           <h5>HTTP Header Parameters</h5>
           <p>
             The annotation <code>%rest:header-param</code> is provided for accessing
@@ -560,7 +560,7 @@
           </pre>
         </section>
 
-        <section id="form-cookie-annotation">
+        <section id="cookie-param-annotation">
           <h5>Cookie Parameters</h5>
           <p>
             The annotation <code>%rest:cookie-param</code> is provided for accessing
