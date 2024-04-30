@@ -433,11 +433,21 @@
         <section id="consumes-annotation">
           <h5>Consumes Annotation</h5>
           <p>
-            Resource Functions MAY be constrained to certain Media Type by means
+            Resource Functions MAY be constrained to certain Media Type(s) by means
             of a <code>%rest:consumes</code> annotation. A function will only be invoked
             if the HTTP <code>Content-Type</code> header of the request matches one
             of the given Media Types.
           </p>
+          <pre class="example highlight" title="Consumes Annotation">
+            (: Will only be invoked if a user supplies one of the specified media types :)
+            declare
+              %rest:path("/widgets")
+              %rest:consumes("application/xml", "application/atom+xml")
+            function local:widgets() {
+              fn:collection("/db/widgets")/widgets
+            };
+          </pre>
+          <p>The <code>%rest:consumes</code> annotation supports <a href="#content-negotiation">content negotiation</a> in conjunction with the <a href="#produces-annotation"><code>%rest:produces</code></a> annotation.</p>
         </section>
 
         <section id="produces-annotation">
@@ -447,16 +457,16 @@
             only be invoked if the HTTP <code>Accept</code> header of the request
             matches one of the given types.
           </p>
-          <pre class="example highlight" title="Consumes and Produces Annotation">
-            (: Will only be invoked if a user supplies the specified media types :)
+          <pre class="example highlight" title="Produces Annotation">
+            (: Will only be invoked if a user accepts one of the specified media types :)
             declare
               %rest:path("/widgets")
-              %rest:consumes("application/xml", "application/atom+xml")
               %rest:produces("application/xml")
             function local:widgets() {
               fn:collection("/db/widgets")/widgets
             };
           </pre>
+          <p>The <code>%rest:produces</code> annotation supports <a href="#content-negotiation">content negotiation</a> in conjunction with the <a href="#consumes-annotation"><code>%rest:consumes</code></a> annotation.</p>
         </section>
       </section>
 
@@ -712,6 +722,23 @@
           (<a href="#path-annotation" class="sectionRef"></a>).
           <!-- TODO if a path annotation is not specified then the remaining URIs apply to the base uri -->
         </p>
+      </section>
+      
+      <section id="content-negotiation">
+        <h3>Content Negotiation</h3>
+        <p>Support for <a href="https://httpwg.org/specs/rfc7231.html#content.negotiation">content negotiation</a> ([[RFC7231]]) of formats is indirectly provided by the <a href="#consumes-annotation"><code>%rest:consumes</code></a> and <a href="#produces-annotation"><code>%rest:produces</code></a> annotations.</p>
+        
+        <pre class="example highlight" title="Content Negotiation">
+            (: Combining consumes and produces provides content negotation support :)
+            declare
+              %rest:path("/widgets")
+              %rest:consumes("application/xml", "application/atom+xml")
+              %rest:produces("application/xml", "application/json")
+            function local:widgets() {
+              fn:collection("/db/widgets")/widgets
+            };
+          </pre>
+        <p>The mechanism by which formats are converted are implementation dependent.</p>
       </section>
 
       <section>
