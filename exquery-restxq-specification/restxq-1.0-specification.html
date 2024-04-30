@@ -797,7 +797,7 @@ local:function-2() {
             application to the HTTP Request URI. The most specific paths are selected
             as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining Path specifity to a request are:</p>
+          <p>The rules determining Path specificity to a request are:</p>
           <ol>
             <li>Path Segment Length</li>
             <p>
@@ -819,7 +819,7 @@ local:function-2() {
 <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.</pre>
           </ol>
           <p>
-            The following example contains six paths sorted by their specifity:
+            The following example contains six paths sorted by their specificity:
           </p>
           <pre class="example" title="Path Specificity">
 /person/elisabeth
@@ -837,7 +837,7 @@ local:function-2() {
             disambiguated by specificity. The most specific media types MUST be
             selected as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining media type specifity are:</p>
+          <p>The rules determining media type specificity are:</p>
           <ol>
             <li>Absolute before Wildcard</li>
             <p>Absolute Media Types are considered more specific than Media Ranges (Media Types
@@ -927,7 +927,7 @@ local:function-2() {
       <h2>Resources for Implementers</h2>
       <p>
         If you plan to implement RESTXQ, there is already a set of common abstraction libraries written in Java
-        which should significantly reduce the ammount of effort involved and avoid re-inventing more wheels. You need
+        which should significantly reduce the amount of effort involved and avoid re-inventing more wheels. You need
         just implement a few interfaces and adapters. For more information see the
         <a href="http://www.github.com/exquery/exquery" title="EXQuery GitHub">EXQuery GitHub page</a>.
       </p>
@@ -952,7 +952,7 @@ local:function-2() {
         Many thanks to:
         <ul>
           <li>Christian Grün for early adoption and enthusiasm.</li>
-          <li>Robin Berjon for making the production of this speficiation much simpler with his cool ReSpec tool.</li>
+          <li>Robin Berjon for making the production of this specification much simpler with his cool ReSpec tool.</li>
         </ul>
       </p>
     </section>
