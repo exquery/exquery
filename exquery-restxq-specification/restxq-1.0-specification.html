@@ -903,6 +903,13 @@ local:function-2() {
             this is the <code>rest:base-uri()</code> appended with the path from the Path Annotation (if present) of the Resource Function.
           </p>
         </section>
+        <section>
+          <h4>rest:build-uri()</h4>
+          <div class="exampleInner">
+            <pre><code class="function">rest:get-absolute-uri($path-segments as <code class="type">xs:anyAtomicType+</code>)</code> as <code class="type">xs:anyURI</code></pre>
+          </div>
+          <p>Summary: This function returns an absolute URI by concatenating the base URI as returned by rest:base-uri() with each path segment in the parameter $path-segments, separating each by a '/' character. The result of this function should be stable across invocations within an implementation.</p>
+        </section>
       </section>
     </section>
     
