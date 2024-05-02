@@ -904,9 +904,9 @@ local:function-2() {
           </p>
         </section>
         <section>
-          <h4>rest:build-uri()</h4>
+          <h4>rest:build-absolute-uri()</h4>
           <div class="exampleInner">
-            <pre><code class="function">rest:get-absolute-uri($path-segments as <code class="type">xs:anyAtomicType+</code>)</code> as <code class="type">xs:anyURI</code></pre>
+            <pre><code class="function">rest:build-absolute-uri($path-segments as <code class="type">xs:anyAtomicType+</code>)</code> as <code class="type">xs:anyURI</code></pre>
           </div>
           <p>Summary: This function returns an absolute URI by concatenating the base URI as returned by rest:base-uri() with each path segment in the parameter $path-segments, separating each by a '/' character. The result of this function should be stable across invocations within an implementation.</p>
         </section>
