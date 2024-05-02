@@ -32,7 +32,7 @@
   <head>
     <title>RESTXQ 1.0: RESTful Annotations for XQuery</title>
     <meta charset='utf-8'/>
-    <script src='http://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
     <script class='remove'>
       var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
@@ -152,16 +152,16 @@
       <a href="http://exquery.org/" title="EXQuery: Extensions for EXQuery">EXQuery project</a>.
     </section>
     <section id='abstract'>
-      Whilst XQuery [[!XQUERY]] was originally envisaged and designed as a query language for XML,
+      Whilst XQuery (see [[XQUERY]]) was originally envisaged and designed as a query language for XML,
       it has been adopted by many as a language for application development. This specification
-      describes a set of XQuery Annotations [[!XQUERY-30]] and a small set of functions to enable XQuery
+      describes a set of XQuery Annotations (see [[XQUERY-30]]) and a small set of functions to enable XQuery
       to provide RESTful services, thus enabling Web Application development in XQuery.
     </section>
 
     <section id="introduction">
       <h2>Introduction</h2>
       <p>
-        XQuery processors are now frequently provided as part of complete data application
+        XQuery [[XQUERY]] processors are now frequently provided as part of complete data application
         processing platforms, which typically incorporate amongst others, XML Data storage
         and Web serving capabilities.
       </p>
@@ -172,7 +172,7 @@
         as a server-side scripting language and processing Web requests.
       </p>
       <p>
-        As of XQuery 3.0, there is still no standard way to create Web Applications in XQuery.
+        As of XQuery 3.0 [[XQUERY-30]], there is still no standard way to create Web Applications in XQuery.
         Many vendors provide extensions to their XQuery implementations which allow users
         to serve web requests using XQuery processing.
         Whilst vendors have borrowed ideas from each other, there is no standard for Web capabilities
@@ -231,7 +231,7 @@
         <h3>Namespaces and Prefixes</h3>
         <p>
           The annotations and functions discussed in this document are contained in
-          namespaces (see [[!XML-NAMES]]) and referenced using an xs:QName:
+          namespaces (see [[XML-NAMES]]) and referenced using an xs:QName:
         </p>
         <ul>
           <li><code>http://exquery.org/ns/restxq</code>, associated with <code>rest</code>.</li>
@@ -254,7 +254,7 @@
       <section id="annotations-background">
         <h3>Background</h3>
         <p>
-          RESTXQ is heavily influenced by [[!JAX-RS]]. However, we simplify and deviate from JAX-RS
+          RESTXQ is heavily influenced by [[?JAX-RS]]. However, we simplify and deviate from JAX-RS
           predominantly due to the language structure differences between Java and XQuery. Where JAX-RS describes Resource Classes
           and Resources Methods for Java, in XQuery we simply use the term Resource Function; for mapping HTTP calls
           to XQuery invocation, our unit of granularity is the XQuery function.
@@ -353,14 +353,10 @@
             declare
               %rest:path("/stock/widget/{$id}")
             function local:widget($id as xs:int) {
-              fn:collection("/db/widgets")//widget[@id = $id]
+              fn:collection("/db/widgets")//widget[@id eq $id]
             };
           </pre>
-          <p>
-            In the above example, an HTTP GET on the following URI would cause the widget
-            with the <code>id</code> of '1981' to be retrieved:
-            <code>http://www.widget-factory.com/stock/widget/{$id}</code>.
-          </p>
+          <p> In the above example, an HTTP GET on the following URI would cause the widget with the <code>id</code> of '1981' to be retrieved: <code>http://www.widget-factory.com/stock/widget/1981</code>. </p>
           <div class="note">
             When many Resource Functions are defined, there can be many Path Annotations.
             As such, conflicts may occur, the resolution of such conflicts MUST be processed
@@ -385,7 +381,7 @@
               %rest:DELETE
               %rest:path("/widget/{$id}")
             function local:widget($id as xs:int) {
-              delete node fn:collection("/db/widgets")//widget[@id = $id]
+              delete node fn:collection("/db/widgets")//widget[@id eq $id]
             };
           </pre>
           <p>
@@ -393,7 +389,7 @@
             optional string literal which maps the HTTP request body to a named function
             parameter. The same syntax as that used for URI templates is applied.
             For example
-            <code>%rest:POST("{$request-body")</code> would inject the request body into
+            <code>%rest:POST("{$request-body}")</code> would inject the request body into
             the function through the function parameter named 'request-body'. The
             function parameter for the request body must meet the following constraints:
             <ol>
@@ -437,11 +433,21 @@
         <section id="consumes-annotation">
           <h5>Consumes Annotation</h5>
           <p>
-            Resource Functions MAY be constrained to certain Media Type by means
+            Resource Functions MAY be constrained to certain Media Type(s) by means
             of a <code>%rest:consumes</code> annotation. A function will only be invoked
             if the HTTP <code>Content-Type</code> header of the request matches one
             of the given Media Types.
           </p>
+          <pre class="example highlight" title="Consumes Annotation">
+            (: Will only be invoked if a user supplies one of the specified media types :)
+            declare
+              %rest:path("/widgets")
+              %rest:consumes("application/xml", "application/atom+xml")
+            function local:widgets() {
+              fn:collection("/db/widgets")/widgets
+            };
+          </pre>
+          <p>The <code>%rest:consumes</code> annotation supports <a href="#content-negotiation">content negotiation</a> in conjunction with the <a href="#produces-annotation"><code>%rest:produces</code></a> annotation.</p>
         </section>
 
         <section id="produces-annotation">
@@ -451,16 +457,16 @@
             only be invoked if the HTTP <code>Accept</code> header of the request
             matches one of the given types.
           </p>
-          <pre class="example highlight" title="Consumes and Produces Annotation">
-            (: Will only be invoked if a user supplies the specified media types :)
+          <pre class="example highlight" title="Produces Annotation">
+            (: Will only be invoked if a user accepts one of the specified media types :)
             declare
               %rest:path("/widgets")
-              %rest:consumes("application/xml", "application/atom+xml")
               %rest:produces("application/xml")
             function local:widgets() {
               fn:collection("/db/widgets")/widgets
             };
           </pre>
+          <p>The <code>%rest:produces</code> annotation supports <a href="#content-negotiation">content negotiation</a> in conjunction with the <a href="#consumes-annotation"><code>%rest:consumes</code></a> annotation.</p>
         </section>
       </section>
 
@@ -489,10 +495,7 @@
             </li>
           </ol>
           <p>
-            <!-- TODO describe type conversion -->
-            Conversion from the request field to the required function parameter
-            type is performed at run-time, and an error is raised if conversion
-            is impossible.
+            Conversion from the parameter string to the required function parameter type is performed at run-time, and an error is raised if conversion is impossible.
           </p>
           <p>
           The annotations in this section MUST have two or more arguments:
@@ -509,7 +512,7 @@
           <h5>Query Parameters</h5>
           <p>
             The annotation <code>%rest:query-param</code> is provided for accessing
-            parameters in the Query String of the URL used for the RESTful Web Service
+            parameters in the Query string of the URL used for the RESTful Web Service
             request.
           </p>
           <pre class="example highlight" title="Query Parameter Annotation with a default value">
@@ -518,7 +521,7 @@
               %rest:path("/widget/{$id}")
               %rest:query-param("client", "{$client}", "unknown")
             function local:widget($id as xs:int, $client as xs:string*) {
-              fn:collection("/db/widgets")//widget[@id = $id][@client = $client]
+              fn:collection("/db/widgets")//widget[@id eq $id][@client = $client]
             };
           </pre>
         </section>
@@ -536,12 +539,12 @@
               %rest:path("/widget/{$id}")
               %rest:form-param("client", "{$client}", "unknown")
             function local:widget($id as xs:int, $client as xs:string*) {
-              fn:collection("/db/widgets")//widget[@id = $id][@client = $client]
+              fn:collection("/db/widgets")//widget[@id eq $id][@client = $client]
             };
           </pre>
         </section>
 
-        <section id="form-header-annotation">
+        <section id="header-param-annotation">
           <h5>HTTP Header Parameters</h5>
           <p>
             The annotation <code>%rest:header-param</code> is provided for accessing
@@ -555,12 +558,12 @@
               %rest:path("/widget/{$id}")
               %rest:header-param("X-Client-Type", "{$client-type}")
             function local:widget($id as xs:int, $client-type as xs:string*) {
-              fn:collection("/db/widgets")//widget[@id = $id][@client-type = $client-type]
+              fn:collection("/db/widgets")//widget[@id eq $id][@client-type = $client-type]
             };
           </pre>
         </section>
 
-        <section id="form-cookie-annotation">
+        <section id="cookie-param-annotation">
           <h5>Cookie Parameters</h5>
           <p>
             The annotation <code>%rest:cookie-param</code> is provided for accessing
@@ -572,7 +575,7 @@
               %rest:path("/widget/{$id}")
               %rest:cookie-param("tasty_cookie, "{$tastycookie}")
             function local:widget($id as xs:int, $tastycookie as xs:string*) {
-              fn:collection("/db/widgets")//widget[@id = $id][@flavor = $tastycookie]
+              fn:collection("/db/widgets")//widget[@id eq $id][@flavor = $tastycookie]
             };
           </pre>
         </section>
@@ -707,7 +710,6 @@
 
     <section id="http-mechanics">
       <h2>HTTP Mechanics</h2>
-      <p><!--TODO --></p>
       <section id="base-uri">
         <h3>Base URI</h3>
         <p>
@@ -717,6 +719,22 @@
           (<a href="#path-annotation" class="sectionRef"></a>).
           <!-- TODO if a path annotation is not specified then the remaining URIs apply to the base uri -->
         </p>
+      </section>
+      
+      <section id="content-negotiation">
+        <h3>Content Negotiation</h3>
+        <p>Support for <a href="https://httpwg.org/specs/rfc7231.html#content.negotiation">content negotiation</a> ([[RFC7231]]) of formats is indirectly provided by the <a href="#consumes-annotation"><code>%rest:consumes</code></a> and <a href="#produces-annotation"><code>%rest:produces</code></a> annotations.</p>
+        
+        <pre class="example highlight" title="Content Negotiation">
+            (: Combining consumes and produces provides content negotation support :)
+            declare
+              %rest:path("/widgets")
+              %rest:consumes("application/xml", "application/atom+xml")
+              %rest:produces("application/xml", "application/json")
+            function local:widgets() {
+              fn:collection("/db/widgets")/widgets
+            };
+          </pre>
       </section>
 
       <section>
@@ -775,7 +793,7 @@ local:function-2() {
             application to the HTTP Request URI. The most specific paths are selected
             as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining Path specifity to a request are:</p>
+          <p>The rules determining Path specificity to a request are:</p>
           <ol>
             <li>Path Segment Length</li>
             <p>
@@ -797,7 +815,7 @@ local:function-2() {
 <code>/a/{$x}</code> <span class="explain">is more specific than</span> <code>/{$x}/y</code>.</pre>
           </ol>
           <p>
-            The following example contains six paths sorted by their specifity:
+            The following example contains six paths sorted by their specificity:
           </p>
           <pre class="example" title="Path Specificity">
 /person/elisabeth
@@ -815,7 +833,7 @@ local:function-2() {
             disambiguated by specificity. The most specific media types MUST be
             selected as candidates to process the HTTP Request.
           </p>
-          <p>The rules determining media type specifity are:</p>
+          <p>The rules determining media type specificity are:</p>
           <ol>
             <li>Absolute before Wildcard</li>
             <p>Absolute Media Types are considered more specific than Media Ranges (Media Types
@@ -884,6 +902,27 @@ local:function-2() {
             this is the <code>rest:base-uri()</code> appended with the path from the Path Annotation (if present) of the Resource Function.
           </p>
         </section>
+        <section>
+          <h4>rest:build-absolute-uri()</h4>
+          <div class="exampleInner">
+            <pre><code class="function">rest:build-absolute-uri($path-segments as <code class="type">xs:anyAtomicType+</code>)</code> as <code class="type">xs:anyURI</code></pre>
+          </div>
+          <p>Summary: This function returns an absolute URI by concatenating the base URI as returned by rest:base-uri() with each path segment in the parameter $path-segments, separating each by a '/' character. The result of this function should be stable across invocations within an implementation.</p>
+        </section>
+      </section>
+    </section>
+    
+    <section id="conformance">
+      <p>This section defines the conformance criteria for a RESTXQ 1.0 implementation. An implementation that claims to conform to this specification MUST include a claim of Minimal Conformance as defined in <a href="#minimal-conformance" class="sectionRef"></a>.</p>
+      
+      
+      <section id="minimal-conformance">
+        <h3>Minimal Conformance</h3>
+        <p>An implementation that claims <strong>Minimal Conformance</strong> to this specification MUST provide all of the following items:</p>
+        <ol>
+          <li><p>An implementation of everything specified in this document.</p></li>
+          <li><p>A definition of every item specified to be implementation-defined.</p></li>
+        </ol>
       </section>
     </section>
 
@@ -891,7 +930,7 @@ local:function-2() {
       <h2>Resources for Implementers</h2>
       <p>
         If you plan to implement RESTXQ, there is already a set of common abstraction libraries written in Java
-        which should significantly reduce the ammount of effort involved and avoid re-inventing more wheels. You need
+        which should significantly reduce the amount of effort involved and avoid re-inventing more wheels. You need
         just implement a few interfaces and adapters. For more information see the
         <a href="http://www.github.com/exquery/exquery" title="EXQuery GitHub">EXQuery GitHub page</a>.
       </p>
@@ -916,7 +955,7 @@ local:function-2() {
         Many thanks to:
         <ul>
           <li>Christian Grün for early adoption and enthusiasm.</li>
-          <li>Robin Berjon for making the production of this speficiation much simpler with his cool ReSpec tool.</li>
+          <li>Robin Berjon for making the production of this specification much simpler with his cool ReSpec tool.</li>
         </ul>
       </p>
     </section>
