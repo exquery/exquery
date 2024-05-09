@@ -384,16 +384,16 @@
             };
           </pre>
           <p>
-            The method annotations <code>POST</code> and <code>PUT</code> may take an
-            optional string literal which maps the HTTP request body to a named function
-            parameter. The same syntax as that used for URI templates is applied.
+            The method annotations <code>POST</code> and <code>PUT</code> may take one or more
+            optional string literals which map the HTTP request body to named function
+            parameters. The same syntax as that used for URI templates is applied.
             For example
             <code>%rest:POST("{$request-body}")</code> would inject the request body into
             the function through the function parameter named 'request-body'. The
             function parameter for the request body must meet the following constraints:
             <ol>
               <li>
-                The cardinality MUST allow for one or more of the typed item(s).
+                The cardinality MUST allow for zero or more of the typed item(s).
               </li>
               <li>
                 The type MUST be compatible with the request body. The type of the request
@@ -402,6 +402,10 @@
                 interpretation of the request body is similar to that of the
                 <a href="http://expath.org/spec/http-client">EXPath HTTP Client</a>:
                 <ol>
+                  <li>Multiple function parameters MUST only be used with a <code>multipart/*</code> Media Type. This media type MAY be implicitly set, or set explicitly using a <code>%rest:consumes</code> annotation. Implementations MUST throw an error if more than one parameter is mapped where any other Media Type is defined using <code>%rest:consumes</code>.</li>
+                  <li>For the <code>multipart/alternative</code> Media type, the order of request body parts SHOULD be processed in reverse in order to preserve the last bodypart having the highest priority.  For all other <code>multipart/*</code> requests, body part order SHOULD be preserved.</li>
+                  <li>Where multiple function parameters are defined, parameters are injected from the body parts of the multipart request until the final string literal is defined.  Each parameter must individually meet this same list of constraints.</li>
+                  <li>The remaining body parts are injected to the function parameter corresponding to the final string literal as an array.  Implementations MAY cast this array to a sequence if it matches cardinality with the function parameter.</li>
                   <li>
                     If the Media Type ([[IANA-MEDIA-TYPES]]) indicated by the <code>Content-Type</code> header
                     matches <code>text/*</code> (excluding <code>text/xml</code>),
@@ -416,12 +420,12 @@
                     implementations MAY support additional XML types.
                   </li>
                   <li>
-                    Otherwise, a binary media type is assumed, and the function
-                    parameter type will be <code>xs:base64Binary</code>.
-                  </li>
-                  <li>
                     An implementation MAY provide support for other input type mappings
                     such as HTML or JSON.
+                  </li>
+                  <li>
+                    Otherwise, a binary media type is assumed, and the function
+                    parameter type will be <code>xs:base64Binary</code>.
                   </li>
                 </ol>
               </li>
@@ -646,6 +650,9 @@
                   an implementation MUST throw an error. This is known as the
                   <dfn>Typed Resource Response rule</dfn>.
                 </li>
+                <li>
+                  If the result type is <code>multipart/*</code>, the function MAY return an array which is to be interpreted as the body parts of the sequence.  Each member of a multipart response MUST obey the <a>Typed Resource Response rule</a>, and MAY itself represent a multipart response with or without relevant HTTP headers.
+                </li>
               </ol>
             </li>
             <li>
@@ -658,7 +665,7 @@
               of the function MUST be defined as <code>item()+</code>. The first item in the
               result sequence is the HTTP headers i.e.
               <code>document-node(element(rest:response)</code>, the second item in the
-              result sequence is the resource itself; Subsequently both the
+              result sequence is the resource itself (which may be a multipart array); Subsequently both the
               <a>Default Resource Response rule</a> and the
               <a>Typed Resource Response rule</a> MUST be applied to the result sequence.
             </li>
@@ -736,7 +743,7 @@
           </pre>
       </section>
 
-      <section>
+      <section id="http-request-matching">
         <h3>HTTP Request Matching</h3>
         <p>
           In many cases, there is more than one Resource Function that could service an
