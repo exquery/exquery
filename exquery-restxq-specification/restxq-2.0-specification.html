@@ -852,7 +852,7 @@
           </pre>
         <p>Implementations MUST include a <code>Access-Control-Allow-Origin</code> header in the response if the <a href="#Access-Control-Allow-Origin-option-annotation"></a> is provided and matches a URL provided in the <code>Origin</code> request header; this should either be the wildcard value <code>*</code>, or a copy of the <code>Origin</code> header value.</p>
         <p>Implementations MUST include a <code>Access-Control-Allow-Methods</code> header in the response if the <a href="#Access-Control-Allow-Methods-option-annotation"></a> is provided for a resource function.  The value of this header should include a combined list of all method values for resource functions for a given path.</p>
-        <p>Implementations MUST include a <code>Access-Control-Allow-Headers</code> header in the response if the <a href="#Acces-Control-Allow-Headers-option-annotation"></a> is provided for a resource function if the request includes an <code>Access-Control-Request-Headers</code> header.</p>
+        <p>Implementations MUST include a <code>Access-Control-Allow-Headers</code> header in the response if the <a href="#Access-Control-Allow-Headers-option-annotation"></a> is provided for a resource function if the request includes an <code>Access-Control-Request-Headers</code> header.</p>
         <p>Implementations MUST include a <code>Accept-Patch</code> header in the response to <code>PATCH</code> requests.  This should correspond to the allowed values for the <a href="#consumes-annotation"></a>.</p>
       </section>
 
