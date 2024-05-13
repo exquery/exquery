@@ -284,10 +284,11 @@
         request, that matches the constraints indicated by the annotations, that the function
         SHOULD be invoked and the result SHOULD be returned as the result of the service request.
       </p>
-      <p>There are two types of Resource Function Annotations described in RESTXQ:</p>
+      <p>There are three types of Resource Function Annotations described in RESTXQ:</p>
       <ul>
         <li>Constraints (<a href="#resource-function-constraints" class="sectionRef"></a>)</li>
         <li>Parameters (<a href="#resource-function-parameters" class="sectionRef"></a>)</li>
+        <li>Options (<a href="#resource-function-options" class="sectionRef"></a>)</li>
       </ul>
 
       <section id="templates">
@@ -371,9 +372,9 @@
             the path annotation of a Resource Function applies to all HTTP methods.
           </p>
           <p>
-            Annotations are defined for all HTTP 1.1 methods except TRACE and CONNECT.
-            All methods MAY return resources except for HEAD, which must only return a
-            <code>rest:response</code> element.
+            Annotations are defined for all HTTP 1.1 methods except OPTIONS, TRACE and CONNECT.
+            All methods MAY return resources except for HEAD, which MUST only return a
+            <code>rest:response</code> element.  Responses to OPTIONS requests are discussed in <a href="#options-requests"></a>.
           </p>
           <pre class="example highlight" title="Method Annotation">
             declare
@@ -384,7 +385,7 @@
             };
           </pre>
           <p>
-            The method annotations <code>POST</code> and <code>PUT</code> may take an
+            The method annotations <code>POST</code>, <code>PUT</code> and <code>PATCH</code> may take an
             optional string literal which maps the HTTP request body to a named function
             parameter. The same syntax as that used for URI templates is applied.
             For example
@@ -427,6 +428,41 @@
               </li>
             </ol>
           </p>
+          <section>
+            <h6>The <code>DELETE</code> Method</h6>
+            <p>According to [[RFC9110], successful DELETE requests should result in one of the following responses:</p>
+            <ul>
+              <li><code>200 (Accepted)</code> if the action will likely succeed but has not yet been enacted</li>
+              <li><code>204 (No Content)</code> if the action has been enacted and no further information is to be supplied, or</li>
+              <li><code>200 (OK)</code>if the action has been enacted and the response message includes a representation describing the status</li>
+            </ul>
+            <p>Implementation SHOULD therefore return either a <code>200</code> or <code>204</code> for any resource function with a DELETE method annotation that returns an empty sequence upon success.</p>
+          </section>
+          <section>
+            <h6>The <code>HEAD</code> Method</h6>
+            <p>Implementations SHOULD allow for a HEAD request to any resource function that would respond to a GET request; the response to such a HEAD request SHOULD be rest:response object which corresponds to that of a GET request to the same function.</p>
+            <pre class="example highlight" title="HEAD response to a GET resource">
+              (: resource function :)
+              declare
+                %rest:GET
+                %rest:path("/widget/{$id}")
+              function local:widget($id as xs:int) {
+                fn:collection("/db/widgets")//widget[@id eq $id]
+              };
+              
+              (: response to a HEAD request :)
+              &lt;rest:response&gt;
+                &lt;http:response status=&quot;200&quot; message=&quot;OK&quot;&gt;
+                  &lt;http:header name=&quot;Content-Length&quot; value=&quot;200&quot;/&gt;
+                  &lt;http:header name=&quot;Content-Type&quot; value=&quot;application/xml&quot;/&gt;
+                &lt;/http:response&gt;
+              &lt;/rest:response&gt;
+          </pre>
+          </section>
+          <section>
+            <h6>The <code>PATCH</code> Method</h6>
+            <p>Implementations MUST throw an error if a resource function which is defined using a PATCH method does not also provide a <code>%rest:consumes</code> annotation as discussed in <a href="#consumes-annotation"></a>.</p>
+          </section>
         </section>
 
         <section id="consumes-annotation">
@@ -580,6 +616,53 @@
         </section>
 
       </section>
+      <section id="resource-function-options">
+        <h4>Resource Function Options</h4>
+        <p>Options for Resource Functions are used to inform the RESTXQ Implementation of specific settings or metadata which may be needed to provide valid responses. Like parameter annotations, option annotations are always optional.</p>
+        <section id="Access-Control-Allow-Origin-option-annotation">
+          <h5><code>Access-Control-Allow-Origin</code> response header Option</h5>
+          <p>This annotation allows users to define the <code>Access-Control-Allow-Origin</code> headers in responses such as CORS preflight checks using the <code>OPTIONS</code> method.</p>
+          <p>The value of this option may be <code>*</code> (to allow any origin), or a sequence of strings corresponding to allowed origin URLs.</p>
+          <pre class="example highlight" title="Access-Control-Allow-Origin Option Annotation">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:Access-Control-Allow-Origin(*)
+            function local:widget($id as xs:int) {
+              fn:collection("/db/widgets")//widget[@id eq $id]
+            };
+          </pre>
+        </section>
+        <section id="Access-Control-Allow-Methods-option-annotation">
+          <h5><code>Access-Control-Allow-Methods</code> response header Option</h5>
+          <p>This annotation allows users to define the <code>Access-Control-Allow-Methods</code> headers in responses such as CORS preflight checks using the <code>OPTIONS</code> method.</p>
+          <p>The value of this option may be a comma separated list of strings corresponding to HTTP request methods.</p>
+          <pre class="example highlight" title="Access-Control-Allow-Methods Option Annotation">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:Access-Control-Allow-Methods("GET")
+            function local:widget($id as xs:int) {
+              fn:collection("/db/widgets")//widget[@id eq $id]
+            };
+          </pre>
+        </section>
+        <section id="Access-Control-Allow-Headers-option-annotation">
+          <h5><code>Access-Control-Allow-Headers</code> response header Option</h5>
+          <p>This annotation allows users to define the <code>Access-Control-Allow-Headers</code> headers in responses such as CORS preflight checks using the <code>OPTIONS</code> method.</p>
+          <p>The value of this option may be a comma separated list of strings corresponding to HTTP request methods.</p>
+          <pre class="example highlight" title="Access-Control-Allow-Methods Option Annotation">
+            declare
+              %rest:GET
+              %rest:path("/widget/{$id}")
+              %rest:Access-Control-Allow-Headers("x-requested-with", "x-requested-by")
+            function local:widget($id as xs:int) {
+              fn:collection("/db/widgets")//widget[@id eq $id]
+            };
+          </pre>
+        </section>
+      </section>
+      
     </section>
 
     <section id="response">
@@ -734,6 +817,43 @@
               fn:collection("/db/widgets")/widgets
             };
           </pre>
+      </section>
+      
+      <section id="options-requests">
+        <h3><code>OPTIONS</code> requests</h3>
+        <p>In previous versions of RESTXQ, requests using the <code>OPTIONS</code> method had to be dealt with by dedicated resource functions in the same way as other method constraints.  RESTXQ 2.0 removes the onus of defining these functions from the user by generating responses for resource functions for other method constraints.</p>
+        <p>Implementations MUST respond to <code>OPTIONS</code> method requests for a given URL associated with one or more resource functions with the appropriate <code>Allow</code> headers. They SHOULD use the status code <code>200 (OK)</code>:</p>
+        
+        <pre class="example highlight" title="OPTIONS method">
+            (: Resource function for DELETE method :)
+            declare
+              %rest:DELETE
+              %rest:path("/widget/{$id}")
+            function local:delete-widget($id as xs:int) {
+              delete node fn:collection("/db/widgets")//widget[@id eq $id]
+            };
+            
+            (: Resource function for GET method :)
+            declare 
+              %rest:GET
+              %rest:path("/widget/{$id}")
+            function local:get-widget($id as xs:int) {
+              fn:collection("/db/widgets")//widget[@id eq $id]
+            };
+            
+            (: Response to an OPTIONS method for path /widget/id :)
+            &lt;rest:response&gt;
+              &lt;http:response status=&quot;200&quot; message=&quot;OK&quot;&gt;
+                &lt;http:header name=&quot;Allow&quot; value=&quot;DELETE, GET, HEAD, OPTIONS&quot;&gt;&lt;/http:header&gt;
+                &lt;http:header name=&quot;Content-Length&quot; value=&quot;0&quot;&gt;&lt;/http:header&gt;
+                &lt;http:header name=&quot;Content-Type&quot; value=&quot;application/xml&quot;&gt;&lt;/http:header&gt;
+              &lt;/http:response&gt;
+            &lt;/rest:response&gt;
+          </pre>
+        <p>Implementations MUST include a <code>Access-Control-Allow-Origin</code> header in the response if the <a href="#Access-Control-Allow-Origin-option-annotation"></a> is provided and matches a URL provided in the <code>Origin</code> request header; this should either be the wildcard value <code>*</code>, or a copy of the <code>Origin</code> header value.</p>
+        <p>Implementations MUST include a <code>Access-Control-Allow-Methods</code> header in the response if the <a href="#Access-Control-Allow-Methods-option-annotation"></a> is provided for a resource function.  The value of this header should include a combined list of all method values for resource functions for a given path.</p>
+        <p>Implementations MUST include a <code>Access-Control-Allow-Headers</code> header in the response if the <a href="#Access-Control-Allow-Headers-option-annotation"></a> is provided for a resource function if the request includes an <code>Access-Control-Request-Headers</code> header.</p>
+        <p>Implementations MUST include a <code>Accept-Patch</code> header in the response to <code>PATCH</code> requests.  This should correspond to the allowed values for the <a href="#consumes-annotation"></a>.</p>
       </section>
 
       <section>
