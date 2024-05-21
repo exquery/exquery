@@ -4,7 +4,7 @@
 
 [![Test](https://github.com/exquery/exquery/actions/workflows/ci.yml/badge.svg)](https://github.com/exquery/exquery/actions/workflows/ci.yml)
 
-The main thing here at the moment apart from simple abstractions for dealing with XQuery 1.0 and XQuery 3.0 concepts, is the [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html) Project.
+The main thing here at the moment apart from simple abstractions for dealing with XQuery 1.0 and XQuery 3.0 concepts, is the [RESTXQ](http://exquery.github.io/exquery/exquery-restxq-specification/restxq-1.0-specification.html) Project.
 The original paper [RESTful XQuery: Standardised XQuery 3.0 Annotations for REST](http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf) is available, as is a simple [presentation on RESTXQ](http://www.adamretter.org.uk/presentations/restxq_mugl_20120308.pdf).
 
 The language is Java 6 (also tested against Oracle JDK 7 and OpenJDK 7) and the build system is Maven 3.
@@ -33,7 +33,7 @@ EXQuery modules have no external dependencies (currently).
 
 ### exquery-restxq-specification
 This is the specification for RESTXQ 1.0, written in [ReSpec](http://github.com/darobin/respec).
-The latest publicly available and viewable specification is available [here](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html) via. our gh-pages branch. 
+The latest publicly available and viewable specification is available [here](http://exquery.github.io/exquery/exquery-restxq-specification/restxq-1.0-specification.html) via. our gh-pages branch. 
 
 ### exquery-restxq-api
 API for the EXQuery RESTXQ project.
